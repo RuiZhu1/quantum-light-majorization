@@ -17,8 +17,8 @@ In the ideal detector limit ($\eta = 1, \nu = 0$), the two displaced no-click ef
    - On $V_a$, the orthonormal even/odd cat basis $\ket{\mathcal C_\pm(a)} = (\ket{a} \pm \ket{-a})/\sqrt{2(1 \pm e^{-2a^2})}$ diagonalizes $A_{00}$ with exact eigenvalues $1 \pm e^{-2a^2}$ (and $0$ on $V_a^\perp$).
    - Thus $\lambda_{\max}(A_{00}) = 1 + e^{-2a^2}$, **uniquely attained by the even cat state $\ket{\mathcal C_+(a)}$** with finite mean photon number $\langle\hat n\rangle = a^2\tanh(a^2)$ (zero Fock truncation required).
 2. **`off_on` / `on_off` Ceiling ($A_{01} = I - \ket{-a}\!\bra{-a} + \ket{a}\!\bra{a}$)**:
-   - On $V_a$, $A_{01}$ has exact eigenvalues $1 \pm \sqrt{1 - e^{-4a^2}}$ (and $1$ on $V_a^\perp$).
-   - Thus $\lambda_{\max}(A_{01}) = 1 + \sqrt{1 - e^{-4a^2}}$, attained by the rank-2 superposition $\cos\vartheta\ket{\mathcal C_+(a)} + \sin\vartheta\ket{\mathcal C_-(a)}$ with $\tan(2\vartheta) = e^{2a^2}\sqrt{1 - e^{-4a^2}}$ and finite mean photon number $\langle\hat n\rangle = \frac{a^2}{2}\bigl[(1+e^{-2a^2})\tanh(a^2) + (1-e^{-2a^2})\coth(a^2)\bigr]$.
+   - On $V_a$, $A_{01} - I = \sqrt{1 - e^{-4a^2}}\sigma_x$ in the orthonormal cat basis $\{\ket{\mathcal C_+(a)}, \ket{\mathcal C_-(a)}\}$, so $A_{01}$ has exact eigenvalues $1 \pm \sqrt{1 - e^{-4a^2}}$ (and $1$ on $V_a^\perp$).
+   - Thus $\lambda_{\max}(A_{01}) = 1 + \sqrt{1 - e^{-4a^2}}$, attained uniquely by the balanced cat superposition $\ket{\psi_{01}^*} = \frac{1}{\sqrt{2}}\bigl(\ket{\mathcal C_+(a)} + \ket{\mathcal C_-(a)}\bigr)$ with exact mean photon number $\langle\hat n\rangle = \frac{a^2}{2}\bigl(\tanh(a^2) + \coth(a^2)\bigr) = a^2\coth(2a^2)$ (since $\hat n$ preserves parity).
 3. **`on_on` Ceiling ($A_{11} = 2I - \ket{-a}\!\bra{-a} - \ket{a}\!\bra{a}$)**:
    - On $V_a^\perp = \{\ket{\psi} : \braket{a|\psi} = \braket{-a|\psi} = 0\}$, $A_{11}$ has exact eigenvalue $2$.
    - The unique minimum-Fock-support dark state in $V_a^\perp \cap \operatorname{span}\{\ket{0}, \ket{1}, \ket{2}\}$ is

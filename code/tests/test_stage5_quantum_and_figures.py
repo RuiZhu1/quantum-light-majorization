@@ -40,14 +40,17 @@ class TestStage5QuantumAndFigures(unittest.TestCase):
             self.assertAlmostEqual(ic.dark_state_chi_a_L2, 2.0, places=14)
             self.assertAlmostEqual(ic.dark_state_chi_a_energy, 4.0 / (a ** 4 + 2.0), places=14)
 
-            # Verify rank-2 operator eigenvalues on a 40-dim Fock compression at eta = 1, nu = 0
+            # Verify rank-2 operator eigenvalues and exact off_on eigenstate energy on 40-dim Fock compression
             e0_p = compressed_effect(a, 1.0, dimension=40, dark_mean=0.0)
             e0_m = compressed_effect(-a, 1.0, dimension=40, dark_mean=0.0)
             eye = np.eye(40, dtype=complex)
             evals_00 = np.linalg.eigvalsh(0.5 * ((e0_p + e0_m) + (e0_p + e0_m).conj().T))
-            evals_01 = np.linalg.eigvalsh(0.5 * ((eye - e0_p + e0_m) + (eye - e0_p + e0_m).conj().T))
+            op_01 = 0.5 * ((eye - e0_p + e0_m) + (eye - e0_p + e0_m).conj().T)
+            evals_01, evecs_01 = np.linalg.eigh(op_01)
             self.assertAlmostEqual(float(evals_00[-1]), ic.off_off_ceiling, places=11)
             self.assertAlmostEqual(float(evals_01[-1]), ic.off_on_ceiling, places=11)
+            e01_fock = float(np.dot(np.abs(evecs_01[:, -1]) ** 2, np.arange(40)))
+            self.assertAlmostEqual(ic.off_on_maximizer_energy, e01_fock, places=11)
 
     def test_02_fock_truncated_sdp_strong_duality_and_monotone_in_N(self) -> None:
         """Verify compressed Fock SDP strong duality (gap <= 1e-11) and nondecreasing convergence in N."""

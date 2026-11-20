@@ -10,6 +10,7 @@ venv/
 
 # LaTeX build artifacts
 *.aux
+paper/*.bbl
 *.blg
 *.fdb_latexmk
 *.fls

@@ -116,12 +116,12 @@ Then:
 
 | Benchmark State | $\bar n_U / \langle\hat n\rangle = 1.10\times$ ($W_2^{\rm rob,worst}$ / $N_s^{\rm CP99}$) | $\bar n_U / \langle\hat n\rangle = 1.25\times$ ($W_2^{\rm rob,worst}$ / $N_s^{\rm CP99}$) | $\bar n_U / \langle\hat n\rangle = 1.50\times$ ($W_2^{\rm rob,worst}$ / $N_s^{\rm CP99}$) | $\bar n_U / \langle\hat n\rangle = 2.00\times$ ($W_2^{\rm rob,worst}$ / $N_s^{\rm CP99}$) | $\bar n_U / \langle\hat n\rangle = 3.00\times$ ($W_2^{\rm rob,worst}$ / $N_s^{\rm CP99}$) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Flagship $r=-0.42$ ($\eta=1.00, a=1.342$)** | $+0.0870$ / **$955$** | $+0.0695$ / **$1,526$** | $+0.0445$ / **$3,897$** | $+0.0033$ / $737,114$ | $-0.0588$ / — |
-| **Flagship $r=-0.42$ ($\eta=0.90, a=1.446$)** | $+0.0680$ / **$1,602$** | $+0.0528$ / **$2,720$** | $+0.0310$ / **$8,153$** | $-0.0050$ / — | $-0.0593$ / — |
-| **High-loss $r=-0.40$ ($\eta=0.70, a=1.629$)** | $+0.0369$ / **$5,843$** | $+0.0252$ / **$12,812$** | $+0.0085$ / $114,507$ | $-0.0191$ / — | $-0.0612$ / — |
-| **Pilot $r=+0.18$ ($\eta=1.00, a=0.434$)** | $+0.0548$ / **$4,772$** | $+0.0548$ / **$4,772$** | $+0.0548$ / **$4,772$** | $+0.0434$ / **$7,642$** | $+0.0243$ / **$24,524$** |
+| **Flagship $r=-0.42$ ($\eta=1.00, a=1.342$)** | $+0.0748$ / **$1,358$** | $+0.0677$ / **$1,633$** | $+0.0564$ / **$2,288$** | $+0.0354$ / **$5,487$** | $-0.0007$ / — |
+| **Flagship $r=-0.42$ ($\eta=0.90, a=1.446$)** | $+0.0559$ / **$2,304$** | $+0.0500$ / **$2,845$** | $+0.0404$ / **$4,233$** | $+0.0227$ / **$12,774$** | $-0.0082$ / — |
+| **High-loss $r=-0.40$ ($\eta=0.70, a=1.629$)** | $+0.0297$ / **$9,206$** | $+0.0251$ / **$12,749$** | $+0.0177$ / **$25,270$** | $+0.0036$ / $592,763$ | $-0.0218$ / — |
+| **Pilot $r=+0.18$ ($\eta=1.00, a=0.434, \bar n_U \ge 0.50\text{–}0.60$)** | $+0.0014$ / $>2\times 10^6$ | $+0.0014$ / $>2\times 10^6$ | $+0.0014$ / $>2\times 10^6$ | $+0.0014$ / $>2\times 10^6$ | $+0.0014$ / $>2\times 10^6$ |
 
-**Physical Insight**: For $r < 0$ squeezed vacuum, keeping the independent energy-bound slack within $\bar n_U / \langle\hat n\rangle \in [1.10, 1.30]$ (readily achieved by a $50{,}000$-shot $5\%$ tap monitor) keeps the worst-case $\Theta_2$-certified shot budget down to **$955$–$2{,}720$ shots per setting** at $\eta \in [0.90, 1.00]$ and **$5{,}843$–$12{,}812$ shots** at $\eta = 0.70$. Beyond $\bar n_U / \langle\hat n\rangle \approx 2.0$, the energy constraint relaxes enough that high-energy coherent states begin to mimic the squeezed-quadrature click rate.
+**Physical Insight**: For $r < 0$ squeezed vacuum under the realistic calibration box $\Theta_2$, keeping the independent energy-bound slack within $\bar n_U / \langle\hat n\rangle \in [1.10, 1.25]$ (readily achieved by a $50{,}000$-shot $5\%$ tap monitor) keeps the worst-case $\Theta_2$-certified shot budget down to **$1,358$–$2,845$ shots per setting** at $\eta \in [0.90, 1.00]$ and **$9,206$–$12,749$ shots** at $\eta = 0.70$ — and even a loose **$2.00\times$** energy bound ($\bar n_U = 2\langle\hat n\rangle$) still certifies flagship $r=-0.42$ in $5,487$–$12,774$ shots at $\eta \in [0.90, 1.00]$. Beyond $\bar n_U / \langle\hat n\rangle \approx 3.0$, the energy constraint relaxes enough that high-energy coherent states match the squeezed-quadrature click rate.
 
 ---
 
@@ -137,27 +137,27 @@ We report both:
 
 | Benchmark State | Setting $a$ | Nominal $W_2$ ($N_s^{\rm CP99}$) | $\Theta_1$ ($1\%$) $W_2^{\rm rob}(\theta_{\rm nom})$ / $W_2^{\rm rob,worst}$ ($N_s^{\rm CP99,worst}$) | $\Theta_2$ ($2\%$) $W_2^{\rm rob}(\theta_{\rm nom})$ / $W_2^{\rm rob,worst}$ ($N_s^{\rm CP99,worst}$) | $\Theta_3$ ($5\%$) $W_2^{\rm rob}(\theta_{\rm nom})$ / $W_2^{\rm rob,worst}$ |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Flagship $r=-0.42$ ($\eta=1.00$)** | $a^*_{W_2}=1.150$ | $+0.1383$ ($630$) | $+0.1185$ / $+0.1038$ ($1,106$) | $+0.0989$ / $+0.0690$ ($2,473$) | $+0.0418$ / $-0.0330$ |
-| **Flagship $r=-0.42$ ($\eta=1.00$)** | $a^*_{\rm CP}=1.342$ | $+0.1168$ ($559$) | $+0.1017$ / $+0.0913$ (**$904$**) | $+0.0870$ / $+0.0657$ (**$1,722$**) | $+0.0487$ / $-0.0058$ |
-| **Flagship $r=-0.42$ ($\eta=0.90$)** | $a^*_{W_2}=1.191$ | $+0.1272$ ($798$) | $+0.1039$ / $+0.0861$ ($1,753$) | $+0.0811$ / $+0.0454$ ($6,289$) | $+0.0155$ / $-0.0729$ |
-| **Flagship $r=-0.42$ ($\eta=0.90$)** | $a^*_{\rm CP}=1.446$ | $+0.1033$ ($688$) | $+0.0867$ / $+0.0764$ (**$1,203$**) | $+0.0706$ / $+0.0493$ (**$2,849$**) | $+0.0309$ / $-0.0221$ |
-| **High-loss $r=-0.40$ ($\eta=0.70$)** | $a^*_{W_2}=1.308$ | $+0.1048$ ($1,334$) | $+0.0792$ / $+0.0604$ ($4,117$) | $+0.0541$ / $+0.0161$ ($58,283$) | $-0.0086$ / $-0.1021$ |
-| **High-loss $r=-0.40$ ($\eta=0.70$)** | $a^*_{\rm CP}=1.629$ | $+0.0859$ ($1,123$) | $+0.0681$ / $+0.0554$ (**$2,638$**) | $+0.0509$ / $+0.0249$ (**$12,869$**) | $+0.0082$ / $-0.0569$ |
-| **Pilot $r=+0.18$ ($\eta=1.00, \bar n_{\max}=0.50$)** | $a^*_{\rm CP}=0.434$ | $+0.0292$ ($12,934$) | $+0.0214$ / $+0.0154$ ($46,568$) | $+0.0137$ / $+0.0014$ ($5.74\times 10^6$) | $-0.0077$ / $-0.0405$ |
-| **Single-photon Fock $\ket{1}$ ($\eta=1.00$)** | $a^*_{\rm CP}=0.433$ | $+0.0311$ ($11,834$) | $+0.0228$ / $+0.0132$ ($66,464$) | $+0.0144$ / $-0.0049$ (—) | $-0.0110$ / $-0.0596$ |
-| **Orthogonal odd cat ($c=1.25, \phi=\pi/2, \eta=0.90$)** | $a^*_{\rm CP}=0.450$ | $+0.0711$ ($2,032$) | $+0.0457$ / $+0.0342$ ($8,925$) | $+0.0205$ / $-0.0026$ (—)* | $-0.0542$ / $-0.1128$ |
-| **Optimized real odd cat ($c=1.35, \phi=0, \eta=1.00$)** | $a^*_{\rm CP}=0.354$ | $+0.0911$ ($851$) | $+0.0689$ / $+0.0593$ ($2,043$) | $+0.0468$ / $+0.0277$ ($8,361$)** | $-0.0133$ / $-0.0630$ |
-| **Non-Gaussian $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($\eta=1.00$)** | $a^*_{\rm CP}=0.699$ | $+0.0638$ ($789$) | $+0.0543$ / $+0.0439$ ($1,769$) | $+0.0449$ / $+0.0243$ ($5,921$)*** | $+0.0211$ / $-0.0320$ |
+| **Flagship $r=-0.42$ ($\eta=1.00$)** | $a_{W_2}=1.150$ | $+0.1383$ ($630$) | $+0.1185$ / $+0.1038$ ($1,106$) | $+0.0989$ / $+0.0690$ ($2,473$) | $+0.0418$ / $-0.0330$ |
+| **Flagship $r=-0.42$ ($\eta=1.00$)** | $a^*_{\rm CP}=1.342$ | $+0.1168$ ($559$) | $+0.1017$ / $+0.0913$ (**$904$**) | $+0.0870$ / $+0.0657$ (**$1,727$**) | $+0.0487$ / $-0.0058$ |
+| **Flagship $r=-0.42$ ($\eta=0.90$)** | $a^*_{W_2}=1.191$ | $+0.1272$ ($798$) | $+0.0997$ / $+0.0839$ ($1,802$) | $+0.0731$ / $+0.0409$ ($7,448$) | $+0.0110$ / $-0.0689$ |
+| **Flagship $r=-0.42$ ($\eta=0.90$)** | $a^*_{\rm CP}=1.446$ | $+0.1033$ ($688$) | $+0.0863$ / $+0.0758$ (**$1,259$**) | $+0.0698$ / $+0.0483$ (**$3,033$**) | $+0.0293$ / $-0.0258$ |
+| **High-loss $r=-0.40$ ($\eta=0.70$)** | $a^*_{W_2}=1.308$ | $+0.1048$ ($1,334$) | $+0.0769$ / $+0.0585$ ($4,228$) | $+0.0498$ / $+0.0125$ ($91,402$) | $-0.0142$ / $-0.1050$ |
+| **High-loss $r=-0.40$ ($\eta=0.70$)** | $a^*_{\rm CP}=1.629$ | $+0.0859$ ($1,123$) | $+0.0681$ / $+0.0553$ (**$2,669$**) | $+0.0507$ / $+0.0246$ (**$13,201$**) | $+0.0079$ / $-0.0577$ |
+| **Pilot $r=+0.18$ ($\eta=1.00, \bar n_{\max}=0.50$)** | $a^*_{\rm CP}=0.434$ | $+0.0292$ ($12,931$) | $+0.0214$ / $+0.0160$ ($42,912$) | $+0.0136$ / $+0.0014$ ($>2\times 10^6$) | $-0.0078$ / $-0.0431$ |
+| **Single-photon Fock $\ket{1}$ ($\eta=1.00$)** | $a^*_{\rm CP}=0.433$ | $+0.0311$ ($11,334$) | $+0.0233$ / $+0.0129$ ($65,950$) | $+0.0156$ / $-0.0052$ (—) | $-0.0058$ / $-0.0518$ |
+| **Orthogonal odd cat ($c=1.25, \phi=\pi/2, \eta=0.90$)** | $a^*_{\rm CP}=0.450$ | $+0.0711$ ($2,032$) | $+0.0380$ / $+0.0329$ ($9,007$) | $+0.0076$ / $-0.0026$ (—)* | $-0.0492$ / $-0.0712$ |
+| **Optimized real odd cat ($c=1.35, \phi=0, \eta=1.00$)** | $a^*_{\rm CP}=0.354$ | $+0.0911$ ($851$) | $+0.0661$ / $+0.0582$ ($1,985$) | $+0.0435$ / $+0.0276$ ($8,361$)** | $+0.0028$ / $-0.0316$ |
+| **Non-Gaussian $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($\eta=1.00$)** | $a^*_{\rm CP}=0.699$ | $+0.0638$ ($789$) | $+0.0598$ / $+0.0501$ ($1,331$) | $+0.0558$ / $+0.0361$ ($2,625$)*** | $+0.0444$ / $-0.0008$ |
 
 *\*Note on orthogonal odd cat (`odd_cat_imag_c125_eta090`)*: At the nominal optimum $a^*_{\rm CP} = 0.450$, $\Theta_2$ worst-case margin dips slightly negative ($-0.0026$), whereas shifting to the calibration-aware optimum $a^*_{\rm robust} = 0.435$ restores a positive worst-case $\Theta_2$ margin $W_2^{\rm rob,worst} = +0.0060$ ([data/stage4/scan3_robust_displacement_optimization.csv](file:///home/marcelo-group/Desktop/quantum-light-majorization/data/stage4/scan3_robust_displacement_optimization.csv)).  
-*\*\*Note on optimized real odd cat (`odd_cat_real_c135_eta100`)*: Shifting from $a^*_{\rm CP} = 0.354$ to $a^*_{\rm robust} = 0.293$ increases $W_2^{\rm rob,worst}(\Theta_2)$ from $+0.0277$ to $+0.0414$ and cuts worst-case CP99 shots by $2.78\times$ (from $8,361$ down to **$3,003$**).  
-*\*\*\*Note on non-Gaussian triple-baseline state (`zero_two_triple_baseline`)*: At the calibration-aware optimum $a^*_{\rm robust,CP} = 0.816$, worst-case $\Theta_2$ CP99 shots drop to **$1,896$** (a $5.22\times$ reduction compared to $9,904$ shots at $a^*_{W_2} = 0.433$).
+*\*\*Note on optimized real odd cat (`odd_cat_real_c135_eta100`)*: Shifting from $a^*_{\rm CP} = 0.354$ to $a^*_{\rm robust} = 0.293$ increases $W_2^{\rm rob,worst}(\Theta_2)$ from $+0.0277$ (unrounded $a^*_{\rm CP}$) to $+0.0414$ and cuts worst-case CP99 shots by $2.78\times$ (from $8,361$ down to **$3,003$**).  
+*\*\*\*Note on non-Gaussian triple-baseline state (`zero_two_triple_baseline`)*: At the calibration-aware optimum $a^*_{\rm robust,CP} = 0.816$ (`scan3`), worst-case $\Theta_2$ CP99 shots drop to **$1,896$** (a $5.22\times$ reduction compared to $9,904$ shots at $a^*_{W_2} = 0.433$).
 
 ### Key Takeaway on Calibration Headroom of $a^*_{\rm CP}$ vs. $a^*_{W_2}$
 In Stage 3 we discovered that shifting $a$ from the raw margin peak $a^*_{W_2}$ to the statistical optimum $a^*_{\rm CP}$ pushes $q(\rho)$ into a lower-variance binomial tail. Stage 4 reveals a **second, independent physical advantage of $a^*_{\rm CP}$**: because $S_2^{\mathcal C}(a)$ and $q(\rho;a)$ have smaller derivatives $|\partial S_2^{\mathcal C}/\partial a|$ and $|\partial q/\partial a|$ on the high-$a$ shoulder of the witness peak, $a^*_{\rm CP}$ suffers **significantly less calibration-box inflation** $\Delta_{\rm cal}(\Theta_2) = B_2^{\rm robust}(\Theta_2) - S_2^{\mathcal C}(\theta_{\rm nom})$ than $a^*_{W_2}$!
-- At $\eta = 1.00$ ($r = -0.42$), $\Delta_{\rm cal}(\Theta_2)$ drops from $0.0394$ at $a^*_{W_2}=1.15$ down to $0.0298$ at $a^*_{\rm CP}=1.342$, cutting worst-case $\Theta_2$ required shots from $2,473$ (or $3,716$ at exact $a^*_{W_2}=1.140$) down to **$1,722$** (and **$1,630$** at $a^*_{\rm robust,CP}=1.482$).
-- At $\eta = 0.90$ ($r = -0.42$), shifting from $a^*_{W_2}=1.191$ to $a^*_{\rm CP}=1.446$ cuts worst-case $\Theta_2$ required shots by **$2.61\times$** (from $7,448$ down to **$2,849$**).
-- At $\eta = 0.70$ ($r = -0.40$), shifting from $a^*_{W_2}=1.308$ to $a^*_{\rm CP}=1.629$ cuts worst-case $\Theta_2$ required shots by **$7.10\times$** (from $91,329$ down to **$12,869$**, and **$11,327$** at $a^*_{\rm robust,CP}=1.767$).
+- At $\eta = 1.00$ ($r = -0.42$), $\Delta_{\rm cal}(\Theta_2)$ drops from $0.0394$ at $a_{W_2}=1.150$ down to $0.0298$ at $a^*_{\rm CP}=1.342$, cutting worst-case $\Theta_2$ required shots from $2,473$ (or $3,716$ at exact $a^*_{W_2}=1.140$) down to **$1,727$** ($1,740$ at `scan3` $a^*_{\rm CP}=1.333$, and **$1,630$** at $a^*_{\rm robust,CP}=1.482$).
+- At $\eta = 0.90$ ($r = -0.42$), shifting from $a^*_{W_2}=1.191$ to $a^*_{\rm CP}=1.446$ cuts worst-case $\Theta_2$ required shots by **$2.46\times$** (from $7,448$ down to **$3,033$**, and **$2,831$** at $a^*_{\rm robust,CP}=1.577$).
+- At $\eta = 0.70$ ($r = -0.40$), shifting from $a^*_{W_2}=1.308$ to $a^*_{\rm CP}=1.629$ cuts worst-case $\Theta_2$ required shots by **$6.92\times$** (from $91,402$ down to **$13,201$**, and **$11,327$** at $a^*_{\rm robust,CP}=1.767$).
 
 ---
 
@@ -185,13 +185,13 @@ We test the boundary classical mixture $(\theta^*, \mu^*) \in \Theta_2 \times \m
 
 | Shots per Setting $N_s$ | Naive Nominal Hoeffding Rejection Rate ($\hat L_2 - 2\epsilon_H > S_2^{\mathcal C}(\theta_{\rm nom})$) | Naive Nominal Clopper–Pearson Rejection Rate ($L_{2,\rm LCB}^{\rm CP} > S_2^{\mathcal C}(\theta_{\rm nom})$) | **Certified Robust Hoeffding Rejection Rate** ($\hat L_2 - 2\epsilon_H > B_2^{\rm robust}(\Theta_2)$) | **Certified Robust Clopper–Pearson Rejection Rate** ($L_{2,\rm LCB}^{\rm CP} > B_2^{\rm robust}(\Theta_2)$) | Exact Binomial PMF Certified Robust CP Rate |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| $1,000$ | $0.00000$ | $0.24634$ (**$24.6\%$ false positives!**) | **$0.00000$** | **$0.00008$** ($\le 0.01$) | **$0.000070$** |
-| $3,000$ | $0.04452$ | $0.88080$ (**$88.1\%$ false positives!**) | **$0.00000$** | **$0.00008$** ($\le 0.01$) | **$0.000073$** |
-| $10,000$ | $0.91632$ | $0.99998$ (**$100.0\%$ false positives!**) | **$0.00000$** | **$0.00006$** ($\le 0.01$) | **$0.000090$** |
-| $30,000$ | $1.00000$ | $1.00000$ (**$100.0\%$ false positives!**) | **$0.00000$** | **$0.00004$** ($\le 0.01$) | **$0.000088$** |
-| $100,000$ | $1.00000$ | $1.00000$ (**$100.0\%$ false positives!**) | **$0.00000$** | **$0.00006$** ($\le 0.01$) | **$0.000081$** |
+| $1,000$ | $0.00002$ | $0.03118$ (**$3.1\%$ false positives**) | **$0.00000$** | **$0.00002$** ($\le 0.01$) | **$0.000027$** |
+| $3,000$ | $0.00896$ | $0.40208$ (**$40.2\%$ false positives!**) | **$0.00000$** | **$0.00008$** ($\le 0.01$) | **$0.000030$** |
+| $10,000$ | $0.80488$ | $0.99812$ (**$99.8\%$ false positives!**) | **$0.00000$** | **$0.00002$** ($\le 0.01$) | **$0.000033$** |
+| $30,000$ | $1.00000$ | $1.00000$ (**$100.0\%$ false positives!**) | **$0.00000$** | **$0.00002$** ($\le 0.01$) | **$0.000034$** |
+| $100,000$ | $1.00000$ | $1.00000$ (**$100.0\%$ false positives!**) | **$0.00000$** | **$0.00004$** ($\le 0.01$) | **$0.000035$** |
 
-**Referee-Proof Demonstration**: Using the naive nominal threshold $S_2^{\mathcal C}(\theta_{\rm nom})$ in the presence of realistic $2\%$ calibration uncertainty ($\Theta_2$) causes **catastrophic Type-I false positives** ($24.6\%$ at $N_s = 1{,}000$, rising to $100\%$ for $N_s \ge 10{,}000$). Replacing $S_2^{\mathcal C}(\theta_{\rm nom})$ by our globally certified $B_2^{\rm robust}(\Theta_2)$ holds the false-positive rate strictly below $\delta_{\rm stat} = 0.01$ ($\le 9 \times 10^{-5}$) at every sample size!
+**Referee-Proof Demonstration**: Using the naive nominal threshold $S_2^{\mathcal C}(\theta_{\rm nom})$ in the presence of realistic $2\%$ calibration uncertainty ($\Theta_2$) causes **catastrophic Type-I false positives** ($3.1\%$ at $N_s = 1{,}000$ and $40.2\%$ at $N_s = 3{,}000$, rising to $99.8\%$–$100\%$ for $N_s \ge 10{,}000$ on `classical_boundary_flagship_a115`, and already $100\%$ at $N_s = 10{,}000$ across the 3-case audit in `stage4_summary.json`). Replacing $S_2^{\mathcal C}(\theta_{\rm nom})$ by our globally certified $B_2^{\rm robust}(\Theta_2)$ holds the false-positive rate strictly below $\delta_{\rm stat} = 0.01$ ($\le 8 \times 10^{-5}$) at every sample size!
 
 ---
 
@@ -211,10 +211,10 @@ To ensure our JPB manuscript is completely referee-proof with respect to the mos
 ## 7. Decision Point 3 (End of Day 5 / Stage 4 Verdict)
 
 1. **Does the flagship $r < 0$ squeezed-quadrature Gaussian squeezed-vacuum benchmark remain robustly certifiable under realistic lab calibration uncertainty ($\Theta_2$: $2\%$ amplitude, $0.01$ efficiency, $10^{-3}$ dark count, $2^\circ$ LO phase, $+10\%$ energy cap) with $< 25{,}000$ shots per setting?**
-   - **YES — by a wide margin**: Under $\Theta_2$, at $a^*_{\rm CP}$ the worst-case certified shot budget for $99\%$ certification power at $\delta_{\rm stat} = 0.01$ ($\delta_{\rm tot} = 0.02$) is **$1,722$ shots/setting** at $\eta = 1.00$ ($1,630$ at $a^*_{\rm robust,CP}=1.482$), **$2,849$ shots/setting** at $\eta = 0.90$ ($2,831$ at $a^*_{\rm robust,CP}=1.577$), and **$12,869$ shots/setting** even at $\eta = 0.70$ ($11,327$ at $a^*_{\rm robust,CP}=1.767$) — all well below the $25,000$-shot threshold!
+   - **YES — by a wide margin**: Under $\Theta_2$, at $a^*_{\rm CP}$ (`scan1`) the worst-case certified shot budget for $99\%$ certification power at $\delta_{\rm stat} = 0.01$ ($\delta_{\rm tot} = 0.02$) is **$1,727$ shots/setting** at $\eta = 1.00$ ($1,630$ at `scan3` $a^*_{\rm robust,CP}=1.482$), **$3,033$ shots/setting** at $\eta = 0.90$ ($2,831$ at `scan3` $a^*_{\rm robust,CP}=1.577$), and **$13,201$ shots/setting** even at $\eta = 0.70$ ($11,327$ at `scan3` $a^*_{\rm robust,CP}=1.767$) — all well below the $25,000$-shot threshold!
 2. **Are non-Gaussian benchmarks also robustly certifiable under $\Theta_2$?**
-   - **YES**: Both the $2b^2 \le 1$ triple-baseline state $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($W_2^{\rm rob,worst}(\Theta_2) = +0.0290$, **$1,896$ shots/setting** at $a^*_{\rm robust,CP}=0.816$) and the optimized real odd cat $c = 1.35$ ($W_2^{\rm rob,worst}(\Theta_2) = +0.0414$, **$3,003$ shots/setting** at $a^*_{\rm robust,CP}=0.293$) are certified with $\le 3,000$ shots/setting under $\Theta_2$.
+   - **YES**: Both the $2b^2 \le 1$ triple-baseline state $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($W_2^{\rm rob,worst}(\Theta_2) = +0.0361$, **$2,625$ shots/setting** at $a^*_{\rm CP}=0.699$, and **$1,896$ shots/setting** at $a^*_{\rm robust,CP}=0.816$) and the optimized real odd cat $c = 1.35$ ($W_2^{\rm rob,worst}(\Theta_2) = +0.0414$, **$3,003$ shots/setting** at $a^*_{\rm robust,CP}=0.293$) are certified with $\le 3,003$ shots/setting under $\Theta_2$.
 3. **What happens to Marcelo's unoptimized $r > 0$ pilot ($r = +0.18, a = 0.434, \bar n_{\max} = 0.50$) and unoptimized Fock $\ket{1}$?**
-   - As predicted, their small nominal margins ($+0.0292$ and $+0.0311$) are severely eroded by $\Theta_2$ calibration inflation (leaving $W_2^{\rm rob,worst} = +0.0014$ requiring $5.7 \times 10^6$ shots for the $r=+0.18$ pilot, and $-0.0049 < 0$ for Fock $\ket{1}$), providing a compelling quantitative justification for our Stage 2–4 theoretical advances ($b > 1/\sqrt{2}$ exact dual + $r < 0$ squeezed-quadrature displacement + $a^*_{\rm CP} / a^*_{\rm robust}$ optimization).
+   - As predicted, their small nominal margins ($+0.0292$ and $+0.0311$) are severely eroded by $\Theta_2$ calibration inflation (leaving $W_2^{\rm rob,worst} = +0.0014$ requiring $>2\times 10^6$ CP shots / $2.52\times 10^7$ Hoeffding shots for the $r=+0.18$ pilot, and $-0.0052 < 0$ for Fock $\ket{1}$), providing a compelling quantitative justification for our Stage 2–4 theoretical advances ($b > 1/\sqrt{2}$ exact dual + $r < 0$ squeezed-quadrature displacement + $a^*_{\rm CP} / a^*_{\rm robust}$ optimization).
 
 **Verdict**: **CLEAR GO to Stage 5 (Days 6–7: Publication Figures & Tables)** and **Stage 6 (Days 8–10: Full JPB Manuscript Draft & Referee-Proof Audit)**.
