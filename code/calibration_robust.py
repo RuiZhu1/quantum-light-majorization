@@ -241,6 +241,93 @@ def _cross_value_from_q(branch: str, qp: float, qm: float) -> float:
     raise ValueError(f"Unknown cross branch: {branch}")
 
 
+def _adaptive_angular_max_vec(
+    n_r: int,
+    m_phi2: np.ndarray,
+    eval_pts_fn: Callable[[np.ndarray, np.ndarray], np.ndarray],
+    target_pad: float = 1e-10,
+    n_init: int = 32,
+    n_sub: int = 8,
+    max_iter: int = 12,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Unclipped adaptive 1D C^2 angular branch-and-bound on [-pi, pi] per radius."""
+    if n_r == 0:
+        empty = np.empty(0, dtype=float)
+        return empty, empty, empty
+
+    phis0 = np.linspace(-math.pi, math.pi, n_init + 1)
+    r_idx0 = np.repeat(np.arange(n_r, dtype=np.int64), n_init + 1)
+    phi0 = np.tile(phis0, n_r)
+    v0 = eval_pts_fn(r_idx0, phi0).reshape(n_r, n_init + 1)
+
+    argmax0 = np.argmax(v0, axis=1)
+    lb = v0[np.arange(n_r), argmax0].copy()
+    best_phi = phis0[argmax0].copy()
+    pruned_ub = lb.copy()
+
+    r_idx = np.repeat(np.arange(n_r, dtype=np.int64), n_init)
+    lefts = np.tile(phis0[:-1], n_r)
+    rights = np.tile(phis0[1:], n_r)
+    v_left = v0[:, :-1].ravel()
+    v_right = v0[:, 1:].ravel()
+
+    interior_t = np.linspace(0.0, 1.0, n_sub + 1)[1:-1]
+    m_int = n_sub - 1
+
+    for _ in range(max_iter):
+        if len(lefts) == 0:
+            break
+        dphi = rights - lefts
+        ub_cell = np.maximum(v_left, v_right) + (m_phi2[r_idx] / 8.0) * (dphi * dphi)
+        cur_ub = np.maximum(lb, pruned_ub)
+        np.maximum.at(cur_ub, r_idx, ub_cell)
+        if np.all(cur_ub - lb <= target_pad):
+            return lb, cur_ub, best_phi
+
+        keep = (ub_cell > lb[r_idx] + 0.25 * target_pad) & (dphi > 1e-13)
+        if not np.all(keep):
+            np.maximum.at(pruned_ub, r_idx[~keep], ub_cell[~keep])
+        if not np.any(keep):
+            break
+
+        k_r = r_idx[keep]
+        k_l = lefts[keep]
+        k_rgt = rights[keep]
+        k_vl = v_left[keep]
+        k_vr = v_right[keep]
+
+        pts_int = k_l[:, None] + (k_rgt - k_l)[:, None] * interior_t[None, :]
+        r_rep = np.repeat(k_r, m_int)
+        v_int = eval_pts_fn(r_rep, pts_int.ravel()).reshape(len(k_l), m_int)
+
+        row_argmax = np.argmax(v_int, axis=1)
+        row_idx = np.arange(len(k_l))
+        row_max = v_int[row_idx, row_argmax]
+        row_phi = pts_int[row_idx, row_argmax]
+        improved = np.flatnonzero(row_max > lb[k_r])
+        for cell_i in improved:
+            ri = int(k_r[cell_i])
+            val = float(row_max[cell_i])
+            if val > lb[ri]:
+                lb[ri] = val
+                best_phi[ri] = float(row_phi[cell_i])
+
+        all_pts = np.concatenate([k_l[:, None], pts_int, k_rgt[:, None]], axis=1)
+        all_vals = np.concatenate([k_vl[:, None], v_int, k_vr[:, None]], axis=1)
+        r_idx = np.repeat(k_r, n_sub)
+        lefts = all_pts[:, :-1].ravel()
+        rights = all_pts[:, 1:].ravel()
+        v_left = all_vals[:, :-1].ravel()
+        v_right = all_vals[:, 1:].ravel()
+
+    ub_final = np.maximum(lb, pruned_ub)
+    if len(lefts) > 0:
+        dphi = rights - lefts
+        ub_cell = np.maximum(v_left, v_right) + (m_phi2[r_idx] / 8.0) * (dphi * dphi)
+        np.maximum.at(ub_final, r_idx, ub_cell)
+    return lb, ub_final, best_phi
+
+
 def _circle_max_asymmetric_scalar(
     branch: str,
     r: float,
@@ -308,78 +395,34 @@ def _circle_max_asymmetric_scalar(
         beta_opt = complex(r * math.cos(phi_opt), r * math.sin(phi_opt))
         return val, val, beta_opt
 
-    # General asymmetric + nonzero delta_phi: 256-pt grid + golden polish + C^2 angular certificate
-    n_phi = 256
-    phis = np.linspace(-math.pi, math.pi, n_phi + 1)
-    qp_arr = Cp * np.exp(-Bp * np.cos(phis))
-    qm_arr = Cm * np.exp(Bm * np.cos(phis - delta_phi))
-    if branch == "off_off":
-        vals = qp_arr + qm_arr
-    elif branch == "off_on":
-        vals = 1.0 + qm_arr - qp_arr
-    elif branch == "on_off":
-        vals = 1.0 + qp_arr - qm_arr
-    elif branch == "on_on":
-        vals = 2.0 - qp_arr - qm_arr
-    else:
+    # General asymmetric + nonzero delta_phi: unclipped adaptive C^2 angular branch-and-bound
+    if branch not in ("off_off", "off_on", "on_off", "on_on"):
         raise ValueError(f"Unknown branch: {branch}")
 
-    step_phi = (2.0 * math.pi) / n_phi
-    top_idx = np.argsort(vals[:-1])[-2:]
-    best_val = float(np.max(vals))
-    best_phi = float(phis[int(np.argmax(vals))])
+    # Overflow-free curvature bound: q_+(phi) <= kp * exp(-eta_+ * (r - a_+)^2), etc.
+    qp_rad_max = kp * math.exp(-eta_plus * (r - a_plus) ** 2)
+    qm_rad_max = km * math.exp(-eta_minus * (r - a_minus) ** 2)
+    m_phi2 = np.array([
+        qp_rad_max * (Bp + Bp * Bp) + qm_rad_max * (Bm + Bm * Bm)
+    ], dtype=float)
 
-    def eval_phi(ph: float) -> float:
-        qp_v = Cp * math.exp(-Bp * math.cos(ph))
-        qm_v = Cm * math.exp(Bm * math.cos(ph - delta_phi))
-        return _cross_value_from_q(branch, qp_v, qm_v)
-
-    gr = 0.5 * (math.sqrt(5.0) - 1.0)
-    for idx in top_idx:
-        lo = float(phis[idx]) - step_phi
-        hi = float(phis[idx]) + step_phi
-        c = hi - gr * (hi - lo)
-        d = lo + gr * (hi - lo)
-        fc, fd = eval_phi(c), eval_phi(d)
-        for _ in range(28):
-            if fc > fd:
-                hi, d, fd = d, c, fc
-                c = hi - gr * (hi - lo)
-                fc = eval_phi(c)
-            else:
-                lo, c, fc = c, d, fd
-                d = lo + gr * (hi - lo)
-                fd = eval_phi(d)
-        ph_cand = 0.5 * (lo + hi)
-        v_cand = eval_phi(ph_cand)
-        if v_cand > best_val:
-            best_val = v_cand
-            best_phi = ph_cand
-
-    # Certified angular upper bound on a fine local or global check:
-    # Since golden search polishes the peak to < 1e-7 in phi, and away from the peak
-    # we can verify with a 2048-point grid if M_phi2 * step^2 / 8 > 1e-11:
-    m_phi2 = Cp * (Bp + Bp * Bp) * math.exp(min(Bp, 50.0)) + Cm * (Bm + Bm * Bm) * math.exp(min(Bm, 50.0))
-    pad = (m_phi2 / 8.0) * (step_phi * step_phi)
-    if pad > 1e-11:
-        phis_fine = np.linspace(-math.pi, math.pi, 4097)
-        qpf = Cp * np.exp(-Bp * np.cos(phis_fine))
-        qmf = Cm * np.exp(Bm * np.cos(phis_fine - delta_phi))
+    def _eval_sc(_r_idx: np.ndarray, phis: np.ndarray) -> np.ndarray:
+        qp_v = Cp * np.exp(-Bp * np.cos(phis))
+        qm_v = Cm * np.exp(Bm * np.cos(phis - delta_phi))
         if branch == "off_off":
-            vf = qpf + qmf
-        elif branch == "off_on":
-            vf = 1.0 + qmf - qpf
-        elif branch == "on_off":
-            vf = 1.0 + qpf - qmf
-        else:
-            vf = 2.0 - qpf - qmf
-        step_f = (2.0 * math.pi) / 4096
-        pad = (m_phi2 / 8.0) * (step_f * step_f)
-        best_grid_f = float(np.max(vf))
-        cert_val = max(best_val, best_grid_f + min(pad, 1e-11))
-    else:
-        cert_val = max(best_val, float(np.max(vals)) + pad)
+            return qp_v + qm_v
+        if branch == "off_on":
+            return 1.0 + qm_v - qp_v
+        if branch == "on_off":
+            return 1.0 + qp_v - qm_v
+        return 2.0 - qp_v - qm_v
 
+    lb_arr, ub_arr, phi_arr = _adaptive_angular_max_vec(
+        1, m_phi2, _eval_sc, target_pad=1e-11, n_init=128, n_sub=8, max_iter=12
+    )
+    best_val = float(lb_arr[0])
+    cert_val = float(ub_arr[0])
+    best_phi = float(phi_arr[0])
     beta_opt = complex(r * math.cos(best_phi), r * math.sin(best_phi))
     return best_val, cert_val, beta_opt
 
@@ -434,30 +477,28 @@ def _circle_max_asymmetric_vec(
         sin_half = math.sin(0.5 * abs(delta_phi))
         return 2.0 - 2.0 * Cp * np.exp(-Bp * sin_half)
 
-    # Vectorized over 512 angles + certified C^2 angular padding for general delta_phi != 0
-    n_phi = 512
-    phis = np.linspace(-math.pi, math.pi, n_phi + 1)[None, :]  # (1, 513)
-    cos_p = np.cos(phis)
-    cos_m = np.cos(phis - delta_phi)
-    qp = Cp[:, None] * np.exp(-Bp[:, None] * cos_p)
-    qm = Cm[:, None] * np.exp(Bm[:, None] * cos_m)
-    if branch == "off_off":
-        vals = qp + qm
-    elif branch == "off_on":
-        vals = 1.0 + qm - qp
-    elif branch == "on_off":
-        vals = 1.0 + qp - qm
-    elif branch == "on_on":
-        vals = 2.0 - qp - qm
-    else:
+    if branch not in ("off_off", "off_on", "on_off", "on_on"):
         raise ValueError(f"Unknown branch: {branch}")
-    step_phi = (2.0 * math.pi) / n_phi
-    m_phi2 = (
-        Cp * (Bp + Bp * Bp) * np.exp(np.minimum(Bp, 50.0))
-        + Cm * (Bm + Bm * Bm) * np.exp(np.minimum(Bm, 50.0))
+
+    qp_rad_max = kp * np.exp(-eta_plus * (r_arr - a_plus) ** 2)
+    qm_rad_max = km * np.exp(-eta_minus * (r_arr - a_minus) ** 2)
+    m_phi2 = qp_rad_max * (Bp + Bp * Bp) + qm_rad_max * (Bm + Bm * Bm)
+
+    def _eval_vec(r_idx: np.ndarray, phis: np.ndarray) -> np.ndarray:
+        qp_v = Cp[r_idx] * np.exp(-Bp[r_idx] * np.cos(phis))
+        qm_v = Cm[r_idx] * np.exp(Bm[r_idx] * np.cos(phis - delta_phi))
+        if branch == "off_off":
+            return qp_v + qm_v
+        if branch == "off_on":
+            return 1.0 + qm_v - qp_v
+        if branch == "on_off":
+            return 1.0 + qp_v - qm_v
+        return 2.0 - qp_v - qm_v
+
+    _, ub_arr, _ = _adaptive_angular_max_vec(
+        len(r_arr), m_phi2, _eval_vec, target_pad=1e-11, n_init=32, n_sub=8, max_iter=12
     )
-    pad = (m_phi2 / 8.0) * (step_phi * step_phi)
-    return np.max(vals, axis=1) + np.minimum(pad, 1e-9)
+    return ub_arr
 
 
 def _certify_radial_dual_sup(
@@ -467,19 +508,26 @@ def _certify_radial_dual_sup(
     r_max: float,
     val_at_zero: float,
     target_pad: float = 1e-12,
+    outer_tail_cap: float = 2.0,
 ) -> float:
-    """Certified global upper bound on sup_{r in [0, r_max]} [G(r) - lam * r^2].
+    """Certified global upper bound on sup_{r >= 0} [G(r) - lam * r^2].
 
-    Along any fixed ray phi, |(d^2/dr^2)[f_A(r e^{i*phi}) - lam*r^2]| <= m2_radial_base + 2*lam.
-    Since the pointwise maximum of C^2 functions has upper second-Dini derivative bounded
-    by the maximum of their second derivatives, max_{[r_i, r_{i+1}]} h <= max(h(r_i), h(r_{i+1}))
-    + M_2 * dr^2 / 8 holds rigorously even across branch kinks in phi*(r)!
+    `outer_tail_cap` bounds sup_{r >= r_max} G(r) (<= 2 for on_on, <= 1 + 2*e^{-30} for
+    off_on/on_off, and <= 2*e^{-30} for off_off once r_max >= max_a + 5.5/sqrt(min_eta)).
+    Whenever lam > 0 and outer_tail_cap > val_at_zero, we set r_eff >= sqrt((outer_tail_cap - val_at_zero)/lam)
+    so G(r) - lam*r^2 <= val_at_zero rigorously for all r >= r_eff.
     """
     if r_max <= 0.0:
-        return val_at_zero
+        return max(val_at_zero, outer_tail_cap if lam <= 1e-12 else val_at_zero)
+    r_eff = r_max
+    if lam > 1e-12 and outer_tail_cap > val_at_zero:
+        r_tail = math.sqrt((outer_tail_cap - val_at_zero) / lam) + 0.05
+        r_eff = max(r_max, r_tail)
+    tail_floor = outer_tail_cap if lam <= 1e-12 else val_at_zero
+    base_floor = max(val_at_zero, tail_floor)
     m2 = m2_radial_base + 2.0 * lam
-    n_init = 1024
-    edges = np.linspace(0.0, r_max, n_init + 1)
+    n_init = 256
+    edges = np.linspace(0.0, r_eff, n_init + 1)
     vals = g_vec_fn(edges) - lam * (edges * edges)
     lb = max(val_at_zero, float(np.max(vals)))
 
@@ -491,7 +539,7 @@ def _certify_radial_dual_sup(
     for _ in range(10):
         dr = rights - lefts
         ub_seg = np.maximum(v_left, v_right) + (m2 / 8.0) * (dr * dr)
-        ub_global = max(val_at_zero, float(np.max(ub_seg)))
+        ub_global = max(base_floor, float(np.max(ub_seg)))
         if ub_global - lb <= target_pad:
             return ub_global
         keep = ub_seg > lb + 0.25 * target_pad
@@ -516,7 +564,7 @@ def _certify_radial_dual_sup(
 
     dr = rights - lefts
     ub_seg = np.maximum(v_left, v_right) + (m2 / 8.0) * (dr * dr)
-    return float(max(lb, np.max(ub_seg)))
+    return float(max(base_floor, lb, np.max(ub_seg)))
 
 
 def _solve_1d_radial_concave_envelope(
@@ -549,8 +597,10 @@ def _solve_1d_radial_concave_envelope(
     r_grid = np.unique(
         np.concatenate((
             np.array([0.0, r_cap]),
-            np.linspace(0.0, r_cap, 600),
-            np.linspace(r_cap, r_max, 600),
+            np.linspace(0.0, r_cap, 150),
+            np.linspace(0.0, min(0.25, r_cap), 40),
+            np.linspace(max(0.0, r_cap - 0.15), min(r_max, r_cap + 0.15), 50),
+            np.linspace(r_cap, r_max, 150),
         ))
     )
     s_grid = r_grid * r_grid
@@ -604,12 +654,24 @@ def _solve_1d_radial_concave_envelope(
         hull_r.append(rf)
         hull_y.append(yf)
 
+    if branch == "off_off":
+        tail_cap = 1e-12
+    elif branch in ("off_on", "on_off"):
+        tail_cap = 1.0 + 1e-12
+    else:
+        tail_cap = 2.0
+
     # Check if energy_cap >= s_peak (unconstrained regime, lambda* = 0)
     if energy_cap >= hull_s[-1] - 1e-12:
         r_opt = hull_r[-1]
         p_val, _, b_opt = g_scalar_fn(r_opt)
         val0 = g_scalar_fn(0.0)[1]
-        dual_ub = _certify_radial_dual_sup(g_vec_fn, m2_radial_base, 0.0, r_max, val0)
+        if branch == "on_on":
+            dual_ub = 2.0
+        else:
+            dual_ub = _certify_radial_dual_sup(g_vec_fn, m2_radial_base, 0.0, r_max, val0, outer_tail_cap=tail_cap)
+        if dual_ub < p_val - 1e-11:
+            raise RuntimeError(f"Dual soundness check failed ({branch}, unconstrained): dual_ub={dual_ub} < primal={p_val}")
         dual_ub = max(dual_ub, p_val)
         return SupportSolution(
             branch=branch,
@@ -650,12 +712,62 @@ def _solve_1d_radial_concave_envelope(
     lam_local = max(0.0, (g_scalar_fn(r_p)[0] - g_scalar_fn(r_m)[0]) / (r_p * r_p - r_m * r_m))
 
     val0 = g_scalar_fn(0.0)[1]
-    if p_seg > p_cap + 1e-7 and (r_R - r_L) > 0.05:
-        # Genuine two-point mixture regime
-        primal = p_seg
+    if p_seg > p_cap + 1e-12 and (r_R - r_L) > 1e-4:
+        # Genuine two-point mixture regime: polish bitangent endpoints (r_L, r_R) via coordinate golden search
+        dr_step = max(2e-2, 2.5 * (r_max / 150.0))
+        lam_cur = lam_seg
+        for _ in range(5):
+            # Left endpoint r_L (check exact r=0 boundary when r_L is at/near vacuum)
+            lo_1 = max(0.0, r_L - dr_step)
+            hi_1 = min(r_cap - 1e-6, r_L + dr_step)
+            if hi_1 > lo_1 + 1e-12:
+                c1, d1 = hi_1 - gr * (hi_1 - lo_1), lo_1 + gr * (hi_1 - lo_1)
+                fc1 = g_scalar_fn(c1)[0] - lam_cur * c1 * c1
+                fd1 = g_scalar_fn(d1)[0] - lam_cur * d1 * d1
+                for _ in range(18):
+                    if fc1 > fd1:
+                        hi_1, d1, fd1 = d1, c1, fc1
+                        c1 = hi_1 - gr * (hi_1 - lo_1)
+                        fc1 = g_scalar_fn(c1)[0] - lam_cur * c1 * c1
+                    else:
+                        lo_1, c1, fc1 = c1, d1, fd1
+                        d1 = lo_1 + gr * (hi_1 - lo_1)
+                        fd1 = g_scalar_fn(d1)[0] - lam_cur * d1 * d1
+                r_cand_1 = 0.5 * (lo_1 + hi_1)
+                p_cand_1, _, b_cand_1 = g_scalar_fn(r_cand_1)
+                p_zero, _, b_zero = g_scalar_fn(0.0)
+                if lo_1 == 0.0 and p_zero >= p_cand_1 - lam_cur * r_cand_1 * r_cand_1:
+                    r_L, p_L, b_L = 0.0, p_zero, b_zero
+                else:
+                    r_L, p_L, b_L = r_cand_1, p_cand_1, b_cand_1
+
+            # Right endpoint r_R
+            lo_2 = max(r_cap + 1e-6, r_R - dr_step)
+            hi_2 = min(r_max, r_R + dr_step)
+            if hi_2 > lo_2 + 1e-12:
+                c2, d2 = hi_2 - gr * (hi_2 - lo_2), lo_2 + gr * (hi_2 - lo_2)
+                fc2 = g_scalar_fn(c2)[0] - lam_cur * c2 * c2
+                fd2 = g_scalar_fn(d2)[0] - lam_cur * d2 * d2
+                for _ in range(18):
+                    if fc2 > fd2:
+                        hi_2, d2, fd2 = d2, c2, fc2
+                        c2 = hi_2 - gr * (hi_2 - lo_2)
+                        fc2 = g_scalar_fn(c2)[0] - lam_cur * c2 * c2
+                    else:
+                        lo_2, c2, fc2 = c2, d2, fd2
+                        d2 = lo_2 + gr * (hi_2 - lo_2)
+                        fd2 = g_scalar_fn(d2)[0] - lam_cur * d2 * d2
+                r_R = 0.5 * (lo_2 + hi_2)
+                p_R, _, b_R = g_scalar_fn(r_R)
+            lam_cur = max(0.0, (p_R - p_L) / max(1e-30, r_R * r_R - r_L * r_L))
+
+        s_L, s_R = r_L * r_L, r_R * r_R
+        w_R = (energy_cap - s_L) / max(1e-30, s_R - s_L)
+        w_L = 1.0 - w_R
+        primal = w_L * p_L + w_R * p_R
         weights = (w_L, w_R)
         betas = (b_L, b_R)
-        lam_opt = lam_seg
+        lam_opt = lam_cur
         regime = "two_point_mixture"
     else:
         primal = p_cap
@@ -665,16 +777,41 @@ def _solve_1d_radial_concave_envelope(
         regime = "single_coherent_concave"
 
     dual_ub = lam_opt * energy_cap + _certify_radial_dual_sup(
-        g_vec_fn, m2_radial_base, lam_opt, r_max, val0
+        g_vec_fn, m2_radial_base, lam_opt, r_max, val0, outer_tail_cap=tail_cap
     )
-    # If coarse hull slope left a small dual gap > 1e-8, refine lambda by 1D golden search
     if dual_ub - primal > 1e-8:
-        lo_l = max(0.0, min(lam_seg, lam_local) * 0.5)
-        hi_l = max(lam_seg, lam_local, 1e-4) * 1.5
+        lo_l = max(0.0, min(lam_seg, lam_opt) * 0.5)
+        hi_l = max(lam_seg, lam_opt, 1e-4) * 1.5
+
+        def eval_grid_dual(lv: float) -> float:
+            return lv * energy_cap + float(np.max(y_grid - lv * s_grid))
+
+        c_g, d_g = hi_l - gr * (hi_l - lo_l), lo_l + gr * (hi_l - lo_l)
+        fc_g, fd_g = eval_grid_dual(c_g), eval_grid_dual(d_g)
+        for _ in range(32):
+            if fc_g < fd_g:
+                hi_l, d_g, fd_g = d_g, c_g, fc_g
+                c_g = hi_l - gr * (hi_l - lo_l)
+                fc_g = eval_grid_dual(c_g)
+            else:
+                lo_l, c_g, fc_g = c_g, d_g, fd_g
+                d_g = lo_l + gr * (hi_l - lo_l)
+                fd_g = eval_grid_dual(d_g)
+        lam_grid = 0.5 * (lo_l + hi_l)
+        dual_grid = lam_grid * energy_cap + _certify_radial_dual_sup(
+            g_vec_fn, m2_radial_base, lam_grid, r_max, val0, target_pad=1e-12, outer_tail_cap=tail_cap
+        )
+        if dual_grid < dual_ub:
+            dual_ub = dual_grid
+            lam_opt = lam_grid
+
+    if dual_ub - primal > 1e-8:
+        lo_l = max(0.0, min(lam_seg, lam_opt) * 0.8)
+        hi_l = max(lam_seg, lam_opt, 1e-4) * 1.25
 
         def eval_dual(lv: float) -> float:
             return lv * energy_cap + _certify_radial_dual_sup(
-                g_vec_fn, m2_radial_base, lv, r_max, val0, target_pad=1e-11
+                g_vec_fn, m2_radial_base, lv, r_max, val0, target_pad=1e-11, outer_tail_cap=tail_cap
             )
 
         c_l = hi_l - gr * (hi_l - lo_l)
@@ -691,12 +828,14 @@ def _solve_1d_radial_concave_envelope(
                 fd_l = eval_dual(d_l)
         lam_refined = 0.5 * (lo_l + hi_l)
         dual_refined = lam_refined * energy_cap + _certify_radial_dual_sup(
-            g_vec_fn, m2_radial_base, lam_refined, r_max, val0, target_pad=1e-12
+            g_vec_fn, m2_radial_base, lam_refined, r_max, val0, target_pad=1e-12, outer_tail_cap=tail_cap
         )
         if dual_refined < dual_ub:
             dual_ub = dual_refined
             lam_opt = lam_refined
 
+    if dual_ub < primal - 1e-11:
+        raise RuntimeError(f"Dual soundness check failed ({branch}): dual_ub={dual_ub} < primal={primal}")
     dual_ub = max(dual_ub, primal)
     return SupportSolution(
         branch=branch,
@@ -816,7 +955,7 @@ def solve_asymmetric_branch(
     kp = math.exp(-nu_plus)
     km = math.exp(-nu_minus)
     m2_base = 2.0 * (kp * eta_plus + km * eta_minus)
-    r_cut = max(a_plus, a_minus) + 4.0 / math.sqrt(min(eta_plus, eta_minus))
+    r_cut = max(a_plus, a_minus) + 5.5 / math.sqrt(min(eta_plus, eta_minus))
 
     def g_vec(r_arr: np.ndarray) -> np.ndarray:
         return _circle_max_asymmetric_vec(
@@ -893,6 +1032,101 @@ def exact_asymmetric_classical_envelope(
 # 2. Globally Certified Calibration-Box Supremum B_2^robust(Theta, nbar_U)
 # ---------------------------------------------------------------------------
 
+def _box_envelope_circle_max_bounds(
+    branch: str,
+    r_arr: np.ndarray,
+    ap_bounds: Tuple[float, float],
+    am_bounds: Tuple[float, float],
+    ep_bounds: Tuple[float, float],
+    em_bounds: Tuple[float, float],
+    nup_opt: float,
+    num_opt: float,
+    dphi_opt: float,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Pointwise circle bounds (lb_arr, ub_arr, phi_arr) for sup_{theta in B} f_A(beta; theta)."""
+    ap_l, ap_u = ap_bounds
+    am_l, am_u = am_bounds
+    ep_l, ep_u = ep_bounds
+    em_l, em_u = em_bounds
+    kp = math.exp(-nup_opt)
+    km = math.exp(-num_opt)
+
+    if abs(dphi_opt) <= 1e-15:
+        if branch == "off_on":
+            am_star = np.clip(r_arr, am_l, am_u)
+            qm_max = km * np.exp(-em_l * ((r_arr - am_star) ** 2))
+            qp_min = kp * np.exp(-ep_u * ((r_arr + ap_u) ** 2))
+            val = 1.0 + qm_max - qp_min
+            return val, val, np.zeros_like(r_arr, dtype=float)
+        if branch == "on_off":
+            ap_star = np.clip(r_arr, ap_l, ap_u)
+            qp_max = kp * np.exp(-ep_l * ((r_arr - ap_star) ** 2))
+            qm_min = km * np.exp(-em_u * ((r_arr + am_u) ** 2))
+            val = 1.0 + qp_max - qm_min
+            return val, val, np.full_like(r_arr, math.pi, dtype=float)
+        if branch == "off_off":
+            am_star = np.clip(r_arr, am_l, am_u)
+            v_pos = kp * np.exp(-ep_l * ((r_arr + ap_l) ** 2)) + km * np.exp(-em_l * ((r_arr - am_star) ** 2))
+            ap_star = np.clip(r_arr, ap_l, ap_u)
+            v_neg = kp * np.exp(-ep_l * ((r_arr - ap_star) ** 2)) + km * np.exp(-em_l * ((r_arr + am_l) ** 2))
+            pos_wins = v_pos >= v_neg
+            val = np.where(pos_wins, v_pos, v_neg)
+            phis = np.where(pos_wins, 0.0, math.pi)
+            return val, val, phis
+
+    # Unclipped adaptive C^2 angular branch-and-bound for off_off (dphi > 0) and on_on
+    s_arr = r_arr * r_arr
+
+    if branch == "off_off":
+        bp_max = 2.0 * ep_l * ap_u * r_arr
+        bm_max = 2.0 * em_l * am_u * r_arr
+        # Global C^2 bound on |d^2/dphi^2 f_00(r e^{i phi}; theta)| over theta in B
+        qp_rad_b = kp * np.exp(-ep_l * np.maximum(0.0, np.where(r_arr < ap_l, ap_l - r_arr, np.where(r_arr > ap_u, r_arr - ap_u, 0.0))) ** 2)
+        qm_rad_b = km * np.exp(-em_l * np.maximum(0.0, np.where(r_arr < am_l, am_l - r_arr, np.where(r_arr > am_u, r_arr - am_u, 0.0))) ** 2)
+        m_phi2 = qp_rad_b * (bp_max + bp_max * bp_max) + qm_rad_b * (bm_max + bm_max * bm_max)
+
+        def _eval_box_00(r_idx: np.ndarray, phis: np.ndarray) -> np.ndarray:
+            rr = r_arr[r_idx]
+            ss = s_arr[r_idx]
+            uu = rr * np.cos(phis)
+            vv2 = (rr * np.sin(phis)) ** 2
+            ap_min_d = np.clip(-uu, ap_l, ap_u)
+            dp_min = (uu + ap_min_d) ** 2 + vv2
+            cos_max = np.cos(np.maximum(0.0, np.abs(phis) - dphi_opt))
+            am_min_d = np.clip(rr * cos_max, am_l, am_u)
+            dm_min = np.maximum(0.0, ss + am_min_d * am_min_d - 2.0 * rr * am_min_d * cos_max)
+            return kp * np.exp(-ep_l * dp_min) + km * np.exp(-em_l * dm_min)
+
+        return _adaptive_angular_max_vec(
+            len(r_arr), m_phi2, _eval_box_00, target_pad=1e-12, n_init=32, n_sub=8, max_iter=12
+        )
+
+    if branch == "on_on":
+        bp_max = 2.0 * ep_u * ap_u * r_arr
+        bm_max = 2.0 * em_u * am_u * r_arr
+        qp_rad_b = kp * np.exp(-ep_u * np.maximum(0.0, np.where(r_arr < ap_l, ap_l - r_arr, np.where(r_arr > ap_u, r_arr - ap_u, 0.0))) ** 2)
+        qm_rad_b = km * np.exp(-em_u * np.maximum(0.0, np.where(r_arr < am_l, am_l - r_arr, np.where(r_arr > am_u, r_arr - am_u, 0.0))) ** 2)
+        m_phi2 = qp_rad_b * (bp_max + bp_max * bp_max) + qm_rad_b * (bm_max + bm_max * bm_max)
+
+        def _eval_box_11(r_idx: np.ndarray, phis: np.ndarray) -> np.ndarray:
+            rr = r_arr[r_idx]
+            ss = s_arr[r_idx]
+            uu = rr * np.cos(phis)
+            vv2 = (rr * np.sin(phis)) ** 2
+            dp_max = np.maximum((uu + ap_l) ** 2 + vv2, (uu + ap_u) ** 2 + vv2)
+            cos_min = np.cos(np.minimum(math.pi, np.abs(phis) + dphi_opt))
+            dm_l = np.maximum(0.0, ss + am_l * am_l - 2.0 * rr * am_l * cos_min)
+            dm_u = np.maximum(0.0, ss + am_u * am_u - 2.0 * rr * am_u * cos_min)
+            dm_max = np.maximum(dm_l, dm_u)
+            return 2.0 - kp * np.exp(-ep_u * dp_max) - km * np.exp(-em_u * dm_max)
+
+        return _adaptive_angular_max_vec(
+            len(r_arr), m_phi2, _eval_box_11, target_pad=1e-12, n_init=32, n_sub=8, max_iter=12
+        )
+
+    raise ValueError(f"Unknown branch: {branch}")
+
+
 def _box_envelope_circle_max_vec(
     branch: str,
     r_arr: np.ndarray,
@@ -904,73 +1138,10 @@ def _box_envelope_circle_max_vec(
     num_opt: float,
     dphi_opt: float,
 ) -> np.ndarray:
-    """Pointwise upper envelope max_{|beta|=r} sup_{theta in B} f_A(beta; theta)."""
-    ap_l, ap_u = ap_bounds
-    am_l, am_u = am_bounds
-    ep_l, ep_u = ep_bounds
-    em_l, em_u = em_bounds
-    kp = math.exp(-nup_opt)
-    km = math.exp(-num_opt)
-
-    if abs(dphi_opt) <= 1e-15 and branch in ("off_on", "on_off"):
-        # Exact 1D reduction on real axis (z = +1 for off_on, z = -1 for on_off)
-        if branch == "off_on":
-            # beta = +r >= 0: q_- maximized at am = clip(r, am_l, am_u), em = em_l;
-            # q_+ minimized at ap = ap_u, ep = ep_u
-            am_star = np.clip(r_arr, am_l, am_u)
-            qm_max = km * np.exp(-em_l * ((r_arr - am_star) ** 2))
-            qp_min = kp * np.exp(-ep_u * ((r_arr + ap_u) ** 2))
-            return 1.0 + qm_max - qp_min
-        else:
-            # beta = -r <= 0: q_+ maximized at ap = clip(r, ap_l, ap_u), ep = ep_l;
-            # q_- minimized at am = am_u, em = em_u
-            ap_star = np.clip(r_arr, ap_l, ap_u)
-            qp_max = kp * np.exp(-ep_l * ((r_arr - ap_star) ** 2))
-            qm_min = km * np.exp(-em_u * ((r_arr + am_u) ** 2))
-            return 1.0 + qp_max - qm_min
-
-    # General 2D angular evaluation for off_off and on_on (with dphi_opt = delta_phi_max)
-    n_phi = 512
-    phis = np.linspace(-math.pi, math.pi, n_phi + 1)[None, :]  # (1, 513)
-    r_col = r_arr[:, None]
-    u = r_col * np.cos(phis)
-    v2 = (r_col * np.sin(phis)) ** 2
-    s_col = r_col * r_col
-    step_phi = (2.0 * math.pi) / n_phi
-
-    if branch == "off_off":
-        # Maximize q_+ and q_-: minimize distances d_+, d_- and use ep_l, em_l
-        ap_min_d = np.clip(-u, ap_l, ap_u)
-        dp_min = (u + ap_min_d) ** 2 + v2
-        # For setting - with phase in [-dphi_opt, dphi_opt]:
-        # max_{|dphi| <= dphi_opt} cos(phi - dphi) occurs at dphi = clip(phi, -dphi_opt, dphi_opt)
-        cos_max = np.cos(np.maximum(0.0, np.abs(phis) - dphi_opt))
-        am_min_d = np.clip(r_col * cos_max, am_l, am_u)
-        dm_min = np.maximum(0.0, s_col + am_min_d * am_min_d - 2.0 * r_col * am_min_d * cos_max)
-        vals = kp * np.exp(-ep_l * dp_min) + km * np.exp(-em_l * dm_min)
-        bp_max = 2.0 * ep_l * ap_u * r_arr
-        bm_max = 2.0 * em_l * am_u * r_arr
-        m_phi2 = kp * (bp_max + bp_max * bp_max) + km * (bm_max + bm_max * bm_max)
-        pad = (m_phi2 / 8.0) * (step_phi * step_phi)
-        return np.max(vals, axis=1) + np.minimum(pad, 1e-8)
-
-    if branch == "on_on":
-        # Minimize q_+ and q_-: maximize distances d_+, d_- and use ep_u, em_u
-        dp_max = np.maximum((u + ap_l) ** 2 + v2, (u + ap_u) ** 2 + v2)
-        # To maximize |beta - a_- e^{i*dphi}|^2 = s + a_-^2 - 2 r a_- cos(phi - dphi),
-        # minimize cos(phi - dphi) over |dphi| <= dphi_opt:
-        cos_min = np.cos(np.minimum(math.pi, np.abs(phis) + dphi_opt))
-        dm_l = np.maximum(0.0, s_col + am_l * am_l - 2.0 * r_col * am_l * cos_min)
-        dm_u = np.maximum(0.0, s_col + am_u * am_u - 2.0 * r_col * am_u * cos_min)
-        dm_max = np.maximum(dm_l, dm_u)
-        vals = 2.0 - kp * np.exp(-ep_u * dp_max) - km * np.exp(-em_u * dm_max)
-        bp_max = 2.0 * ep_u * ap_u * r_arr
-        bm_max = 2.0 * em_u * am_u * r_arr
-        m_phi2 = kp * (bp_max + bp_max * bp_max) + km * (bm_max + bm_max * bm_max)
-        pad = (m_phi2 / 8.0) * (step_phi * step_phi)
-        return np.max(vals, axis=1) + np.minimum(pad, 1e-8)
-
-    raise ValueError(f"Unknown branch: {branch}")
+    """Certified upper bound on max_{|beta|=r} sup_{theta in B} f_A(beta; theta)."""
+    return _box_envelope_circle_max_bounds(
+        branch, r_arr, ap_bounds, am_bounds, ep_bounds, em_bounds, nup_opt, num_opt, dphi_opt
+    )[1]
 
 
 def _certify_cross_branch_over_box(
@@ -1009,7 +1180,7 @@ def _certify_cross_branch_over_box(
     ) -> Tuple[float, float, Dict[str, float], Tuple[float, ...], Tuple[complex, ...]]:
         """Return (primal_lb, dual_ub, worst_theta, weights, betas) on subbox."""
         m2_base = 2.0 * (kp * ep_b[1] + km * em_b[1])
-        r_cut = max(ap_b[1], am_b[1]) + 4.0 / math.sqrt(min(ep_b[0], em_b[0]))
+        r_cut = max(ap_b[1], am_b[1]) + 5.5 / math.sqrt(min(ep_b[0], em_b[0]))
 
         def g_vec(r_arr: np.ndarray) -> np.ndarray:
             return _box_envelope_circle_max_vec(
@@ -1017,8 +1188,11 @@ def _certify_cross_branch_over_box(
             )
 
         def g_sc(r_val: float) -> Tuple[float, float, complex]:
-            v = float(g_vec(np.array([r_val]))[0])
-            return v, v, complex(r_val, 0.0)
+            lb, ub, phi = _box_envelope_circle_max_bounds(
+                branch, np.array([r_val]), ap_b, am_b, ep_b, em_b, nup_opt, num_opt, dphi_opt
+            )
+            ph = float(phi[0])
+            return float(lb[0]), float(ub[0]), complex(r_val * math.cos(ph), r_val * math.sin(ph))
 
         ub_sol = _solve_1d_radial_concave_envelope(
             branch, g_vec, g_sc, m2_base, n_U, r_cut
@@ -1082,6 +1256,8 @@ def _certify_cross_branch_over_box(
                 best_w = p_sol.support_weights
                 best_b = p_sol.support_betas
 
+        if dual_ub < best_lb - 1e-11:
+            raise RuntimeError(f"Box dual soundness check failed ({branch}): dual_ub={dual_ub} < best_lb={best_lb}")
         return best_lb, max(dual_ub, best_lb), best_th, best_w, best_b
 
     init_box = (

@@ -3,8 +3,8 @@
 **Status**: Complete (Days 4–5 of the 10-day sprint, 20 Nov – 30 Nov 2026)  
 **Deliverables**:
 - [code/calibration_robust.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/calibration_robust.py): Exact pointwise asymmetric dual solver, globally certified calibration-box solver (`certify_robust_classical_envelope`), calibration-aware displacement optimizer (`optimize_displacement_robust`), bright-tail no-go mixture constructor (`bright_tail_no_go_mixture`), tap-beam independent energy-bound calculator (`tap_beam_energy_upper_bound`), and Monte Carlo Type-I/Type-II simulator (`simulate_calibration_monte_carlo`).
-- [code/stage4_calibration_scans.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/stage4_calibration_scans.py) & `data/stage4/` (5 CSV tables + [data/stage4/stage4_summary.json](file:///home/marcelo-group/Desktop/quantum-light-majorization/data/stage4/stage4_summary.json), 565 certified rows, maximum box relaxation gap $1.00 \times 10^{-8}$).
-- [code/tests/test_stage4_calibration.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/tests/test_stage4_calibration.py): 10 unit tests covering all theoretical, calibration-box, energy-bound, and statistical certification claims (43/43 total tests passing across Stages 1–4).
+- [code/stage4_calibration_scans.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/stage4_calibration_scans.py) & `data/stage4/` (5 CSV tables + [data/stage4/stage4_summary.json](file:///home/marcelo-group/Desktop/quantum-light-majorization/data/stage4/stage4_summary.json), 565 certified rows, maximum box relaxation gap $1.305 \times 10^{-12}$).
+- [code/tests/test_stage4_calibration.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/tests/test_stage4_calibration.py): 11 unit tests covering all theoretical, unclipped adaptive $C^2$ calibration-box, energy-bound, and statistical certification claims (44/44 total tests passing across Stages 1–4).
 
 ---
 
@@ -81,7 +81,7 @@ $$
    $$
    \sup_{\theta \in B} h_{\mathcal C_{\bar n_U}}(A(\theta)) \le \inf_{\lambda \ge 0}\Bigl[\lambda \bar n_U + \sup_{r \ge 0}\bigl(\max_{|\beta|=r} F_A^B(\beta) - \lambda r^2\bigr)\Bigr] =: U_A(B).
    $$
-   Pairing $U_A(B)$ with the exact feasible primal lower bound $L_A(B) = \max_{\theta \in \mathcal V(B)} h_{\mathcal C_{\bar n_U}}(A(\theta))$ inside adaptive branch-and-bound subdivision guarantees $0 \le U_A - L_A \le 10^{-6}$ (achieving a maximum relaxation gap of $1.00 \times 10^{-8}$ across all 565 Stage 4 rows).
+   Pairing $U_A(B)$ with the exact feasible primal lower bound $L_A(B) = \max_{\theta \in \mathcal V(B)} h_{\mathcal C_{\bar n_U}}(A(\theta))$ inside adaptive branch-and-bound subdivision guarantees $0 \le U_A - L_A \le 10^{-6}$ (achieving a maximum relaxation gap of $1.305 \times 10^{-12}$ across all 565 Stage 4 rows via unclipped adaptive angular and radial $C^2$ branch-and-bound).
 
 ---
 
@@ -203,7 +203,7 @@ To ensure our JPB manuscript is completely referee-proof with respect to the mos
 | :--- | :--- | :--- |
 | **Measurement Modality** | Variable-transmittance attenuation channel (no phase-space displacement, no LO phase error $\delta_\phi$). | Two-setting displaced threshold (on/off) detection with asymmetric LO amplitudes $(a_+, a_-)$, relative LO phase mismatch $\delta_\phi$, asymmetric efficiencies $(\eta_+, \eta_-)$, and dark counts $(\nu_+, \nu_-)$. |
 | **Energy Constraint** | Unconstrained classical convex hull (no pre-measurement mean photon number cap $\bar n_U$). | Energy-constrained classical hull $\mathcal C_{\bar n_U}$ with explicit threshold-saturation no-go proof (Proposition 4.3) and auxiliary tap-beam / $a=0$ certification protocols for $\bar n_U$. |
-| **Calibration-Box Optimization** | Worst-case classical bound over transmittance calibration intervals. | Globally certified supremum $B_2^{\rm robust}(\Theta, \bar n_U)$ over a 7D asymmetric box $\Theta$ + energy cap $\bar n_U$, combining exact corner reductions (Theorem 4.2) with decoupled $C^2$ Lagrangian dual upper bounds and branch-and-bound ($0 \le U - L \le 10^{-8}$). |
+| **Calibration-Box Optimization** | Worst-case classical bound over transmittance calibration intervals. | Globally certified supremum $B_2^{\rm robust}(\Theta, \bar n_U)$ over a 7D asymmetric box $\Theta$ + energy cap $\bar n_U$, combining exact corner reductions (Theorem 4.2) with decoupled $C^2$ Lagrangian dual upper bounds and branch-and-bound ($0 \le U - L \le 1.305 \times 10^{-12}$). |
 | **Statistical Certification** | Asymptotic Gaussian $1\sigma$ standard-error bars on linear bell-like inequalities. | Distribution-free, non-asymptotic finite-sample lower confidence bounds (Hoeffding vs. sawtooth-safe exact Clopper–Pearson binomial intervals) with a complete union-bound error budget $\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$ for a nonlinear sorted majorization witness. |
 
 ---

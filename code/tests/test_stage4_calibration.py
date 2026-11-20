@@ -6,7 +6,7 @@ Covers all 9 verification requirements from notes/STAGE4_HANDOFF_PROMPT.md:
   2. Asymmetric `on_on` interior complex maximizer (both u* != 0 and v* != 0) when
      eta_+ a_+ != eta_- a_-, strictly exceeding every real-axis and imaginary-axis coherent state.
   3. Nonzero relative LO phase mismatch delta_phi != 0 strictly increasing `off_off` and `on_on`
-     while decreasing `off_on`, matching closed-form 2 - 2*kappa*exp[-eta*(E + a^2 + 2*a*sqrt(E)*sin(|delta_phi|/2))]
+     while decreasing `off_on`, matching closed-form 2 - 2*kappa*exp[-eta*(nbar_U + a^2 + 2*a*sqrt(nbar_U)*sin(|delta_phi|/2))]
      to within 1e-10.
   4. Exact monotonicity of S_1^C and S_2^C in dark counts (nu_+, nu_-) and energy cap nbar_U.
   5. Global calibration-box soundness: 1,000 random (theta, mu) in Theta_2 x C_{nbar_U}
@@ -35,6 +35,11 @@ if str(CODE_DIR) not in sys.path:
     sys.path.insert(0, str(CODE_DIR))
 
 from calibration_robust import (
+    CalibrationBox,
+    _box_envelope_circle_max_vec,
+    _certify_cross_branch_over_box,
+    _circle_max_asymmetric_scalar,
+    _circle_max_asymmetric_vec,
     asymmetric_coherent_no_click,
     bright_tail_no_go_mixture,
     certify_robust_classical_envelope,
@@ -428,6 +433,107 @@ class TestStage4CalibrationAndStats(unittest.TestCase):
             summary["type1_false_positive_audit"]["max_certified_robust_false_positive_rate"],
             summary["type1_false_positive_audit"]["delta_stat"],
         )
+
+    def test_11_unclipped_angular_and_box_dual_never_underestimates(self) -> None:
+        """Verify unclipped adaptive C^2 angular bounds never underestimate continuous circle maxima."""
+        # 1. Exact symmetric flagship Theta2 case where legacy 512-grid + 1e-8 cap underestimated by ~7e-6
+        box_flag = make_standard_calibration_box("Theta2", 1.15, 1.0, 0.0, 0.22)
+        r_cap = math.sqrt(box_flag.energy_cap_upper)
+        u_box_11 = float(
+            _box_envelope_circle_max_vec(
+                "on_on",
+                np.array([r_cap]),
+                box_flag.a_plus_bounds,
+                box_flag.a_minus_bounds,
+                box_flag.eta_plus_bounds,
+                box_flag.eta_minus_bounds,
+                box_flag.nu_plus_bounds[1],
+                box_flag.nu_minus_bounds[1],
+                box_flag.delta_phi_max,
+            )[0]
+        )
+        a_u = box_flag.a_plus_bounds[1]
+        e_u = box_flag.eta_plus_bounds[1]
+        nu_u = box_flag.nu_plus_bounds[1]
+        dphi = box_flag.delta_phi_max
+        exact_sym_11 = 2.0 - 2.0 * math.exp(
+            -nu_u - e_u * (r_cap**2 + a_u**2 + 2.0 * a_u * r_cap * math.sin(0.5 * dphi))
+        )
+        self.assertGreaterEqual(u_box_11, exact_sym_11 - 1e-14)
+        self.assertLessEqual(u_box_11 - exact_sym_11, 1e-9)
+
+        # Verify _box_envelope_circle_max_vec bounds arbitrary corner samples across [0, delta_phi_max]
+        phis_dense = np.linspace(-math.pi, math.pi, 20001)
+        box_skew = CalibrationBox(
+            label="Skewed_Test",
+            a_plus_bounds=(1.05, 1.15),
+            a_minus_bounds=(0.82, 0.94),
+            eta_plus_bounds=(0.88, 0.96),
+            eta_minus_bounds=(0.76, 0.85),
+            nu_plus_bounds=(0.001, 0.004),
+            nu_minus_bounds=(0.002, 0.006),
+            delta_phi_max=math.radians(5.0),
+            energy_cap_upper=0.36,
+        )
+        r_sk = math.sqrt(box_skew.energy_cap_upper)
+        for br in ("off_off", "on_on"):
+            nu_idx = 0 if br == "off_off" else 1
+            ub_b = float(
+                _box_envelope_circle_max_vec(
+                    br,
+                    np.array([r_sk]),
+                    box_skew.a_plus_bounds,
+                    box_skew.a_minus_bounds,
+                    box_skew.eta_plus_bounds,
+                    box_skew.eta_minus_bounds,
+                    box_skew.nu_plus_bounds[nu_idx],
+                    box_skew.nu_minus_bounds[nu_idx],
+                    box_skew.delta_phi_max,
+                )[0]
+            )
+            for ap_c in box_skew.a_plus_bounds:
+                for am_c in box_skew.a_minus_bounds:
+                    for ep_c in box_skew.eta_plus_bounds:
+                        for em_c in box_skew.eta_minus_bounds:
+                            qp_d = np.exp(-box_skew.nu_plus_bounds[nu_idx] - ep_c * (r_sk**2 + ap_c**2 + 2.0 * ap_c * r_sk * np.cos(phis_dense)))
+                            qm_d = np.exp(-box_skew.nu_minus_bounds[nu_idx] - em_c * (r_sk**2 + am_c**2 - 2.0 * am_c * r_sk * np.cos(phis_dense - box_skew.delta_phi_max)))
+                            c_max = float(np.max(qp_d + qm_d if br == "off_off" else 2.0 - qp_d - qm_d))
+                            self.assertGreaterEqual(ub_b, c_max - 1e-13)
+
+            cert = _certify_cross_branch_over_box(br, box_skew)
+            self.assertGreaterEqual(cert.certified_upper_bound, cert.primal_lower_bound - 1e-11)
+            self.assertLessEqual(cert.relaxation_gap, 1e-6)
+
+        # 2. Asymmetric fixed-theta scalar & vector circle bounds match continuous optima to 1e-9
+        from scipy.optimize import minimize_scalar
+
+        ap, am, ep, em, nup, num, dp = 1.25, 0.90, 0.95, 0.80, 0.002, 0.005, math.radians(5.0)
+        r_t = 0.72
+        for br in ("off_off", "off_on", "on_off", "on_on"):
+            lb_s, ub_s, beta_s = _circle_max_asymmetric_scalar(br, r_t, ap, am, ep, em, nup, num, dp)
+            ub_v = float(_circle_max_asymmetric_vec(br, np.array([r_t]), ap, am, ep, em, nup, num, dp)[0])
+            qp_d = np.exp(-nup - ep * (r_t**2 + ap**2 + 2.0 * ap * r_t * np.cos(phis_dense)))
+            qm_d = np.exp(-num - em * (r_t**2 + am**2 - 2.0 * am * r_t * np.cos(phis_dense - dp)))
+            if br == "off_off":
+                vals_d = qp_d + qm_d
+                eval_phi = lambda p: math.exp(-nup - ep * (r_t**2 + ap**2 + 2.0 * ap * r_t * math.cos(p))) + math.exp(-num - em * (r_t**2 + am**2 - 2.0 * am * r_t * math.cos(p - dp)))
+            elif br == "off_on":
+                vals_d = 1.0 + qm_d - qp_d
+                eval_phi = lambda p: 1.0 + math.exp(-num - em * (r_t**2 + am**2 - 2.0 * am * r_t * math.cos(p - dp))) - math.exp(-nup - ep * (r_t**2 + ap**2 + 2.0 * ap * r_t * math.cos(p)))
+            elif br == "on_off":
+                vals_d = 1.0 + qp_d - qm_d
+                eval_phi = lambda p: 1.0 + math.exp(-nup - ep * (r_t**2 + ap**2 + 2.0 * ap * r_t * math.cos(p))) - math.exp(-num - em * (r_t**2 + am**2 - 2.0 * am * r_t * math.cos(p - dp)))
+            else:
+                vals_d = 2.0 - qp_d - qm_d
+                eval_phi = lambda p: 2.0 - math.exp(-nup - ep * (r_t**2 + ap**2 + 2.0 * ap * r_t * math.cos(p))) - math.exp(-num - em * (r_t**2 + am**2 - 2.0 * am * r_t * math.cos(p - dp)))
+            i_best = int(np.argmax(vals_d))
+            true_c = float(-minimize_scalar(lambda p: -eval_phi(p), bounds=(phis_dense[i_best] - 1e-2, phis_dense[i_best] + 1e-2), method="bounded", options={"xatol": 1e-14}).fun)
+            self.assertAlmostEqual(lb_s, eval_phi(math.atan2(beta_s.imag, beta_s.real)), places=13)
+            self.assertLessEqual(lb_s, true_c + 1e-12)
+            self.assertGreaterEqual(ub_s, true_c - 1e-13)
+            self.assertGreaterEqual(ub_v, true_c - 1e-13)
+            self.assertLessEqual(ub_s - true_c, 1e-9)
+            self.assertLessEqual(ub_v - true_c, 1e-9)
 
 
 if __name__ == "__main__":
