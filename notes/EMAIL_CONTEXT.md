@@ -17,39 +17,30 @@
 > All the best,
 > Marcelo
 
-## 2. Draft Reply to Marcelo (Week 1 Claim-by-Claim Audit Report)
-
-Attach `notes/WEEK1_CLAIM_AUDIT.md`.
+## 2. Draft Standup Reply to Marcelo (~300 words, 10-day sprint to 30 Nov 2026)
 
 ```text
-Subject: Re: Spotlight in China Focus Collection (JPB) – Week 1 audit and plan
+Subject: Re: Spotlight in China Focus Collection (JPB) – Quick update & 4 questions
 
 Dear Marcelo,
 
-Thank you very much for sharing this opportunity and for preparing the technical note, pilot scripts, and six-week roadmap—this looks like a very focused and realistic target for the JPB Focus Collection. I would be happy to take the lead on the theoretical derivations, numerical calculations, and main sections, and it would be great if you could handle the physics-oriented revision of the Introduction.
+Thank you very much for sharing this opportunity and preparing the technical note and pilot code—this is a sharp, well-scoped target for the JPB Focus Collection. I am happy to lead the proofs, numerics, figures, and main sections, and would be grateful if you could handle the physics-oriented revision of the Introduction.
 
-Before diving into Week 2, I completed the Week 1 baseline checks, independent mathematical verification, and prior-art claim audit (full one-page summary attached as WEEK1_CLAIM_AUDIT.md):
+To leave December for your revision and internal review, I am aiming to finish a complete first draft and reproducible repository by 30 November 2026:
+https://github.com/RuiZhu1/quantum-light-majorization
 
-1. Baseline & math verification:
-   - All 12 unit tests in code/tests/test_quantum_light.py pass and the technical note compiles cleanly.
-   - I independently verified Lemma 1, Proposition 1 (A_00 under 2b^2 <= 1, uniqueness of x_* for A_01, Jensen tightness for A_11), the odd-cat coherent mimic, and exact classical non-attainment at the odd-cat operating point.
-   - Connecting back to our submitted Communications Physics manuscript, the direct-sum envelope also yields valid bounds for all Renyi entropy sums (alpha <= 1 via Cor. 1 and alpha > 1 via Eq. (17)), and our earlier rank-2 identity from quantum_optics_future.md directly gives the exact ideal quantum off/off ceiling 1 + exp(-2a^2) (attained by the even cat state at very low energy) and off/on ceiling 1 + sqrt(1 - exp(-4a^2)).
+Before running the full parameter scans and calibration-box analysis, could we briefly confirm four points?
+1. Is 31 Dec 2026 a hard cutoff for the Focus Collection, or is there flexibility via the editors?
+2. Is it fine to pause quantum-light-followups until this manuscript is submitted (complementary to Project B, with zero technical overlap)?
+3. Author list: Rui, Marcelo, and Gilad, or just the two of us?
+4. Do you agree with including only exact/certified quantum bounds rather than risking delays on loose infinite-dimensional Fock-tail bounds?
 
-2. Key prior-art audit findings (Go/No-Go):
-   - Kovtoniuk et al., PRA 109, 053710 (2024) (v4, Sec. IV) already derives the complete unconstrained classical convex hull for two displaced on/off settings under the exact same curvature condition b <= 1/sqrt(2) (2b^2 <= 1) and applies it to squeezed vacuum displaced along the antisqueezed quadrature. So we should position squeezed vacuum (r > 0) strictly as a validation testbed and illustration of Shannon information loss—not an energy-constraint advantage.
-   - Kovtoniuk, Bohmann & Semenov, PRA 113, 063726 (2026) already uses worst-case calibration boxes with asymptotic 1-sigma error bars for variable-attenuation on/off detection. We should cite this explicitly and distinguish our contribution via distribution-free finite-sample guarantees (Hoeffding/exact binomial + union bound), dark counts, and pre- vs. post-displacement losses (T vs. eta) with asymmetric settings.
-   - Medranda & Luis, JPA 48, 255302 (2015) uses single-setting PNR majorization against a single Poisson reference, very distinct from our binary direct-sum convex-set envelope.
-   - Addressing a likely referee question ("why not just measure at zero displacement a = 0 with an energy bound?", which already detects the odd cat since q(0) = 0): I verified that a simple superposition (1/2)|0> - (sqrt(3)/2)|2> (<n> = 1.50, cap 1.55, a = 0.44) simultaneously evades (i) Kovtoniuk (2024)'s complete unconstrained hull, (ii) undisplaced a = 0 with the same energy cap, and (iii) either single displaced setting +/-a with the same energy cap across eta in [0.95, 1.00], while our two-setting majorization witness certifies it robustly (W_2 = +0.0945 at eta = 1, +0.0541 at eta = 0.95). Moreover, squeezed vacuum displaced along the squeezed quadrature (r < 0) also evades all three baselines and directly motivates solving the energy-active A_01 dual branch in Week 2.
+---
+[AI-assisted technical standup summary — full proofs, audit, and code are in the GitHub repo above]
 
-Overall, my Week 1 verdict is a clear GO, and this topic is completely complementary to the polarization (Project A) and binned-homodyne/GKP (Project B) plans in quantum-light-followups without any overlap.
-
-Before I start Week 2 (exact Lagrangian-dual classical envelope for energy-active A_01 and S_1), could we briefly confirm four practical points?
-1. Official submission deadline for the JPB Spotlight in China Focus Collection (is Dec 31 the hard deadline, or is there any flexibility through the editors you know?).
-2. Should I pause quantum-light-followups for the next six weeks to focus fully on this JPB manuscript?
-3. Author list (Rui, Marcelo, and Gilad, or just the two of us?).
-4. Whether you agree with the Week 2 priority order from the note: lock down a rigorous classical-envelope + calibration/finite-sample manuscript first, and include only the certified quantum-envelope results that fit safely inside the six-week schedule.
-
-Please let me know your thoughts, and we can have a quick meeting if helpful before I push into Week 2.
+- Progress & methods: Verified all baseline checks plus a new 0 < T < 1 Fock Kraus-channel test for the odd cat (21/21 passing). Using 2D-to-1D concave-envelope Lagrangian duality with C^2-certified dual upper bounds, we solved the exact classical envelope for all a > 0 (lifting 2b^2 <= 1), classified attainment vs. non-attainment, and obtained universal closed-form (S_1^C, S_2^C) and all-order Renyi bounds.
+- Key result: Lifting 2b^2 <= 1 unlocks ordinary ~3.5 dB Gaussian squeezed vacuum displaced along the squeezed quadrature (r < 0): W_2 = +0.138 at eta = 1 (~2,500 shots) and +0.104 even at eta = 0.70 (~4,400 shots), simultaneously evading Kovtoniuk (2024)'s unconstrained hull, a = 0 + energy cap, and single-setting + energy cap.
+- Limits / what does not work: r > 0 squeezed vacuum gives no energy advantage over Kovtoniuk (2024); r < 0 squeezed vacuum fails completely inside 2b^2 <= 1; majorization cannot outperform full convex-hull membership on identical data; and imperfect-detector infinite-dimensional quantum envelopes currently lack tight certified tail bounds (so we use exact ideal quantum off/off and off/on ceilings).
 
 Best regards,
 Rui
