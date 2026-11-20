@@ -70,6 +70,37 @@ class OpticalWitnessChecks(unittest.TestCase):
             actual = np.vdot(state, off_matrix(c, eta) @ state).real
             self.assertAlmostEqual(actual, odd_cat_off(c, c, eta), places=12)
 
+    def test_odd_cat_source_loss_against_fock_kraus_channel(self):
+        """Independent Kraus-channel check of Eq. (21) for 0 < T < 1 (pure loss before displacement)."""
+        dim = 36
+        c = 0.44
+        psi = (coherent_vector(c, dim) - coherent_vector(-c, dim)) / math.sqrt(2 * (1 - math.exp(-2 * c * c)))
+        rho0 = np.outer(psi, psi.conj())
+        for T in [0.5, 0.8, 0.95]:
+            # Exact amplitude-damping Kraus operators K_l = sqrt((1-T)^l / l!) T^(n/2) a^l
+            rho_T = np.zeros((dim, dim), dtype=complex)
+            for ell in range(dim):
+                K = np.zeros((dim, dim), dtype=float)
+                for n in range(ell, dim):
+                    m = n - ell
+                    # <m| a^l |n> = sqrt(n! / m!)
+                    log_coeff = (
+                        0.5 * (math.lgamma(n + 1) - math.lgamma(m + 1) - math.lgamma(ell + 1))
+                        + 0.5 * m * math.log(T)
+                        + 0.5 * ell * math.log(1.0 - T)
+                    )
+                    K[m, n] = math.exp(log_coeff)
+                rho_T += K @ rho0 @ K.T
+            # Verify trace preservation and mean photon number T * c^2 * coth(c^2)
+            self.assertAlmostEqual(np.trace(rho_T).real, 1.0, places=12)
+            mean_n = float(np.sum(np.arange(dim) * np.diag(rho_T).real))
+            self.assertAlmostEqual(mean_n, T * c * c / math.tanh(c * c), places=11)
+            for eta in [0.7, 0.9, 1.0]:
+                for a in [0.44, 1.15]:
+                    actual = float(np.trace(rho_T @ off_matrix(a, eta, dim, dark_mean=0.01)).real)
+                    expected = odd_cat_off(a, c, eta, source_transmission=T, dark_mean=0.01)
+                    self.assertAlmostEqual(actual, expected, places=11)
+
     def test_detector_effects_are_positive_contractions(self):
         for eta in [0.0, 0.7, 1.0]:
             spectrum = np.linalg.eigvalsh(off_matrix(0.44, eta, dark_mean=0.01))
