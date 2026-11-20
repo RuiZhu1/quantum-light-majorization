@@ -29,6 +29,10 @@ Research repository for our *Journal of Physics B: Atomic, Molecular and Optical
    - **Theorems 4.1 & 4.2:** Solved the exact asymmetric classical support functions for general $\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$ (including the interior complex coherent maximizer $u^*\neq 0, v^*\neq 0$ on `on_on` when $\eta_+ a_+ \neq \eta_- a_-$ and exact LO phase-error monotonicity), and built a globally certified branch-and-bound + decoupled $C^2$ Lagrangian dual solver for $B_2^{\rm robust}(\Theta, \bar n_U) = \sup_{\theta\in\Theta} S_2^{\mathcal C}(\theta,\bar n_U)$ with maximum relaxation gap $1.00\times 10^{-8}$.
    - **Proposition 4.3 & Experimental $\bar n_U$ Certification:** Proved the bright-tail threshold-saturation no-go theorem (showing a classical mixture with $\langle\hat n\rangle = 100$ photons deviates from vacuum on/off counts by $<1.4\times 10^{-5}$) and formalized Route A (calibrated beam-splitter tap before displacement) and Route B ($a=0$ characterized-source protocol) to certify $\bar n_U$ at confidence $1-\delta_E$.
    - **Robust Experimental Feasibility & Error Budget ($\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$):** Under the realistic lab calibration box $\Theta_2$ ($2\%$ amplitude, $0.01$ efficiency, $10^{-3}$ dark count, $2^\circ$ LO phase, $+10\%$ energy cap), our flagship $r=-0.42$ squeezed vacuum is certified with **$1,722$ shots/setting** at $\eta=1.00$ ($1,630$ at $a^*_{\rm robust}$), **$2,849$ shots/setting** at $\eta=0.90$, and **$12,869$ shots/setting** even at $\eta=0.70$ ($11,327$ at $a^*_{\rm robust}$), while $50,000$-trial Monte Carlo audits prove $B_2^{\rm robust}$ holds Type-I false positives strictly $\le 8\times 10^{-5} \ll \delta_{\rm stat}=0.01$ (where naive nominal thresholds suffer $100\%$ false positives).
+4. **Stage 5 Certified Quantum Benchmarks, Gentle-Projection Tail Audit & Publication Figures (`code/quantum_benchmarks.py`, `code/make_figures.py`, `paper/figures/`, `notes/STAGE5_QUANTUM_AND_FIGURES.md`):**
+   - **Proposition 5.1:** Verified exact zero-truncation ideal ($\eta=1, \nu=0$) quantum branch ceilings (`off_off` $= 1+e^{-2a^2}$ attained by even cat $\ket{\mathcal C_+(a)}$, `off_on` $= 1+\sqrt{1-e^{-4a^2}}$ in $\operatorname{span}\{\ket{a},\ket{-a}\}$, and `on_on` $= 2$ attained by the 3-level dark state $\ket{\chi_a}$ with $\langle\hat n\rangle = 4/(a^4+2)$).
+   - **Finite-Fock SDP vs. Gentle-Projection Tail Audit (`data/stage5/`):** Implemented exact Fock-compressed SDP dual `solve_fock_truncated_quantum_branch` (gap $\le 2.2\times 10^{-15}$) and quantified Eq. (27)'s gentle-projection remainder $R_N(2) = 2(\sqrt{\delta_N}+\delta_N/2)$ across $N\in[15,200]$.
+   - **5 Publication-Grade Vector Figures (`paper/figures/fig1`–`fig5`):** Generated all 5 multi-panel vector PDF figures and PNG previews reproducibly via `code/make_figures.py`.
 
 ---
 
@@ -50,7 +54,8 @@ quantum-light-majorization/
 │   ├── WEEK2_EXACT_CLASSICAL_DUAL.md             Exact classical dual proofs: Thms 2.1–2.4, Prop. 2.5
 │   ├── STAGE3_SCANS_AND_OPTIMIZATION.md          Stage 3 proofs (Thms 3.1–3.2, Prop. 3.3) & scan summary
 │   ├── STAGE4_HANDOFF_PROMPT.md                  Stage 4 specification & handoff guide
-│   └── STAGE4_CALIBRATION_AND_FINITE_SAMPLE.md   Stage 4 proofs (Thms 4.1–4.4, Prop. 4.3) & calibration audit
+│   ├── STAGE4_CALIBRATION_AND_FINITE_SAMPLE.md   Stage 4 proofs (Thms 4.1–4.4, Prop. 4.3) & calibration audit
+│   └── STAGE5_QUANTUM_AND_FIGURES.md             Stage 5 quantum ceilings, Fock tail audit & figure guide
 ├── code/
 │   ├── requirements.txt                          Python dependencies (NumPy, SciPy, Matplotlib)
 │   ├── quantum_light_feasibility.py              Pilot analytic squeezed-light model & safe bound B_2
@@ -61,22 +66,26 @@ quantum-light-majorization/
 │   ├── stage3_scans.py                           Reproduces all 6 Stage 3 scans in data/stage3/
 │   ├── calibration_robust.py                     Asymmetric dual, certified B_2^robust, energy bound & MC
 │   ├── stage4_calibration_scans.py               Reproduces all 5 Stage 4 scans in data/stage4/
+│   ├── quantum_benchmarks.py                     Ideal quantum ceilings, compressed Fock SDP & tail audit
+│   ├── make_figures.py                           Generates all 5 publication vector PDFs in paper/figures/
 │   ├── week1_audit_verify.py                     Reproduces all audit & exact-dual benchmark checks
 │   └── tests/
 │       ├── test_quantum_light.py                 13 baseline unit checks (incl. 0<T<1 Kraus odd-cat)
 │       ├── test_classical_dual.py                8 exact-dual primal/dual, 2-pt, MC & Gaussian tests
 │       ├── test_stage3_scans.py                  12 Stage 3 Fock-Kraus, Thm 3.1–3.3 & CP/MC tests
-│       └── test_stage4_calibration.py            10 Stage 4 asymmetric dual, B_2^robust, no-go & MC tests
+│       ├── test_stage4_calibration.py            10 Stage 4 asymmetric dual, B_2^robust, no-go & MC tests
+│       └── test_stage5_quantum_and_figures.py    4 Stage 5 quantum ceilings, Fock SDP & figure tests
 ├── data/
 │   ├── benchmarks.json                           Benchmark summary generated by code/note_calculations.py
 │   ├── efficiency.csv                            Fixed-parameter efficiency scan for PGFPlots
 │   ├── lorenz.csv                                Direct-sum Lorenz curve data for PGFPlots
 │   ├── quantum_light_feasibility.json            Pilot efficiency scan output
 │   ├── stage3/                                   11 Stage 3 scan CSVs + master stage3_summary.json
-│   └── stage4/                                   5 Stage 4 calibration CSVs + master stage4_summary.json
+│   ├── stage4/                                   5 Stage 4 calibration CSVs + master stage4_summary.json
+│   └── stage5/                                   Quantum ceilings & Fock tail audit CSV + stage5_summary.json
 └── paper/
     ├── references.bib                            Verified working bibliography for JPB manuscript
-    └── figures/                                  Submission figures (Day 6)
+    └── figures/                                  5 publication vector PDFs + PNG previews (fig1–fig5)
 ```
 
 ---
@@ -91,14 +100,16 @@ conda activate quantumcomputing
 # 1. Regenerate baseline benchmark JSON and CSV files in data/
 python code/note_calculations.py
 
-# 2. Run the full unit test suite (43 tests: 13 baseline + 8 exact dual + 12 Stage 3 + 10 Stage 4)
+# 2. Run the full unit test suite (47 tests: 13 baseline + 8 exact dual + 12 Stage 3 + 10 Stage 4 + 4 Stage 5)
 python -m unittest discover -s code/tests -v
 
-# 3. Run the exact classical dual benchmarks, audit checks, Stage 3 scans, and Stage 4 calibration scans
+# 3. Run the exact classical dual benchmarks, Stage 3-5 scans, and generate all 5 publication figures
 python code/classical_dual.py
 python code/week1_audit_verify.py
 python code/stage3_scans.py
 python code/stage4_calibration_scans.py
+python code/quantum_benchmarks.py
+python code/make_figures.py
 
 # 4. Compile Marcelo's technical note (from notes/)
 cd notes && latexmk -pdf -interaction=nonstopmode -halt-on-error quantum_light_technical_note.tex
@@ -126,11 +137,11 @@ Accelerated execution of Marcelo's full research plan to deliver a **100% submis
   - Proved **Theorem 4.1** (closed-form asymmetric circle maxima incl. interior complex `on_on` maximizer $u^*\neq 0, v^*\neq 0$ and LO phase-error monotonicity), **Theorem 4.2** (exact corner reductions + decoupled box-envelope dual), **Proposition 4.3** (bright-tail threshold-saturation no-go proof) + Routes A/B for certifying $\bar n_U$, and **Theorem 4.4** (union-bound error budget $\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$) (`notes/STAGE4_CALIBRATION_AND_FINITE_SAMPLE.md`).
   - Verified via 50,000-trial Monte Carlo audits (`code/stage4_calibration_scans.py`, `data/stage4/`) and 10 unit tests (`code/tests/test_stage4_calibration.py`, 43/43 passing) that $B_2^{\rm robust}(\Theta_2)$ holds Type-I false positives $\le 8\times 10^{-5} \le \delta_{\rm stat}=0.01$ while certifying flagship $r=-0.42$ squeezed vacuum in **$1,630$–$2,849$ shots/setting** ($\eta\in[0.90,1.00]$) and **$11,327$–$12,869$ shots/setting** ($\eta=0.70$).
 
-- [ ] **Day 6 (25 Nov) — Certified Quantum Benchmarks & Publication Figures [NEXT]**
-  - Finalize exact zero-truncation ideal quantum `off_off` ($1+e^{-2a^2}$, even cat), `off_on` ($1+\sqrt{1-e^{-4a^2}}$), and 3-level dark-state $\ket{\chi_a}$ results (plus strictly certified finite-dim quantum extensions only if informative).
-  - Generate all 4–5 publication-grade vector figures in `paper/figures/` via reproducible `code/make_figures.py` (measurement scheme & phase-space geometry; Lorenz curves & attainment/entropy comparison; Gaussian $r<0$/$r>0$ & cat detection maps; calibration-box & finite-sample power curves).
+- [x] **Day 6 (25 Nov) — Certified Quantum Benchmarks & Publication Figures [COMPLETE]**
+  - Finalized exact zero-truncation ideal quantum `off_off` ($1+e^{-2a^2}$, even cat), `off_on` ($1+\sqrt{1-e^{-4a^2}}$), and 3-level dark-state $\ket{\chi_a}$ results, plus exact Fock-compressed SDP duals $h_{\mathcal Q,N}(P_N A P_N)$ and gentle-projection tail bound audits (`code/quantum_benchmarks.py`, `data/stage5/`, `notes/STAGE5_QUANTUM_AND_FIGURES.md`).
+  - Generated all 5 publication-grade vector PDF figures (and PNG previews) in `paper/figures/` via reproducible `code/make_figures.py` (`fig1_scheme_and_phases`, `fig2_lorenz_and_hierarchy`, `fig3_state_scans_and_cats`, `fig4_calibration_and_stats`, `fig5_quantum_ceilings_audit`), verified by 4 new unit tests (`code/tests/test_stage5_quantum_and_figures.py`, 47/47 passing).
 
-- [ ] **Days 7–8 (26–27 Nov) — Complete JPB LaTeX Manuscript (`paper/main.tex`)**
+- [ ] **Days 7–8 (26–27 Nov) — Complete JPB LaTeX Manuscript (`paper/main.tex`) [NEXT]**
   - Draft full submission-ready manuscript (`paper/main.tex`) with modular physics-oriented Introduction slot ready for Marcelo's polish, airtight Theorems/Proofs, Results, Experimental Feasibility & Error Budget, Discussion, and Appendices.
 
 - [ ] **Days 9–10 (28–30 Nov) — Adversarial Referee Audit, End-to-End Reproduction & Freeze**
