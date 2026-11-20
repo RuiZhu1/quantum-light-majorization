@@ -109,7 +109,10 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "1,727",
             "3,033",
             "13,201",
-            "1,718",
+            "1,630",
+            "2,831",
+            "11,327",
+            "12,934",
             "0.524741",
             "51 unit tests",
         ]
@@ -118,7 +121,14 @@ class TestStage6ManuscriptSync(unittest.TestCase):
 
     def test_04_run_all_cli_and_no_backticks_in_tex(self) -> None:
         tex_text = (PAPER_DIR / "main.tex").read_text(encoding="utf-8")
+        tex_no_comments = re.sub(r"(?m)^%.*$", "", tex_text)
         self.assertNotIn("`", tex_text, "Found raw Markdown backtick in paper/main.tex")
+        for forbidden_tex in ("h_{\\Cset_E}(A_{11}", "Stage~3", "Stage~4", "Marcelo's", "12,931", "1,718"):
+            self.assertNotIn(forbidden_tex, tex_no_comments, f"Found stale/internal token '{forbidden_tex}' in paper/main.tex")
+
+        fig_code = (REPO_ROOT / "code" / "make_figures.py").read_text(encoding="utf-8")
+        for forbidden_fig in ("Marcelo pilot", "Eq. (27)", "1,718"):
+            self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
 
         # Verify total unit tests match documented count (51)
         proc_help = subprocess.run(
