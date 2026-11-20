@@ -18,9 +18,13 @@ Research repository for our *Journal of Physics B: Atomic, Molecular and Optical
 
 **Locked manuscript scope:** One optical mode, two opposite real displacements $\alpha_\pm = \pm a$ ($a>0$, **all $b=\sqrt{\eta}a > 0$, lifting $2b^2 \le 1$**), a calibrated on/off detector (efficiency $\eta$, Poisson dark-count mean $\nu$, distinct from pre-displacement source transmission $T$), all detection windows retained (no postselection or PNR reconstruction), and an independent upper bound $\bar n_{\max}$ on source energy before displacement. Out of scope for this first manuscript: multimode models, steering protocols, cryptographic security claims.
 
-**Key Day 1 Breakthroughs (verified to $10^{-14}$):**
+**Key Breakthroughs So Far (verified to $10^{-13}$):**
 1. **Universal exact closed-form classical envelope (`code/classical_dual.py`, `notes/WEEK2_EXACT_CLASSICAL_DUAL.md`):** Solved all five support functions across the entire parameter space $(a>0, \eta\in(0,1], \nu\ge 0, \bar n_{\max}\ge 0)$ with $C^2$-certified Lagrangian dual bounds. Proved exact concavity thresholds ($b^2 \le 27/8$ for $E_0$/`off_on`; $b^2 \le (3+\sqrt{6})/2$ for `off_off`; globally concave for $E_1$/`on_on`), demonstrated that individual branches strictly require two-point coherent mixtures above these thresholds, and proved analytically that click branches dominate every bitangent in $(S_1^{\mathcal C}, S_2^{\mathcal C})$.
-2. **Flagship Gaussian squeezed-vacuum benchmark ($r < 0$, $b > 1/\sqrt{2}$):** Ordinary ~3.5 dB squeezed vacuum displaced along the *squeezed* quadrature defeats **all three baselines** (Kovtoniuk 2024 unconstrained hull, undisplaced $a=0$ + energy cap, single displaced setting + energy cap) all the way down to **$\eta = 0.70$** with **$W_2 \in [+0.104, +0.138]$** (10–20x larger than Marcelo's pilot margin, cutting Hoeffding shots from ~300,000 to **2,500–4,500 per setting**), surviving $T=0.90$, $n_{\rm th}=0.02$, and $\nu=10^{-2}$.
+2. **Stage 3 Universal Squeezed-Thermal Theorem, Zero Sorting Penalty & Statistical-Margin Optimization (`code/optical_states.py`, `code/witness_analysis.py`, `code/stage3_scans.py`, `notes/STAGE3_SCANS_AND_OPTIMIZATION.md`):**
+   - **Theorem 3.1:** Proved that undisplaced $a=0$ + energy cap can *never* detect any squeezed thermal state, whereas our majorization witness along the squeezed quadrature ($r < 0$) is **necessary and sufficient** for $P$-nonclassicality $(2n_{\rm th}+1)e^{2r}<1$ across all $\eta>0, T>0, \nu\ge 0$, and arbitrarily loose finite $\bar n_{\max}$ (surviving $n_{\rm th}=0.35$, 5x energy-cap overestimation, and $\nu=10^{-2}$ with only 1.0% relative $e^{-\nu}$ drop!).
+   - **Theorem 3.2 & Prop. 3.3:** Proved exact diagonal outcome-resolved classicality $\mathcal D_{\bar n_{\max}}$ with **zero sorting penalty** ($\Pi_{\rm sort} \equiv 0$, $W_2 \equiv \Delta_{\rm OR}$) across the entire `on_on` flagship regime, and completed the exact positive-energy attainment phase classification & dark-count cascade (7 phases at $\nu=0$ incl. the `(E0, off_off)` attained sliver; all 9 phases coexisting for $0 < \nu < \nu_1 \approx 0.0969$, shrinking via $\ln 2 - \frac{1}{2}$ and $\nu_3 \approx 0.4676$ to the unique phase `E1/on_on/non_attained` for all $\nu \ge \ln 2$).
+   - **Odd-cat $(a, c, \phi)$ & $\cos\theta\ket{0}+\sin\theta\ket{2}$ optimization:** Independent $(a, c)$ boosts real odd cat 6.9x ($+0.091$, surviving to $\eta=0.90$), orthogonal $\phi=\pi/2$ boosts it 9.2x ($+0.122$, surviving to $\eta=0.70$), and $\theta\approx -24^\circ$ achieves $+0.219$ ($\eta=1.0$) / $+0.138$ ($\eta=0.70$) beating all three baselines.
+   - **Exact Clopper–Pearson displacement optimization ($a^*_{\rm CP}$ vs $a^*_{W_2}$):** Cuts sawtooth-safe guaranteed 99%-power required shots by **3.9x–7.0x** over Hoeffding (**559 shots/setting** for flagship $r=-0.42$ at $\eta=1.0$, **1,056 shots/setting** for realistic $T=0.90, \eta=0.85, n_{\rm th}=0.02, \nu=10^{-3}$, **789 shots/setting** for $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$), shifting $a^*_{\rm CP}$ away from branch cliffs while preserving triple-baseline separation.
 
 ---
 
@@ -39,21 +43,28 @@ quantum-light-majorization/
 │   ├── EMAIL_CONTEXT.md                   Marcelo's invitation email & ~300-word standup reply
 │   ├── WEEK1_CLAIM_AUDIT.md               Prior-art claim-by-claim novelty audit (STRONG GO)
 │   ├── WEEK1_MATH_DERIVATIONS.md          Independent derivations of Lemma 1, Prop. 1 & bridges
-│   └── WEEK2_EXACT_CLASSICAL_DUAL.md      Exact classical dual proofs: Thms 2.1–2.4, Prop. 2.5
+│   ├── WEEK2_EXACT_CLASSICAL_DUAL.md      Exact classical dual proofs: Thms 2.1–2.4, Prop. 2.5
+│   ├── STAGE3_SCANS_AND_OPTIMIZATION.md   Stage 3 proofs (Thms 3.1–3.2, Prop. 3.3) & scan summary
+│   └── STAGE4_HANDOFF_PROMPT.md           Stage 4 handoff guide (calibration boxes & finite samples)
 ├── code/
 │   ├── requirements.txt                   Python dependencies (NumPy, SciPy, Matplotlib)
 │   ├── quantum_light_feasibility.py       Pilot analytic squeezed-light model & safe bound B_2
 │   ├── note_calculations.py               Odd-cat model, Hoeffding sizes, regenerates data/
 │   ├── classical_dual.py                  Exact classical dual + C^2-certified solver (all a>0)
+│   ├── optical_states.py                  Exact squeezed thermal, rotated cat, Fock |1>, |0>+|2>
+│   ├── witness_analysis.py                Baselines, outcome-resolved, entropies, exact CP stats
+│   ├── stage3_scans.py                    Reproduces all 6 Stage 3 scans in data/stage3/
 │   ├── week1_audit_verify.py              Reproduces all audit & exact-dual benchmark checks
 │   └── tests/
 │       ├── test_quantum_light.py          13 baseline unit checks (incl. 0<T<1 Kraus odd-cat)
-│       └── test_classical_dual.py         8 exact-dual primal/dual, 2-pt, MC & Gaussian tests
+│       ├── test_classical_dual.py         8 exact-dual primal/dual, 2-pt, MC & Gaussian tests
+│       └── test_stage3_scans.py           12 Stage 3 Fock-Kraus, Thm 3.1–3.3 & CP/MC tests
 ├── data/
 │   ├── benchmarks.json                    Benchmark summary generated by code/note_calculations.py
 │   ├── efficiency.csv                     Fixed-parameter efficiency scan for PGFPlots
 │   ├── lorenz.csv                         Direct-sum Lorenz curve data for PGFPlots
-│   └── quantum_light_feasibility.json     Pilot efficiency scan output
+│   ├── quantum_light_feasibility.json     Pilot efficiency scan output
+│   └── stage3/                            11 Stage 3 scan CSVs + master stage3_summary.json
 └── paper/
     ├── references.bib                     Verified working bibliography for JPB manuscript
     └── figures/                           Submission figures (Day 6)
@@ -71,12 +82,13 @@ conda activate quantumcomputing
 # 1. Regenerate baseline benchmark JSON and CSV files in data/
 python code/note_calculations.py
 
-# 2. Run the full unit test suite (21 tests: 13 baseline + 8 exact dual)
+# 2. Run the full unit test suite (33 tests: 13 baseline + 8 exact dual + 12 Stage 3)
 python -m unittest discover -s code/tests -v
 
-# 3. Run the exact classical dual benchmarks & audit verification
+# 3. Run the exact classical dual benchmarks, audit checks, and Stage 3 global scans
 python code/classical_dual.py
 python code/week1_audit_verify.py
+python code/stage3_scans.py
 
 # 4. Compile Marcelo's technical note (from notes/)
 cd notes && latexmk -pdf -interaction=nonstopmode -halt-on-error quantum_light_technical_note.tex
@@ -94,11 +106,12 @@ Accelerated execution of Marcelo's full research plan to deliver a **100% submis
   - Implemented $C^2$-certified dual solver (`code/classical_dual.py`, primal–dual gap $\le 10^{-13}$) and 8 unit tests (`code/tests/test_classical_dual.py`, 21/21 passing).
   - Uncovered flagship $b>1/\sqrt{2}$, $r<0$ Gaussian squeezed-vacuum benchmark ($W_2 = +0.138$ at $\eta=1.00$, $+0.104$ at $\eta=0.70$, beating all three baselines simultaneously), alongside the non-Gaussian $2b^2\le 1$ triple-baseline state $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$.
 
-- [ ] **Days 2–3 (21–22 Nov) — Full State & Measurement Scans + Optimization [NEXT]**
-  - Systematic scans of squeezed vacuum ($r>0$ and $r<0$), squeezed thermal light ($n_{\rm th}>0$), source loss ($0.8\le T\le 1$), dark counts ($\nu\in\{0,10^{-4},10^{-3},10^{-2}\}$), independently optimized odd-cat $(a, c)$, and the $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ family.
-  - Optimize displacement $a$ for **certified finite-sample statistical margin** (not merely noiseless $W_2$); map active classical branches, attainment phases, Shannon/Tsallis/Rényi violations, and comparison against complete energy-constrained outcome-resolved classical criteria.
+- [x] **Days 2–3 (21–22 Nov) — Full State & Measurement Scans + Optimization [COMPLETE]**
+  - Implemented closed-form Fock-cutoff-free models (`code/optical_states.py`), exact baseline / outcome-resolved / entropic / sawtooth-safe Clopper–Pearson certification & optimizer (`code/witness_analysis.py`), global scan pipeline (`code/stage3_scans.py` generating 11 CSVs + `data/stage3/stage3_summary.json`, 7,183 rows, zero energy-cap violations, max primal–dual gap $9.28\times 10^{-14}$), and 12 new Fock-Kraus/theorem/sawtooth/Monte-Carlo unit tests (`code/tests/test_stage3_scans.py`, 33/33 passing).
+  - Proved **Theorem 3.1** (universal exactness of $r<0$ squeezed-thermal witness across all $\eta, T, \nu$, arbitrarily loose $\bar n_{\max}$, exact $e^{-\nu}$ dark-count stability, and impossibility of undisplaced $a=0$ + cap detection), **Theorem 3.2** (exact diagonal outcome-resolved classicality $\mathcal D_{\bar n_{\max}}$ with zero sorting penalty whenever $W_2>0$ on the matching `on_on`/`off_off` branch), **Proposition 3.3** (complete positive-energy classical attainment classification & dark-count phase cascade: 7 at $\nu=0$; all 9 for $0<\nu<\nu_1\approx 0.0969$, cascading to unique `E1/on_on/non_attained` for $\nu\ge\ln 2$), and the exact $\mathcal L_\eta \circ D(a) \circ \mathcal L_T$ non-interchangeability identity (`notes/STAGE3_SCANS_AND_OPTIMIZATION.md`).
+  - Demonstrated 6.9x–9.2x odd-cat margin gains via independent $(a, c, \phi)$ optimization (surviving to $\eta=0.70$ for $\phi=\pi/2$), $+0.219$ / $+0.138$ triple-baseline margins for $\cos\theta\ket{0}+\sin\theta\ket{2}$, 7x thermal-noise tolerance ($n_{\rm th}=0.35$) and 5x energy-cap slack for $r<0$, and 3.9x–7.0x shot reductions via sawtooth-safe exact Clopper–Pearson displacement optimization $a^*_{\rm CP}$ (**559–1,238 guaranteed shots/setting** at 99% power).
 
-- [ ] **Days 4–5 (23–24 Nov) — Asymmetric Calibration Boxes, Energy Bound & Finite-Sample Certification**
+- [ ] **Days 4–5 (23–24 Nov) — Asymmetric Calibration Boxes, Energy Bound & Finite-Sample Certification [NEXT]**
   - Generalize certified dual solver to asymmetric calibration intervals $\Theta$ ($a_+\neq a_-$, $\eta_+\neq\eta_-$, $\nu_+\neq\nu_-$) to certify $B_2^{\rm robust} = \sup_{\theta\in\Theta} S_2^{\mathcal C}(\theta,\bar n_U)$ globally (never grid/endpoint heuristics alone).
   - Compare Hoeffding vs. exact Clopper–Pearson binomial confidence intervals; run Monte Carlo false-positive and certification-power simulations; explicitly state justified experimental energy-bound procedures.
   - **Decision Point (Calibration):** Calibrate experimental feasibility claims strictly against worst-case calibration margins.
