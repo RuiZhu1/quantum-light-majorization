@@ -17,19 +17,19 @@
 > All the best,
 > Marcelo
 
-## 2. Draft Standup Reply to Marcelo (~300 words, 6-week plan)
+## 2. Draft Standup Reply to Marcelo (~300 words, 10-day sprint to 30 Nov 2026)
 
 ```text
 Subject: Re: Spotlight in China Focus Collection (JPB) – Quick update & 4 questions
 
 Dear Marcelo,
 
-Thank you very much for sharing this opportunity and preparing the technical note, pilot code, and six-week plan—this is a sharp, well-scoped target for the JPB Focus Collection. I am happy to lead the proofs, numerics, figures, and main sections, and would be grateful if you could handle the physics-oriented revision of the Introduction.
+Thank you very much for sharing this opportunity and preparing the technical note and pilot code—this is a sharp, well-scoped target for the JPB Focus Collection. I am happy to lead the proofs, numerics, figures, and main sections, and would be grateful if you could handle the physics-oriented revision of the Introduction.
 
-We are on track for the six-week plan (submitting by the end of 2026), and all working code, derivations, and audit notes are tracked here:
+To leave December for your revision and internal review, I am aiming to finish a complete first draft and reproducible repository by 30 November 2026:
 https://github.com/RuiZhu1/quantum-light-majorization
 
-Before moving into the Week 3 parameter scans and calibration-box analysis, could we briefly confirm four points?
+Before running the full parameter scans and calibration-box analysis, could we briefly confirm four points?
 1. Is 31 Dec 2026 a hard cutoff for the Focus Collection, or is there flexibility via the editors?
 2. Is it fine to pause quantum-light-followups until this manuscript is submitted (complementary to Project B, with zero technical overlap)?
 3. Author list: Rui, Marcelo, and Gilad, or just the two of us?
