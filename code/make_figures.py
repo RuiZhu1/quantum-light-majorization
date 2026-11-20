@@ -184,10 +184,10 @@ def make_fig1_scheme_and_phases() -> Dict[str, str]:
     ax_b.contourf(XX, YY, W_sq, levels=[0.35, 0.65, 0.88, 1.0], colors=["#D0E7F9", "#89C2EE", "#2B83BA"], alpha=0.8)
     ax_b.contour(XX, YY, W_sq, levels=[0.35, 0.65, 0.88], colors=[PALETTE["blue"]], linewidths=1.0)
 
-    # Energy-cap disk |beta| <= sqrt(nbar_U)
+    # RMS energy-cap circle |beta| = sqrt(nbar_U)
     r_cap = math.sqrt(0.22)
     cap_circle = Circle((0.0, 0.0), r_cap, facecolor="none", edgecolor=PALETTE["green"],
-                        linestyle="--", linewidth=1.6, label=f"Energy cap $|\\beta|\\leq\\sqrt{{\\bar{{n}}_U}}={r_cap:.2f}$")
+                        linestyle="--", linewidth=1.6, label=f"RMS circle $|\\beta|=\\sqrt{{\\bar{{n}}_U}}={r_cap:.2f}$")
     ax_b.add_patch(cap_circle)
 
     # Detector vacuum projections at -alpha_+ = -a and -alpha_- = +a
@@ -242,7 +242,7 @@ def make_fig1_scheme_and_phases() -> Dict[str, str]:
     ax_c.axvline(1.0 / math.sqrt(2.0), color=PALETTE["red"], linestyle="--", lw=1.3,
                  label="$2b^2=1$ ($b=1/\\sqrt{2}\\approx 0.707$)")
     ax_c.axvline(B_CRIT_OFF_OFF, color="#222222", linestyle=":", lw=1.2,
-                 label=f"$b_{{\\rm crit,00}}\\approx {B_CRIT_OFF_OFF:.2f}$, $b_{{\\rm crit,01}}\\approx {B_CRIT_E0:.2f}$")
+                 label=f"$b_{{\\rm crit,00}}\\approx {B_CRIT_OFF_OFF:.2f}$, $b_{{\\rm crit,0}}\\approx {B_CRIT_E0:.2f}$")
     ax_c.axvline(B_CRIT_E0, color="#222222", linestyle=":", lw=1.2)
     ax_c.plot([1.15], [0.22], "*", color=PALETTE["red"], markersize=11, markeredgecolor="#111111",
               label="Flagship $r=-0.42$ ($b=1.15, E=0.22$)")

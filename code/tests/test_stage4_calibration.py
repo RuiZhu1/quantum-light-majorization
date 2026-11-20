@@ -49,10 +49,12 @@ from calibration_robust import (
     optimize_displacement_robust,
     simulate_calibration_monte_carlo,
     solve_asymmetric_branch,
+    squeezed_thermal_box_extremes,
     tap_beam_energy_upper_bound,
 )
 from classical_dual import exact_classical_envelope
 from optical_states import squeezed_thermal_mean_photons, squeezed_thermal_off_complex
+from witness_analysis import exact_cp_certification_power
 
 
 class TestStage4CalibrationAndStats(unittest.TestCase):
@@ -534,6 +536,77 @@ class TestStage4CalibrationAndStats(unittest.TestCase):
             self.assertGreaterEqual(ub_v, true_c - 1e-13)
             self.assertLessEqual(ub_s - true_c, 1e-9)
             self.assertLessEqual(ub_v - true_c, 1e-9)
+
+    def test_12_squeezed_thermal_exact_corners_and_forall_cp99(self) -> None:
+        """Verify exact analytical squeezed-thermal box corners and Theta2 forall N >= N_0 CP99 counts."""
+        rng = np.random.default_rng(20261121)
+        for r, n_th, T, a_nom, eta_nom, cap_nom in (
+            (-0.42, 0.0, 1.0, 1.34182, 1.00, 0.22),
+            (-0.40, 0.05, 0.90, 1.62929, 0.70, 0.22),
+            (+0.18, 0.02, 0.95, 0.43418, 1.00, 0.50),
+        ):
+            box = make_standard_calibration_box("Theta3", a_nom, eta_nom, 0.002, cap_nom)
+            (qp_min, qp_max), (qm_min, qm_max) = squeezed_thermal_box_extremes(
+                r, box, n_th=n_th, source_transmission=T
+            )
+            aps = rng.uniform(*box.a_plus_bounds, size=250)
+            ams = rng.uniform(*box.a_minus_bounds, size=250)
+            eps = rng.uniform(*box.eta_plus_bounds, size=250)
+            ems = rng.uniform(*box.eta_minus_bounds, size=250)
+            nps = rng.uniform(*box.nu_plus_bounds, size=250)
+            nms = rng.uniform(*box.nu_minus_bounds, size=250)
+            dps = rng.uniform(-box.delta_phi_max, box.delta_phi_max, size=250)
+            for ap, am, ep, em, nup, num, dp in zip(aps, ams, eps, ems, nps, nms, dps):
+                qp_r = squeezed_thermal_off_complex(
+                    complex(ap, 0.0), r, ep, n_th=n_th, source_transmission=T, dark_mean=nup
+                )
+                qm_r = squeezed_thermal_off_complex(
+                    -am * complex(math.cos(dp), math.sin(dp)),
+                    r,
+                    em,
+                    n_th=n_th,
+                    source_transmission=T,
+                    dark_mean=num,
+                )
+                self.assertGreaterEqual(qp_r, qp_min - 1e-15)
+                self.assertLessEqual(qp_r, qp_max + 1e-15)
+                self.assertGreaterEqual(qm_r, qm_min - 1e-15)
+                self.assertLessEqual(qm_r, qm_max + 1e-15)
+
+        # Verify attached exact corner closure matches L-BFGS-B fallback cleanly on flagship Theta2
+        def q_raw(a: float, eta: float, nu: float, dphi: float = 0.0) -> float:
+            return squeezed_thermal_off_complex(
+                -a * complex(math.cos(dphi), math.sin(dphi)), -0.42, eta, dark_mean=nu
+            )
+
+        box2 = make_standard_calibration_box("Theta2", 1.34182, 1.0, 0.0, 0.22)
+        ev_ext = evaluate_state_over_calibration_box(
+            q_raw,
+            1.34182,
+            1.0,
+            0.0,
+            0.22,
+            squeezed_thermal_mean_photons(-0.42),
+            box2,
+            exact_box_extremes_fn=lambda b: squeezed_thermal_box_extremes(-0.42, b),
+        )
+        ev_gen = evaluate_state_over_calibration_box(
+            q_raw,
+            1.34182,
+            1.0,
+            0.0,
+            0.22,
+            squeezed_thermal_mean_photons(-0.42),
+            box2,
+        )
+        self.assertAlmostEqual(ev_ext["L2_worst_in_box"], ev_gen["L2_worst_in_box"], places=14)
+        self.assertEqual(ev_ext["cp99_robust_worst_sig"], 1727)
+        self.assertGreaterEqual(
+            exact_cp_certification_power(
+                ev_ext["qp_worst_in_box"], ev_ext["qm_worst_in_box"], ev_ext["B2_robust_cert"], 1727
+            ),
+            0.99,
+        )
 
 
 if __name__ == "__main__":

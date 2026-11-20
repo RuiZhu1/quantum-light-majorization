@@ -26,6 +26,7 @@ from calibration_robust import (
     make_standard_calibration_box,
     optimize_displacement_robust,
     simulate_calibration_monte_carlo,
+    squeezed_thermal_box_extremes,
     tap_beam_energy_upper_bound,
 )
 from classical_dual import exact_classical_envelope
@@ -62,15 +63,13 @@ def _make_q_fn_squeezed(
     source_transmission: float = 1.0,
 ) -> Callable[[float, float, float, float], float]:
     def q_fn(a: float, eta: float, nu: float, delta_phi: float = 0.0) -> float:
-        # Note: in our Stage 3 convention, r < 0 means the REAL axis is squeezed
-        # and r > 0 means the REAL axis is antisqueezed, whereas squeezed_thermal_off_complex
-        # places x^2/u + y^2/w with u = 1 + (eta*T/2)*((2n_th+1)e^{2r} - 1).
-        # Wait: at delta_phi = 0, alpha = -a is purely real (y = 0), so x^2/u = a^2/u,
-        # which matches squeezed_thermal_off(a, r, eta, n_th, source_transmission, nu) identically!
         alpha = -a * complex(math.cos(delta_phi), math.sin(delta_phi))
         return squeezed_thermal_off_complex(
             alpha, r, eta, n_th=n_th, source_transmission=source_transmission, dark_mean=nu
         )
+    q_fn._exact_box_extremes = lambda box: squeezed_thermal_box_extremes(
+        r, box, n_th=n_th, source_transmission=source_transmission
+    )
     return q_fn
 
 
@@ -538,6 +537,7 @@ def run_scan4_monte_carlo_false_positive_and_power() -> List[Dict[str, Any]]:
                 n_trials=n_trials,
                 delta_stat=delta_stat,
                 seed=20261125 + idx_n,
+                conservative_upper=True,
             )
             rows.append({
                 "experiment_type": "Type_I_classical_false_positive_audit",
