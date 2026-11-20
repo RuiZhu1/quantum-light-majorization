@@ -603,7 +603,7 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
     ax1.plot(fp_shots, fp_rob_cp, color=PALETTE["green"], marker="s", markersize=5.0, lw=2.0,
              label="Type-I FP: Certified $B_2^{\\rm rob}(\\Theta_2)$ ($\\leq 0.008\\% \\ll \\delta_{\\rm stat}$)")
     ax1.plot(pow_shots, pow_mc_cp, color=PALETTE["blue"], marker="o", markersize=5.0, lw=2.0,
-             label="Type-II Power: Robust CP ($r=-0.42, a^*_{\\rm CP}$, $99\\%$ at $1,722$)")
+             label="Type-II Power: Robust CP ($r=-0.42, a^*_{\\rm CP}$, $99\\%$ at $1,718$)")
     ax1.plot(pow_shots, pow_mc_hoeff, color=PALETTE["orange"], marker="^", markersize=5.0, lw=1.5, linestyle="-.",
              label="Type-II Power: Robust Hoeffding ($r=-0.42, a^*_{\\rm CP}$)")
     ax1.axhline(1.0, color=PALETTE["gray"], linestyle=":", lw=1.0, label="$\\delta_{\\rm stat} = 1\\%$ Type-I budget")

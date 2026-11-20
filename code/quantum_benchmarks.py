@@ -120,10 +120,11 @@ def ideal_quantum_branch_ceilings(a: float) -> IdealQuantumCeilings:
         with mean photon number <n> = a^2 * tanh(a^2).
       - A_01 = I - |-a><-a| + |a><a| restricted to V_a has eigenvalues 1 +/- sqrt(1 - g^2)
         (and eigenvalue 1 on V_a^perp). Hence lambda_max(A_01) = 1 + sqrt(1 - exp(-4*a^2)).
-        Writing |psi_theta> = cos(theta)|u_+> + sin(theta)|u_-> in the orthonormal even/odd cat
-        basis |u_+> = |C_+(a)>, |u_-> = |C_-(a)>, the unique maximizer has
-        tan(2*theta) = sqrt(1 - g^2) / g, giving mean photon number
-        <n>_(01) = a^2 * [(1 + g)/2 * tanh(a^2) + (1 - g)/2 * coth(a^2)].
+        Writing A_01 - I = |a><a| - |-a><-a| = sqrt(1 - g^2) sigma_x in the orthonormal
+        even/odd cat basis {|u_+> = |C_+(a)>, |u_-> = |C_-(a)>}, its unique top
+        eigenstate is |psi_01*> = (|C_+(a)> + |C_-(a)>) / sqrt(2). Since n_hat preserves
+        parity (<C_+(a)|n_hat|C_-(a)> = 0), its exact mean photon number is
+        <n>_(01) = (a^2 / 2) * (tanh(a^2) + coth(a^2)) = a^2 * coth(2*a^2).
       - A_11 = 2*I - |-a><-a| - |a><a| has eigenvalue 2 on the infinite-dimensional orthogonal
         complement V_a^perp = {|psi> : <a|psi> = <-a|psi> = 0}. The minimum-Fock-support dark state
         in V_a^perp intersection span{|0>, |1>, |2>} is |chi_a> = (-a^2|0> + sqrt(2)|2>)/sqrt(a^4 + 2),
@@ -140,9 +141,12 @@ def ideal_quantum_branch_ceilings(a: float) -> IdealQuantumCeilings:
     q_even = even_cat_general_off(a, a, eta=1.0, phi=0.0, source_transmission=1.0, dark_mean=0.0)
     l2_even = 2.0 * q_even
 
-    # Exact mean photon number of the unique rank-2 off_on eigenstate in span{|a>, |-a>}
-    coth_a2 = 1.0 / math.tanh(a * a) if a * a > 1e-8 else 1.0 / (a * a)
-    e_off_on = (a * a) * (0.5 * (1.0 + g) * math.tanh(a * a) + 0.5 * (1.0 - g) * coth_a2)
+    # Exact mean photon number a^2 * coth(2*a^2) of (|C_+(a)> + |C_-(a)>)/sqrt(2)
+    e_off_on = (
+        (0.5 + (2.0 / 3.0) * (a ** 4))
+        if (2.0 * a * a < 1e-6)
+        else (a * a) / math.tanh(2.0 * a * a)
+    )
 
     th_dark = dark_state_theta(a)
     e_dark = zero_two_mean_photons(th_dark, source_transmission=1.0)
