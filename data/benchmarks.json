@@ -1,0 +1,61 @@
+{
+  "status": "theoretical model calculations; no finite-data experiment",
+  "squeezed": {
+    "displacement_magnitude": 0.44,
+    "squeezing_r": 0.18,
+    "mean_photons": 0.03275143515784283,
+    "assumed_energy_cap": 0.5,
+    "detector_efficiency": 1.0,
+    "source_transmission": 1.0,
+    "dark_count_mean": 0.0,
+    "classical_s2_components": {
+      "off_off": 1.6479748666634064,
+      "off_on": 1.6657583468534471,
+      "on_on": 1.000452716932805
+    },
+    "classical_majorization_vector": [
+      1,
+      0.6657583468534471,
+      0.33424165314655285,
+      0
+    ],
+    "classical_s2_upper_bound": 1.6657583468534471,
+    "squeezed_no_click_probability_each_setting": 0.8392582504716164,
+    "squeezed_lorenz2": 1.6785165009432328,
+    "nonclassicality_excess": 0.012758154089785645,
+    "classical_shannon_lower_bound_bits": 0.9192014769331712,
+    "squeezed_shannon_sum_bits": 1.272162211340771
+  },
+  "odd_cat": {
+    "a": 0.44,
+    "cat_amplitude": 0.44,
+    "eta": 1.0,
+    "energy_cap": 1.05,
+    "mean_photons": 1.0124625460797378,
+    "q_plus": 0.1605223548557162,
+    "q_minus": 0.1605223548557162,
+    "L2": 1.6789552902885676,
+    "classical_s2_upper_bound": 1.6657583468534471,
+    "excess": 0.013196943435120456,
+    "components": {
+      "off_off": 1.6479748666634064,
+      "off_on": 1.6657583468534471,
+      "on_on": 1.4233113845680512
+    },
+    "coherent_mimic_energy": 1.6357220635208538,
+    "coherent_mimic_imag_amplitude": 1.2789535032677513
+  },
+  "sample_sizes": {
+    "squeezed": {
+      "failure_probability": 0.01,
+      "nominal_mean_threshold_per_setting": 73619,
+      "half_margin_per_setting": 294475
+    },
+    "odd_cat": {
+      "failure_probability": 0.01,
+      "nominal_mean_threshold_per_setting": 68805,
+      "half_margin_per_setting": 275218
+    }
+  },
+  "squeezed_labelled_off_off_excess": 0.03054163427982637
+}

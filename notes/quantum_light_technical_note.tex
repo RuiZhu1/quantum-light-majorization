@@ -1,0 +1,779 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{microtype,booktabs,tabularx,longtable,array}
+\usepackage{enumitem}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor,graphicx}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Quantum-light majorization: technical note}
+\fancyhead[R]{\small 20 November 2026}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=3pt,topsep=5pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\Cset}{\mathcal C}
+\newcommand{\Qset}{\mathcal Q}
+\newcommand{\nbar}{\bar n_{\max}}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\bra}[1]{\langle #1\rvert}
+\newcommand{\abs}[1]{\lvert #1\rvert}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\I}{I}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+\title{Energy-constrained majorization witnesses\protect\\of nonclassical light\\[6pt]
+\large Technical note, reproducible testbed, and six-week research plan}
+\author{Prepared for Marcelo F. Ciappina}
+\date{20 November 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+This note develops a concrete application of the binary-measurement majorization
+framework of Zhu, Gour, and Ciappina to one optical mode measured by two displaced
+click/no-click detectors. A mean-photon-number constraint prevents the classical
+and quantum majorization bounds from becoming trivial. Weak squeezed vacuum is
+the primary testbed: its detection probabilities are analytic, its energy is small,
+and an independent Fock-space calculation provides a check. An odd coherent-state
+superposition supplies a separate example in which the energy constraint is
+essential: its two measured probabilities have an exact coherent-state explanation
+if the energy information is discarded. The note gives a restricted-state-set
+majorization lemma, a proved analytic classical envelope, benchmark numbers,
+finite-sample criteria, calculations still to be completed, an annotated reading
+list, and a six-week plan. The results are theoretical feasibility calculations,
+not experimental data or a claim of priority. Twelve executable checks accompany
+the source.
+\end{abstract}
+
+\section{Research objective and scope}
+The proposed question is:
+\begin{quote}
+Can an independently bounded mean photon number turn two binary optical
+measurements into a useful majorization test of nonclassicality, with explicit
+detector calibration and finite-sample guarantees?
+\end{quote}
+The supplied manuscript~\cite{ZhuManuscript}, particularly Theorem~4,
+Corollary~4, and the distinction between detector bias and unsharpness, is the
+mathematical starting point. The optical task compares a classical set of coherent
+mixtures with a larger quantum set under the same energy budget. A violation of
+the \emph{classical} envelope is the proposed witness. No physical state violates
+the correctly specified universal quantum envelope.
+
+\textbf{Testbed.} Use squeezed vacuum first, followed by squeezed thermal light.
+These states validate the probability model, the calibration conventions, the
+Lorenz partial sums, and the statistical pipeline. The initial squeezed example
+is also detected by an outcome-resolved classical inequality; it therefore does
+not, by itself, establish an advantage from the energy constraint.
+
+\textbf{Separate application check.} Use a small odd cat state to demonstrate that
+energy information can exclude an otherwise exact classical explanation of the
+two binary distributions. Its present parameters are sensitive to inefficiency;
+they are a conceptual benchmark, not an optimized experimental proposal.
+
+\textbf{Six-week scope.} One mode, two real opposite displacements, a calibrated
+on/off detector, and a stated bound on source energy before displacement. Complete
+the classical bounds and finite-data treatment first. Tight quantum envelopes and
+general attainability classifications are extensions. Do not introduce a
+multimode model, a full steering protocol, or a cryptographic security claim into
+the first manuscript.
+
+\section{Optical model and conventions}
+Let $\hat n=\hat a^\dagger\hat a$ and
+$D(\alpha)=\exp(\alpha\hat a^\dagger-\alpha^*\hat a)$.
+The settings are $\alpha_+=a$ and $\alpha_-=-a$, with $a>0$ real.
+Displacement is applied \emph{before} photodetection. For efficiency
+$0<\eta\leq1$ and independent Poisson dark counts of mean $\nu\geq0$ per
+detection window, the effects are
+\begin{align}
+ E_0(\alpha)&=e^{-\nu}D^\dagger(\alpha)(1-\eta)^{\hat n}D(\alpha),
+ &E_1(\alpha)&=\I-E_0(\alpha). \label{eq:effects}
+\end{align}
+Outcome $0$ means no click. At $\eta=1$, the diagonal operator in
+Eq.~\eqref{eq:effects} is the vacuum projector. Noise and efficiency must enter
+the actual effects, rather than an ideal measurement bound; see also
+Ref.~\cite{Sperling2012} for detector modeling.
+
+For a coherent input $\ket\beta$,
+\begin{equation}
+ q_\alpha(\beta)=\bra\beta E_0(\alpha)\ket\beta
+ =\kappa e^{-\eta\abs{\beta+\alpha}^2},\qquad \kappa=e^{-\nu}.
+ \label{eq:coherent}
+\end{equation}
+For an arbitrary input $\rho$, write
+\begin{equation}
+ p_\pm=(q_\pm,1-q_\pm),\quad
+ q_\pm=\tr[\rho E_0(\pm a)],\quad
+ v(\rho)=p_+\oplus p_-.
+ \label{eq:v}
+\end{equation}
+The sum of the entries of $v$ is $2$, not $1$. The Lorenz partial sums
+$L_k(v)$ sum its $k$ largest entries, with $L_0=0$ and $L_4=2$.
+All detection windows are retained, including no-click events. No event
+postselection or photon-number reconstruction is part of the witness.
+
+The constrained sets are
+\begin{align}
+ \Qset_{\nbar}&=\{\rho\geq0:\tr\rho=1,\ \tr(\rho\hat n)\leq\nbar\},\label{eq:qset}\\
+ \Cset_{\nbar}&=\left\{\rho=\int_{\mathbb C}\ket\beta\bra\beta\,\dd\mu(\beta):
+ \mu\geq0,\ \int\dd\mu=1,\ \int\abs\beta^2\dd\mu\leq\nbar\right\}.
+ \label{eq:cset}
+\end{align}
+Here $\mu$ is a positive probability measure and may contain point masses.
+In particular, the constraint is on \emph{average} energy: a permitted mixture
+may have a small weight on coherent components with $\abs\beta^2>\nbar$.
+Clearly $\Cset_{\nbar}\subseteq\Qset_{\nbar}$.
+
+The energy cap applies to the signal at the entrance to the displacement stage.
+It excludes the local oscillator used to implement displacement. A source loss
+channel of transmissivity $T$ precedes this stage; detector inefficiency follows
+it. These two losses must not be combined indiscriminately, because the latter
+also attenuates the applied displacement.
+
+\section{Majorization for restricted optical state sets}
+The binary construction in Ref.~\cite{ZhuManuscript} extends without a
+finite-dimensional assumption when formulated in terms of suprema over an
+admissible state set.
+
+\begin{lemma}[Restricted-set binary envelope]\label{lem:binary}
+For any nonempty set $\mathcal S$ of states and two binary POVMs, define
+$S_k^{\mathcal S}=\sup_{\rho\in\mathcal S}L_k(v(\rho))$.
+Then
+\begin{equation}
+ \omega_{\mathcal S}=
+ (S_1^{\mathcal S},\ S_2^{\mathcal S}-S_1^{\mathcal S},\
+  1+S_1^{\mathcal S}-S_2^{\mathcal S},\ 1-S_1^{\mathcal S})
+ \label{eq:omega}
+\end{equation}
+is already ordered and is the least majorization upper bound of all
+$v(\rho)$ with $\rho\in\mathcal S$.
+\end{lemma}
+\begin{proof}
+For every pair of binary distributions, the smallest entry is one minus the
+largest, so $L_3=1+L_1$. Also
+$L_2=\max(q_+,1-q_+)+\max(q_-,1-q_-)$, and hence
+$L_1+\tfrac12\leq L_2\leq2L_1$. Taking suprema gives
+$S_3=1+S_1$ and $S_1+\tfrac12\leq S_2\leq2S_1$.
+These inequalities put the increments of $(0,S_1,S_2,1+S_1,2)$ in decreasing
+order. They form a concave Lorenz curve and bound every admissible curve.
+Any other upper bound must dominate each supremum $S_k$, establishing minimality.
+Neither convexity of $\mathcal S$ nor attainment of its suprema is needed.
+\end{proof}
+
+Define $h_{\mathcal S}(A)=\sup_{\rho\in\mathcal S}\tr(\rho A)$.
+Only eight support-function problems are needed:
+\begin{align}
+ S_1^{\mathcal S}&=\max_{j=\pm,\,b=0,1}h_{\mathcal S}(E_b(ja)),\label{eq:s1}\\
+ S_2^{\mathcal S}&=\max_{b,c=0,1}h_{\mathcal S}(E_b(a)+E_c(-a)).\label{eq:s2}
+\end{align}
+Two outcomes from one setting sum to $1$ and cannot exceed the largest cross
+pair. It follows that $\omega_{\Cset}\prec\omega_{\Qset}$.
+Different states may maximize $S_1$ and $S_2$; an optimal vector need not be
+physically attained, as emphasized in the supplied manuscript.
+
+\subsection{Why the unrestricted envelopes are trivial}
+Without an energy cap, coherent inputs with $\abs\beta\to\infty$ give
+$q_+,q_-\to0$. Therefore both classical and quantum state sets have
+$S_1=1$, $S_2=2$, and $\omega=(1,1,0,0)$, for any fixed nonzero efficiency.
+With ideal detection and no dark counts there is even an exact finite-energy
+example:
+\begin{equation}
+ \ket{\chi_a}=\frac{-a^2\ket0+\sqrt2\ket2}{\sqrt{a^4+2}},
+ \qquad \langle\pm a|\chi_a\rangle=0,
+ \qquad \langle\hat n\rangle_{\chi_a}=\frac4{a^4+2}.
+ \label{eq:darkstate}
+\end{equation}
+Both settings click with certainty. This example already lives in a
+three-dimensional Fock subspace. A restriction to $\ket0,\ket1$ is therefore
+a physical assumption that requires justification, not an innocuous numerical
+approximation. At nonunit efficiency, the unrestricted suprema still give the
+trivial vector, even if no finite-energy state attains certain clicks.
+
+\section{An analytic classical envelope available immediately}
+The following construction is valid for arbitrary classical mixtures with the
+average cap in Eq.~\eqref{eq:cset}. It supplies the first implementation before
+the exact energy-constrained optimizations are completed.
+
+Set $b=\sqrt\eta\,a$ and assume $b^2\leq\tfrac12$. Define
+\begin{align}
+ A_{00}&=2\kappa e^{-b^2},\label{eq:a00}\\
+ A_{01}&=1+\kappa G(b),\quad
+ G(b)=\max_{x\geq0}\{e^{-(x-b)^2}-e^{-(x+b)^2}\},\label{eq:a01}\\
+ A_{11}&=2-2\kappa e^{-\eta(\nbar+a^2)},\label{eq:a11}\\
+ B_2&=\max\{\tfrac32,A_{00},A_{01},A_{11}\}.\label{eq:B2}
+\end{align}
+The unique maximizer $x_*>b$ in Eq.~\eqref{eq:a01} solves
+\begin{equation}
+ \log\frac{x_*+b}{x_*-b}=4bx_*.
+ \label{eq:root}
+\end{equation}
+The left side minus the right side decreases strictly on $(b,\infty)$, so a
+bracketed scalar root search is sufficient.
+
+\begin{proposition}[Safe classical witness]\label{prop:safe}
+Under the stated assumptions,
+\begin{equation}
+ v(\rho)\prec\widetilde\omega_C=(1,B_2-1,2-B_2,0)
+ \quad (\rho\in\Cset_{\nbar}).\label{eq:safeomega}
+\end{equation}
+Consequently $W_2=L_2(v)-B_2>0$ certifies nonclassicality relative to the
+trusted detector and energy model.
+\end{proposition}
+\begin{proof}
+For a coherent input write $\beta=u+\mathrm iv$ and scale
+$x=\sqrt\eta u$, $y=\sqrt\eta v$.
+The sum of its no-click probabilities is
+$2\kappa e^{-(x^2+y^2+b^2)}\cosh(2bx)$.
+Its maximum is at $x=y=0$ when $2b^2\leq1$: the stationary equation
+$x=b\tanh(2bx)$ has no nonzero solution in this range. This proves the
+off/off bound $A_{00}$, including arbitrary mixtures.
+
+A cross pair is $1+q_+-q_-$ or its negative-difference counterpart.
+The largest absolute difference occurs at $y=0$ and equals $\kappa G(b)$,
+which proves $A_{01}$. Differentiating gives Eq.~\eqref{eq:root}.
+
+Finally, for every coherent amplitude,
+$q_++q_-\geq2\kappa e^{-\eta(\abs\beta^2+a^2)}$.
+Convexity of the exponential and the average energy cap imply
+\begin{equation}
+ \int(q_++q_-)\dd\mu\geq
+ 2\kappa e^{-\eta(\int\abs\beta^2\dd\mu+a^2)}
+ \geq2\kappa e^{-\eta(\nbar+a^2)}.
+ \label{eq:jensen}
+\end{equation}
+Subtracting from $2$ proves $A_{11}$. These bounds cover every cross pair;
+within-setting pairs sum to $1$. The other partial sums obey $L_1\leq1$
+and $L_3\leq2$. The floor $B_2\geq3/2$ makes the vector in
+Eq.~\eqref{eq:safeomega} ordered, completing the proof.
+\end{proof}
+
+\textbf{Tight versus conservative ingredients.} The off/off support $A_{00}$
+is attained by vacuum. The on/on support $A_{11}$ is attained by the coherent
+state $\ket{\mathrm i\sqrt{\nbar}}$, so the Jensen step is tight. The cross
+support $A_{01}$ is attained within the energy budget if
+$\nbar\geq x_*^2/\eta$. Otherwise it is a conservative upper bound. Setting
+$S_1$ to $1$ is also conservative in general. For $\nu=0$ and
+$\nbar\geq a^2$, however, $S_1=1$ is attained by $\ket{-a}$.
+Thus the construction is exact in some parameter regimes, but it must not be
+called the optimal energy-constrained vector everywhere.
+
+The Shannon consequence is
+\begin{equation}
+ H(p_+)+H(p_-)\geq-\sum_{j=1}^4
+ \widetilde\omega_{C,j}\log_2\widetilde\omega_{C,j}=h_2(B_2-1).
+ \label{eq:shannon}
+\end{equation}
+The direct sum has total $2$; equivalently its normalized entropy is
+$H(v/2)=1+[H(p_+)+H(p_-)]/2$. For Tsallis entropy with
+$\gamma>0$, $\gamma\ne1$,
+$T_\gamma(p_+)+T_\gamma(p_-)\geq
+[2-\sum_j\widetilde\omega_{C,j}^{\gamma}]/(\gamma-1)$.
+General R\'enyi entropies of $v/2$ are legitimate majorization monotones, but
+they must not be identified with a sum of the two individual R\'enyi entropies.
+
+\section{Squeezed vacuum as the primary testbed}\label{sec:squeezed}
+Use quadratures $X=(\hat a+\hat a^\dagger)/\sqrt2$,
+$P=(\hat a-\hat a^\dagger)/(\mathrm i\sqrt2)$, so vacuum covariance is
+$\I/2$. Orient the input squeezed vacuum with covariance
+$\operatorname{diag}(e^{2r},e^{-2r})/2$: the real displacement lies along
+the antisqueezed quadrature. After source transmission $T$,
+\begin{align}
+ u&=1+\tfrac12\eta T(e^{2r}-1),&
+ w&=1+\tfrac12\eta T(e^{-2r}-1),\nonumber\\
+ q_+=q_-&=\frac{\kappa}{\sqrt{uw}}
+                \exp(-\eta a^2/u),&
+ \langle\hat n\rangle&=T\sinh^2r.\label{eq:squeezed}
+\end{align}
+For $T=\eta=1$ and $\nu=0$ this reduces to
+\begin{equation}
+ q_\pm=\frac{\exp[-a^2(1-\tanh r)]}{\cosh r}.
+ \label{eq:squeezedideal}
+\end{equation}
+For squeezed thermal light with initial thermal occupation $n_{\rm th}$,
+replace $e^{\pm2r}$ in $u,w$ by $(2n_{\rm th}+1)e^{\pm2r}$.
+Its energy before displacement is
+$T[(n_{\rm th}+1/2)\cosh(2r)-1/2]$. Every scan must check this energy
+against its stated cap.
+
+\subsection{Fixed benchmark and interpretation}
+The reference point is
+\begin{equation}
+ a=0.44,\quad r=0.18,\quad T=1,\quad\nu=0,\quad\nbar=0.5,
+ \qquad \sinh^2r=0.0327514352.
+ \label{eq:benchmark}
+\end{equation}
+The cap is intentionally loose. It is an assumed independent upper bound,
+not an estimate extracted from the known target-state formula.
+
+\begin{table}[htbp]
+\centering
+\caption{Squeezed-vacuum testbed. Values are theoretical probabilities; all
+parameters other than $\eta$ are fixed by Eq.~\eqref{eq:benchmark}.}
+\begin{tabular}{rrrr}
+\toprule
+$\eta$ & $B_2$ & $L_2$ & $W_2=L_2-B_2$\\
+\midrule
+1.00 & 1.66575835 & 1.67851650 & 0.01275815\\
+0.95 & 1.66400472 & 1.68969509 & 0.02569037\\
+0.90 & 1.68019050 & 1.70128654 & 0.02109604\\
+0.80 & 1.71303591 & 1.72576149 & 0.01272558\\
+0.70 & 1.74652340 & 1.75205599 & 0.00553260\\
+\bottomrule
+\end{tabular}
+\label{tab:sq}
+\end{table}
+
+At ideal efficiency, $q_+=q_-=0.8392582505$ and
+$\widetilde\omega_C=(1,0.6657583469,0.3342416531,0)$.
+The classical bound induced by Shannon entropy is $0.91920148$ bits, whereas
+the measured Shannon sum is $1.27216221$ bits. The Lorenz test detects this
+case, while this particular scalar reduction does not.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.75\linewidth,height=5.8cm,xlabel={$k$},ylabel={$L_k$},
+ xmin=0,xmax=4,ymin=0,ymax=2.08,xtick={0,1,2,3,4},grid=major,
+ legend style={at={(0.03,0.97)},anchor=north west,font=\small}]
+\addplot[thick,blue!65!black,mark=square*] table[x=k,y=classical,col sep=comma]{../data/lorenz.csv};
+\addlegendentry{Classical upper envelope}
+\addplot[thick,orange!85!black,mark=*] table[x=k,y=squeezed,col sep=comma]{../data/lorenz.csv};
+\addlegendentry{Squeezed testbed}
+\end{axis}
+\end{tikzpicture}
+\caption{Direct-sum Lorenz sums for the ideal testbed. The squeezed vector
+exceeds the classical envelope at $k=2$. The envelope is a bound, not the
+distribution of a single reference classical state.}
+\end{figure}
+
+\textbf{What this testbed does and does not show.} Its off/off sum also exceeds
+the energy-independent bound $A_{00}=1.64797487$, by $0.03054163$.
+It is consequently already recognized by an outcome-resolved test of the kind
+studied in Ref.~\cite{Kovtoniuk2024}. This is a valuable regression test and
+an illustration of information lost by a Shannon reduction, not evidence of
+superiority over complete classical-set criteria. The nonmonotonic $W_2$ in
+Table~\ref{tab:sq} reflects changes in both the data and the active envelope
+branch; it is not an increase in a nonclassicality resource under loss.
+
+\section{A separate example where energy information is essential}\label{sec:cat}
+For this diagnostic use an odd coherent-state superposition
+\begin{equation}
+ \ket{C_-(c)}=\frac{\ket c-\ket{-c}}
+ {\sqrt{2(1-e^{-2c^2})}},\qquad
+ \langle\hat n\rangle=c^2\coth(c^2),\qquad c>0.
+ \label{eq:cat}
+\end{equation}
+For ideal detection and $a=c$,
+\begin{equation}
+ q_+=q_-=\frac{1-e^{-2a^2}}2,\qquad
+ L_2=1+e^{-2a^2}.\label{eq:catq}
+\end{equation}
+Take $a=c=0.44$, $\nbar=1.05$, $\eta=1$, and $\nu=0$.
+Then
+\begin{align}
+ \langle\hat n\rangle&=1.01246255<1.05,&q_\pm&=0.16052235,\nonumber\\
+ B_2&=1.66575835,&L_2-B_2&=0.01319694.\label{eq:catnumbers}
+\end{align}
+Here $x_*=0.75610659$, so the coherent amplitude maximizing the cross sum
+has energy $x_*^2\simeq0.57169717<1.05$.
+Thus $A_{01}$ is attainable, is the largest branch, and $B_2$ is the
+\emph{exact} classical $S_2$ at this point. Since $S_1=1$ is also attainable,
+Eq.~\eqref{eq:safeomega} is the exact classical majorization supremum here.
+
+Nevertheless, the coherent input
+\begin{equation}
+ \ket{\mathrm i y},\qquad
+ y^2=-\log q_\pm-a^2=1.63572206,
+ \label{eq:mimic}
+\end{equation}
+reproduces \emph{both} ideal binary distributions exactly. Accordingly, no test
+using only these two distributions and the detector model can reject classicality
+without additional information. Equation~\eqref{eq:jensen} shows that any
+classical mixture producing this equal pair must satisfy
+$\langle\hat n\rangle\geq-\log q_\pm-a^2$; the coherent mimic attains this
+minimum. The cap $1.05$ therefore excludes all classical explanations while
+admitting the cat state.
+
+This is an explicit example of the value of energy information. It does not
+establish priority for energy-assisted nonclassicality tests, nor make majorization
+stronger than a complete convex-membership test using the same information.
+The direct energy inequality from Eq.~\eqref{eq:jensen} also detects this case.
+The proposed contribution is an organized majorization description and its
+attainability and detector dependence.
+
+The exact vector in this example is not itself attained by a classical state.
+Attaining $S_1=1$ forces a coherent state $\ket{a}$ or $\ket{-a}$.
+Its $L_2$ is $1+\max(e^{-4a^2},1-e^{-4a^2})$, strictly below $S_2$.
+Thus the maximizing states for the first and second Lorenz sums are incompatible,
+providing a concrete optical instance of the manuscript's attainment question.
+
+For source loss $T$, real $a,c$, and nonideal detection, an analytic check is
+\begin{equation}
+ q_\pm=\frac{\kappa\left[
+ e^{-\eta(a+\sqrt T c)^2}+e^{-\eta(a-\sqrt T c)^2}
+ -2e^{-2c^2}e^{-\eta(a^2-Tc^2)}\right]}
+ {2(1-e^{-2c^2})},\qquad \langle\hat n\rangle=Tc^2\coth(c^2).
+ \label{eq:catloss}
+\end{equation}
+The fixed example loses its majorization violation already at $\eta=0.98$
+($W_2\simeq-0.00413$). Optimize $a$ and $c$ before making any robustness claim.
+The squeezed state remains the preferred testbed for the detector analysis.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.82\linewidth,height=5.5cm,xlabel={Detector efficiency $\eta$},
+ ylabel={$W_2$},xmin=0.7,xmax=1,ymin=-0.08,ymax=0.04,grid=major,
+ xtick={0.7,0.75,0.8,0.85,0.9,0.95,1},scaled y ticks=false,
+ legend style={at={(0.03,0.03)},anchor=south west,font=\small}]
+\addplot[thick,blue!65!black] table[x=eta,y=squeezed_gap,col sep=comma]{../data/efficiency.csv};
+\addlegendentry{Squeezed testbed, $\nbar=0.5$}
+\addplot[thick,orange!85!black] table[x=eta,y=odd_cat_gap,col sep=comma]{../data/efficiency.csv};
+\addlegendentry{Odd-cat check, $\nbar=1.05$}
+\addplot[black,dashed,domain=0.7:1]{0};
+\end{axis}
+\end{tikzpicture}
+\caption{Fixed-state, fixed-displacement efficiency scans. Positive values certify
+nonclassicality under the model. The vertical range clips the large negative
+odd-cat values to show the useful margins. These curves are not optimized
+efficiency thresholds or resource monotones.}
+\end{figure}
+
+\section{Calculations to complete}
+\subsection{Exact classical envelope: highest priority}
+For each effect or cross sum $A$, define $f_A(\beta)=\bra\beta A\ket\beta$.
+The optimization over coherent mixtures is a moment problem:
+\begin{equation}
+ h_C(A)=\sup_{\mu\geq0}\left\{\int f_A\dd\mu:
+ \int\dd\mu=1,\ \int\abs\beta^2\dd\mu\leq\nbar\right\}.
+ \label{eq:classicalprimal}
+\end{equation}
+For every $\lambda\geq0$, one obtains the rigorous dual upper bound
+\begin{equation}
+ h_C(A)\leq\lambda\nbar+
+ \sup_{\beta\in\mathbb C}[f_A(\beta)-\lambda\abs\beta^2].
+ \label{eq:classicaldual}
+\end{equation}
+Minimize the right side over $\lambda$. Establish the moment-problem strong
+duality and attainment conditions for the chosen effects, including the
+$\nbar=0$ boundary, before identifying the infimum with the exact primal.
+For $\lambda>0$ and $0\leq f_A\leq m$, where $m=1$ or $2$, a maximizer lies
+inside $\abs\beta\leq\sqrt{m/\lambda}$: outside this disk the objective is
+negative, whereas its value at vacuum is nonnegative. Treat $\lambda=0$
+analytically or with an explicit tail bound.
+
+\begin{enumerate}
+\item Reproduce $A_{00}$ and $A_{11}$ and solve the energy-active cross branch
+when $x_*^2/\eta>\nbar$.
+\item Optimize $S_1$ as well as $S_2$, particularly when dark counts or a small
+energy cap prevent $S_1=1$.
+\item Find extremizing coherent states or mixtures. A two-support-point ansatz
+is natural for a probability measure with one active moment constraint;
+prove its sufficiency in the relevant regime instead of assuming it.
+\item Compare exact and conservative vectors, their attained partial sums,
+and their Shannon/Tsallis reductions.
+\end{enumerate}
+A finite grid over amplitudes and a linear program give a \emph{lower} bound
+on the supremum, not a safe witness threshold. Use an analytic or globally
+certified dual upper bound for claims of nonclassicality.
+
+\subsection{Quantum envelope and truncation: secondary priority}
+For $\rho\in\Qset_{\nbar}$, the corresponding support obeys
+\begin{equation}
+ h_Q(A)\leq\inf_{\lambda\geq0}
+ \left\{\lambda\nbar+\sup\spec(A-\lambda\hat n)\right\}.
+ \label{eq:quantumdual}
+\end{equation}
+In a finite Fock space this is the standard dual of an SDP with trace and
+energy constraints; strict feasibility for positive energy allows equality.
+For the infinite-dimensional statement, supply a compactness/duality proof
+or retain the expression as an upper bound. Inspect maximizing states and
+whether the same state can attain $S_1$ and $S_2$.
+
+The finite matrices must be compressions of the actual effects,
+$P_NE_bP_N$, with $P_N=\sum_{n=0}^N\ket n\bra n$.
+Exponentiating a truncated creation operator can change the measurement.
+Increasing $N$ until digits stabilize is a numerical check, not a certified
+infinite-dimensional upper bound.
+
+A simple, although often loose, remainder bound is available. Set
+$\delta_N=\min(1,\nbar/(N+1))$.
+For any admissible $\rho$, its tail weight is at most $\delta_N$.
+The state $\sigma=P_N\rho P_N+\tr[(\I-P_N)\rho]\ket0\bra0$
+has energy at most $\nbar$, lies in the finite subspace, and satisfies
+$\tfrac12\norm{\rho-\sigma}_1\leq\sqrt{\delta_N}+\delta_N/2$.
+Thus for $0\leq A\leq m\I$,
+\begin{equation}
+ h_Q(A)\leq h_{Q,N}(P_NAP_N)
+ +m\min\{1,\sqrt{\delta_N}+\delta_N/2\}.
+ \label{eq:tail}
+\end{equation}
+This follows from the gentle-projection trace-norm bound followed by adding
+the missing trace to vacuum. Evaluate a certified finite-dimensional dual
+upper bound for $h_{Q,N}$ when using Eq.~\eqref{eq:tail}. This correction
+can exceed the small pilot margins; sharper spectral-tail estimates are a
+research task. The analytic classical tests above do not require a Fock cutoff.
+
+\subsection{State and measurement scans}
+Start with $0<a\leq0.7$, $0\leq r\leq0.5$, $0.7\leq\eta\leq1$, and
+$\nu\in\{0,10^{-4},10^{-3},10^{-2}\}$. Explore source transmission
+$0.8\leq T\leq1$ and small thermal occupations, always enforcing the energy
+budget. For each point record the active branch, all Lorenz sums, the witness
+margin, and the induced Shannon bound. Optimize displacement for the
+\emph{certified statistical margin}, not only for noiseless $W_2$.
+
+For the odd-cat check, vary measurement displacement and cat amplitude
+independently. Compare against the exact classical set using the same
+energy and calibration assumptions. Neither sorting nor a majorization
+envelope can outperform a complete membership test with the same data;
+the intended benefits are explicit bounds, universality across uncertainty
+measures, and a transparent account of attainable distributions.
+
+\section{Calibration and finite-sample certification}\label{sec:statistics}
+Let $\theta=(a_+,a_-,\eta_+,\eta_-,\nu_+,\nu_-,\ldots)$ lie in an independently
+established confidence region $\Theta$ and let $\bar n_U$ be a justified energy
+upper bound. Use
+\begin{equation}
+ B_2^{\rm robust}=\sup_{\theta\in\Theta}
+ B_2(\theta,\bar n_U).\label{eq:robust}
+\end{equation}
+The symmetric formula~\eqref{eq:B2} applies only to the symmetric model it
+assumes. Efficiency mismatch or unequal displacement errors require a
+generalized support calculation. A calibration grid or endpoint-only search
+does not automatically certify the supremum, particularly when branches switch.
+
+For $N_s$ independent shots at each of the two fixed settings, estimate their
+no-click probabilities by $\widehat q_\pm$. Hoeffding's inequality and a union
+bound~\cite{Hoeffding1963} give, with probability at least $1-\delta_{\rm stat}$,
+\begin{equation}
+ \abs{\widehat q_\pm-q_\pm}\leq
+ \epsilon=\sqrt{\frac{\log(4/\delta_{\rm stat})}{2N_s}}.
+ \label{eq:hoeffding}
+\end{equation}
+Since
+\begin{equation}
+ L_2=1+\abs{q_+-\tfrac12}+\abs{q_--\tfrac12},\label{eq:L2formula}
+\end{equation}
+the following rejection rule is valid:
+\begin{equation}
+ \widehat L_2-2\epsilon>B_2^{\rm robust}.\label{eq:reject}
+\end{equation}
+Add the calibration and energy-confidence failure probabilities to
+$\delta_{\rm stat}$ by a union bound. The two-setting error control also
+covers choosing which Lorenz pair is largest after observing the data.
+Searching many displacement settings on the same data requires additional
+multiple-comparison control or separate optimization and validation data.
+
+At $\delta_{\rm stat}=0.01$ and the ideal squeezed gap
+$\Delta=0.01275815$, $N_s=73\,619$ is the nominal threshold at which
+$2\epsilon<\Delta$. This is not a power guarantee. Requiring
+$4\epsilon<\Delta$, so that certification follows on the simultaneous
+confidence event for data drawn from the specified state, gives
+$N_s=294\,475$ per setting. A convenient planning value is $300\,000$
+shots per setting, excluding calibration and energy characterization. These
+numbers assume the model parameters exactly; worst-case calibration reduces
+the available margin.
+
+\textbf{Energy information is an input to the certificate.} Threshold-detector
+counts alone do not give a general upper bound on mean photon number because
+bright tails can saturate the detector. Nor does a finite sample mean of an
+unbounded photon-number observable supply a distribution-free upper confidence
+bound without additional assumptions. Specify an independent energy constraint,
+or a monitoring procedure with a justified tail model. Never use knowledge that
+the target is squeezed vacuum to exclude classical alternatives of higher energy.
+
+\section{Simple tests and their present status}\label{sec:tests}
+The file \texttt{test\_quantum\_light.py} contains twelve tests, all passing
+in the supplied environment. They check implementation and benchmark
+consistency; analytic proofs provide the guarantee for arbitrary states.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.65\linewidth}}
+\toprule
+Check & Expected outcome and purpose\\
+\midrule
+\endhead
+Coherent-state response & Exact coherent probabilities agree with an independent
+Fock-matrix evaluation for real and complex displacements, three efficiencies,
+and nonzero dark counts.\\
+Gaussian testbed & Squeezed-vacuum probabilities agree with the Fock-state
+expansion at $r=0,0.18,0.3$ and $\eta=0.7,0.9,1$.\\
+Odd-cat response & The coherent-superposition formula agrees with the Fock-matrix
+evaluation at the same three efficiencies.\\
+Effect positivity & Compressed effects have spectra in $[0,1]$ within numerical
+tolerance, including the zero-efficiency limit.\\
+Vacuum/source-loss limits & $r=0$ and $T=0$ reduce to
+$q=\exp(-\nu-\eta a^2)$; zero efficiency leaves only dark counts.\\
+Classical-mixture nulls & 750 seeded mixtures with different efficiencies obey
+both the Lorenz bound and its Shannon reduction. This is a stress test,
+not a proof over all mixtures.\\
+Rare bright component & The allowed mixture
+$0.98\ket0\bra0+0.02\ket{5\mathrm i}\bra{5\mathrm i}$ has mean $0.5$
+and obeys the bound, despite a component with $25$ photons.\\
+Unrestricted obstruction & The three-level state in Eq.~\eqref{eq:darkstate}
+has zero no-click probabilities for both ideal settings.\\
+Squeezed benchmark & $W_2>0$ while the induced Shannon test does not reject;
+the outcome-resolved off/off test does reject.\\
+Energy-essential mimic & The odd cat obeys its energy cap; a coherent state
+reproduces both probabilities but exceeds that cap.\\
+Energy-cap monotonicity & The analytic classical envelope weakens as the cap
+increases and approaches the trivial bound.\\
+Statistics and fragility & $300\,000$ shots meet the stated half-margin
+condition; $100\,000$ do not. The fixed odd-cat witness fails at $\eta=0.98$.\\
+\bottomrule
+\end{longtable}
+
+Further tests to add during the project are: primal--dual agreement in
+energy-active classical branches; convergence with certified tails for quantum
+supports; calibration-box worst cases; finite-data false-positive and power
+simulations; and comparison to the tight outcome-resolved classical criteria.
+
+\section{Six-week work plan and decision points}
+The dates below run from 20 November through 31 December 2026. They are a
+research schedule, not a verified journal submission deadline.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.42\linewidth}>{\raggedright\arraybackslash}p{0.32\linewidth}}
+\toprule
+Period & Calculations and reading & Completion criterion\\
+\midrule
+\endhead
+Week 1\newline 20--26 Nov & Read the supplied binary framework and the 2024
+classical-set paper. Reproduce the squeezed testbed, the odd-cat mimic, and all
+simple tests. Audit energy-assisted prior art. & A claim-by-claim comparison:
+what follows from existing criteria, what energy information adds, and what
+remains potentially new.\\
+Week 2\newline 27 Nov--3 Dec & Complete the energy-constrained classical
+supports. Solve the cross branch and dark-count $S_1$ problem. Derive explicit
+upper certificates. & Exact or certified classical envelopes for the chosen
+parameter range, with extremizers and numerical checks.\\
+Week 3\newline 4--10 Dec & Map squeezed vacuum and squeezed thermal testbeds;
+optimize displacement. Examine the odd-cat family separately. Begin quantum
+support and attainment calculations if time permits. & Detection-region plots,
+an identified active-bound mechanism, and comparison to outcome-resolved tests.\\
+Week 4\newline 11--17 Dec & Treat calibration intervals, dark counts, source
+loss, and finite shots. State how energy is bounded. & A certification rule
+with a complete error budget and a realistic positive-margin region.\\
+Week 5\newline 18--24 Dec & Finish only the quantum-envelope/attainment results
+that can be certified. Prepare figures and write methods and results. & Draft
+with reproducible data and no dependence on an unjustified Fock cutoff.\\
+Week 6\newline 25--31 Dec & Internal review, mathematical checks, bibliography
+and novelty audit, writing and figure revision. & Submission-ready manuscript
+and code archive, subject to the collection's actual submission window.\\
+\bottomrule
+\end{longtable}
+
+\textbf{Decision points.} At the end of Week~1, proceed only with a precise
+contribution beyond re-expressing the known two-setting classical region.
+At the end of Week~2, prioritize a rigorous classical-bound paper if a complete
+quantum-envelope analysis threatens the schedule. At the end of Week~4, reduce
+the experimental ambition if calibration uncertainty consumes the violation.
+Nonviolation of this sufficient witness must never be interpreted as classicality.
+
+The intended manuscript should contain: the restricted-set binary construction;
+the unrestricted obstruction; energy-constrained classical and selected quantum
+bounds; attainable-state examples; squeezed-light validation; the distinct
+energy-essential example; and one realistic detector/statistical analysis.
+Four useful figures are the measurement scheme, Lorenz curves, a detection
+region versus squeezing/efficiency, and an energy/attainability comparison.
+
+\section{References to read, in working order}
+\begin{enumerate}[leftmargin=*,label=\textbf{\arabic*.}]
+\item \textbf{Zhu, Gour, and Ciappina, supplied manuscript~\cite{ZhuManuscript}.}
+Read Sections~6--7 and the attainment discussion first. Extract the binary
+partial-sum construction, bias conventions, and limitations of scalar entropy
+reductions. Lemma~\ref{lem:binary} makes the restricted-state-set extension
+explicit for this project.
+\item \textbf{Kovtoniuk et al., PRA 109, 053710 (2024)~\cite{Kovtoniuk2024}.}
+The main prior-art benchmark: classical convex sets and tight inequalities for
+photocounting and unbalanced homodyne statistics. Read the corrected version,
+especially its two-local-oscillator-setting treatment. Determine exactly which
+proposed claims are already consequences of its complete classical region.
+\item \textbf{Medranda and Luis, J. Phys. A 48, 255302 (2015)~\cite{Medranda2015}.}
+Read for existing uses of majorization in quantum-light photon statistics,
+including comparisons with variance. It prevents treating the broad connection
+between majorization and optical nonclassicality as new.
+\item \textbf{Baek, Nha, and Son (2019)~\cite{Baek2019};
+Rudnicki, Pucha\l a, and \.{Z}yczkowski (2014)~\cite{Rudnicki2014}.}
+Use these for generalized-measurement direct-sum bounds and their entropic
+consequences. Track normalization carefully. Friedland, Gheorghiu, and Gour,
+including the erratum~\cite{Friedland2013}, supplies the broader universal
+uncertainty motivation.
+\item \textbf{Sperling, Vogel, and Agarwal (2012)~\cite{Sperling2012}.}
+Read for how finite efficiency and noise counts alter observed counting
+statistics. The project uses a single binary detector, so multiplexing is
+background rather than an additional implementation requirement.
+\item \textbf{Kovtoniuk, Bohmann, and Semenov, PRA 113, 063726 (2026)~\cite{Kovtoniuk2026}.}
+Read for a recent low-resource alternative using variable attenuation and an
+on/off detector. Its discussion already includes efficiency uncertainty;
+generic calibration robustness alone should not be presented as novel.
+\item \textbf{Hoeffding (1963)~\cite{Hoeffding1963}.}
+Use the bounded-variable inequality to verify the simple finite-data certificate.
+Later compare it with exact binomial intervals for less conservative sample sizes.
+\end{enumerate}
+
+\appendix
+\section{Independent Fock-space check}
+For the model in Eq.~\eqref{eq:effects}, exact matrix elements are
+\begin{equation}
+ \bra m E_0(\alpha)\ket n
+ =\kappa e^{-\eta\abs\alpha^2}\sqrt{m!n!}
+ \sum_{k=0}^{\min(m,n)}
+ \frac{(1-\eta)^k(-\eta\alpha)^{m-k}(-\eta\alpha^*)^{n-k}}
+ {k!(m-k)!(n-k)!}.
+ \label{eq:fockeffect}
+\end{equation}
+These are obtained by expanding the coherent-state kernel of
+$\kappa:\!\exp[-\eta(\hat a^\dagger+\alpha^*)(\hat a+\alpha)]\!:$.
+The chosen squeezed vacuum has coefficients
+\begin{equation}
+ \langle2m|\psi_r\rangle=
+ \frac{\sqrt{(2m)!}}{2^m m!\sqrt{\cosh r}}(\tanh r)^m,
+ \qquad \langle2m+1|\psi_r\rangle=0.
+\end{equation}
+Positive coefficients fix the antisqueezing direction used in
+Eq.~\eqref{eq:squeezedideal}. Matrix-element checks at dimension $32$ agree
+with the analytic benchmark probabilities within $10^{-12}$. This checks
+the low-energy state formulas, not the unrestricted operator supremum.
+
+\section{Files and reproduction}
+The accompanying files are:
+\begin{itemize}
+\item \texttt{quantum\_light\_feasibility.py}: analytic squeezed-light pilot
+and safe classical envelope (Python standard library).
+\item \texttt{note\_calculations.py}: additional odd-cat calculation and
+generation of the JSON and CSV data used in this note.
+\item \texttt{test\_quantum\_light.py}: the twelve tests; requires NumPy.
+\item \texttt{note\_data/}: benchmark JSON and the CSV data for both figures.
+\item \texttt{quantum\_light\_technical\_note.tex} and the matching
+\texttt{.bib}: editable document and bibliography.
+\end{itemize}
+Run from the directory containing the source files:
+\begin{verbatim}
+python3 note_calculations.py
+python3 -m unittest -v test_quantum_light
+latexmk -pdf -interaction=nonstopmode quantum_light_technical_note.tex
+\end{verbatim}
+The PDF uses PGFPlots to draw vector figures directly from the generated CSV
+files. Numerical data are reproducible; the classical-mixture stress test uses
+the fixed seed $20261120$. No experiment, external data set, or trained model
+is needed to run these checks.
+
+\begingroup
+\small
+\setlength{\bibsep}{3pt}
+\bibliographystyle{plainnat}
+\bibliography{quantum_light_technical_note}
+\endgroup
+\end{document}

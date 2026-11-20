@@ -1,0 +1,161 @@
+{
+  "status": "preliminary model calculation, not experimental data",
+  "ideal": {
+    "displacement_magnitude": 0.44,
+    "squeezing_r": 0.18,
+    "mean_photons": 0.03275143515784283,
+    "assumed_energy_cap": 0.5,
+    "detector_efficiency": 1.0,
+    "source_transmission": 1.0,
+    "dark_count_mean": 0.0,
+    "classical_s2_components": {
+      "off_off": 1.6479748666634064,
+      "off_on": 1.6657583468534471,
+      "on_on": 1.000452716932805
+    },
+    "classical_majorization_vector": [
+      1,
+      0.6657583468534471,
+      0.33424165314655285,
+      0
+    ],
+    "classical_s2_upper_bound": 1.6657583468534471,
+    "squeezed_no_click_probability_each_setting": 0.8392582504716164,
+    "squeezed_lorenz2": 1.6785165009432328,
+    "nonclassicality_excess": 0.012758154089785645,
+    "classical_shannon_lower_bound_bits": 0.9192014769331712,
+    "squeezed_shannon_sum_bits": 1.272162211340771
+  },
+  "efficiency_scan": [
+    {
+      "displacement_magnitude": 0.44,
+      "squeezing_r": 0.18,
+      "mean_photons": 0.03275143515784283,
+      "assumed_energy_cap": 0.5,
+      "detector_efficiency": 0.98,
+      "source_transmission": 1.0,
+      "dark_count_mean": 0.0,
+      "classical_s2_components": {
+        "off_off": 1.654368194842882,
+        "off_on": 1.6606769542231903,
+        "on_on": 0.9864903781400238
+      },
+      "classical_majorization_vector": [
+        1,
+        0.6606769542231903,
+        0.3393230457768097,
+        0
+      ],
+      "classical_s2_upper_bound": 1.6606769542231903,
+      "squeezed_no_click_probability_each_setting": 0.8414696045521617,
+      "squeezed_lorenz2": 1.6829392091043234,
+      "nonclassicality_excess": 0.022262254881133092,
+      "classical_shannon_lower_bound_bits": 0.9241694327008949,
+      "squeezed_shannon_sum_bits": 1.2615643470415434
+    },
+    {
+      "displacement_magnitude": 0.44,
+      "squeezing_r": 0.18,
+      "mean_photons": 0.03275143515784283,
+      "assumed_energy_cap": 0.5,
+      "detector_efficiency": 0.95,
+      "source_transmission": 1.0,
+      "dark_count_mean": 0.0,
+      "classical_s2_components": {
+        "off_off": 1.664004722706487,
+        "off_on": 1.6528744354184441,
+        "on_on": 0.9651803290616163
+      },
+      "classical_majorization_vector": [
+        1,
+        0.6640047227064869,
+        0.3359952772935131,
+        0
+      ],
+      "classical_s2_upper_bound": 1.664004722706487,
+      "squeezed_no_click_probability_each_setting": 0.8448475467437179,
+      "squeezed_lorenz2": 1.6896950934874357,
+      "nonclassicality_excess": 0.025690370780948824,
+      "classical_shannon_lower_bound_bits": 0.9209348070143468,
+      "squeezed_shannon_sum_bits": 1.245171029688857
+    },
+    {
+      "displacement_magnitude": 0.44,
+      "squeezing_r": 0.18,
+      "mean_photons": 0.03275143515784283,
+      "assumed_energy_cap": 0.5,
+      "detector_efficiency": 0.9,
+      "source_transmission": 1.0,
+      "dark_count_mean": 0.0,
+      "classical_s2_components": {
+        "off_off": 1.6801905012032163,
+        "off_on": 1.6393646604508922,
+        "on_on": 0.9286632363453324
+      },
+      "classical_majorization_vector": [
+        1,
+        0.6801905012032163,
+        0.31980949879678366,
+        0
+      ],
+      "classical_s2_upper_bound": 1.6801905012032163,
+      "squeezed_no_click_probability_each_setting": 0.850643271352678,
+      "squeezed_lorenz2": 1.701286542705356,
+      "nonclassicality_excess": 0.02109604150213973,
+      "classical_shannon_lower_bound_bits": 0.9041741744278531,
+      "squeezed_shannon_sum_bits": 1.216456348119833
+    },
+    {
+      "displacement_magnitude": 0.44,
+      "squeezing_r": 0.18,
+      "mean_photons": 0.03275143515784283,
+      "assumed_energy_cap": 0.5,
+      "detector_efficiency": 0.8,
+      "source_transmission": 1.0,
+      "dark_count_mean": 0.0,
+      "classical_s2_components": {
+        "off_off": 1.713035906942695,
+        "off_on": 1.6102615214256768,
+        "on_on": 0.8517176919974696
+      },
+      "classical_majorization_vector": [
+        1,
+        0.713035906942695,
+        0.28696409305730497,
+        0
+      ],
+      "classical_s2_upper_bound": 1.713035906942695,
+      "squeezed_no_click_probability_each_setting": 0.8628807430355495,
+      "squeezed_lorenz2": 1.725761486071099,
+      "nonclassicality_excess": 0.012725579128403997,
+      "classical_shannon_lower_bound_bits": 0.864767207708776,
+      "squeezed_shannon_sum_bits": 1.1532887945347248
+    },
+    {
+      "displacement_magnitude": 0.44,
+      "squeezing_r": 0.18,
+      "mean_photons": 0.03275143515784283,
+      "assumed_energy_cap": 0.5,
+      "detector_efficiency": 0.7,
+      "source_transmission": 1.0,
+      "dark_count_mean": 0.0,
+      "classical_s2_components": {
+        "off_off": 1.7465233950397507,
+        "off_on": 1.5779577103374864,
+        "on_on": 0.7692457651003961
+      },
+      "classical_majorization_vector": [
+        1,
+        0.7465233950397507,
+        0.25347660496024926,
+        0
+      ],
+      "classical_s2_upper_bound": 1.7465233950397507,
+      "squeezed_no_click_probability_each_setting": 0.8760279955609609,
+      "squeezed_lorenz2": 1.7520559911219218,
+      "nonclassicality_excess": 0.0055325960821710485,
+      "classical_shannon_lower_bound_bits": 0.8167420553863638,
+      "squeezed_shannon_sum_bits": 1.0813430174763363
+    }
+  ]
+}
