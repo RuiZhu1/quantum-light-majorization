@@ -26,7 +26,7 @@ Research repository for our *Journal of Physics B: Atomic, Molecular and Optical
    - **Odd-cat $(a, c, \phi)$ & $\cos\theta\ket{0}+\sin\theta\ket{2}$ optimization:** Independent $(a, c)$ boosts real odd cat 6.9x ($+0.091$, surviving to $\eta=0.90$), orthogonal $\phi=\pi/2$ boosts it 9.2x ($+0.122$, surviving to $\eta=0.70$), and $\theta\approx -24^\circ$ achieves $+0.219$ ($\eta=1.0$) / $+0.138$ ($\eta=0.70$) beating all three baselines.
    - **Exact Clopper–Pearson displacement optimization ($a^*_{\rm CP}$ vs $a^*_{W_2}$):** Cuts sawtooth-safe guaranteed 99%-power required shots by **3.9x–7.0x** over Hoeffding (**559 shots/setting** for flagship $r=-0.42$ at $\eta=1.0$, **1,056 shots/setting** for realistic $T=0.90, \eta=0.85, n_{\rm th}=0.02, \nu=10^{-3}$, **789 shots/setting** for $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$), shifting $a^*_{\rm CP}$ away from branch cliffs while preserving triple-baseline separation.
 3. **Stage 4 Asymmetric Calibration Boxes, Globally Certified $B_2^{\rm robust}$, Energy-Bound Protocols & Finite-Sample Error Budgets (`code/calibration_robust.py`, `code/stage4_calibration_scans.py`, `notes/STAGE4_CALIBRATION_AND_FINITE_SAMPLE.md`):**
-   - **Theorems 4.1 & 4.2:** Solved the exact asymmetric classical support functions for general $\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$ (including the interior complex coherent maximizer $u^*\neq 0, v^*\neq 0$ on `on_on` when $\eta_+ a_+ \neq \eta_- a_-$ and exact LO phase-error monotonicity), and built a globally certified branch-and-bound + decoupled $C^2$ Lagrangian dual solver for $B_2^{\rm robust}(\Theta, \bar n_U) = \sup_{\theta\in\Theta} S_2^{\mathcal C}(\theta,\bar n_U)$ with maximum relaxation gap $1.00\times 10^{-8}$.
+   - **Theorems 4.1 & 4.2:** Solved the exact asymmetric classical support functions for general $\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$ (including the interior complex coherent maximizer $u^*\neq 0, v^*\neq 0$ on `on_on` when $\eta_+ a_+ \neq \eta_- a_-$ and exact LO phase-error monotonicity), and built an unclipped adaptive $C^2$ branch-and-bound + decoupled Lagrangian dual solver for $B_2^{\rm robust}(\Theta, \bar n_U) = \sup_{\theta\in\Theta} S_2^{\mathcal C}(\theta,\bar n_U)$ with maximum relaxation gap $1.305\times 10^{-12}$.
    - **Proposition 4.3 & Experimental $\bar n_U$ Certification:** Proved the bright-tail threshold-saturation no-go theorem (showing a classical mixture with $\langle\hat n\rangle = 100$ photons deviates from vacuum on/off counts by $<1.4\times 10^{-5}$) and formalized Route A (calibrated beam-splitter tap before displacement) and Route B ($a=0$ characterized-source protocol) to certify $\bar n_U$ at confidence $1-\delta_E$.
    - **Robust Experimental Feasibility & Error Budget ($\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$):** Under the realistic lab calibration box $\Theta_2$ ($2\%$ amplitude, $0.01$ efficiency, $10^{-3}$ dark count, $2^\circ$ LO phase, $+10\%$ energy cap), our flagship $r=-0.42$ squeezed vacuum is certified in **$1,727$ shots/setting** at $a^*_{\rm CP}=1.342$ ($\eta=1.00$, dropping to **$1,630$** at $a^*_{\rm robust,CP}=1.482$), **$3,033$ shots/setting** at $a^*_{\rm CP}=1.446$ ($\eta=0.90$, dropping to **$2,831$** at $a^*_{\rm robust,CP}=1.577$), and **$13,201$ shots/setting** even at $\eta=0.70$ ($r=-0.40, a^*_{\rm CP}=1.629$, dropping to **$11,327$** at $a^*_{\rm robust,CP}=1.767$), while $50,000$-trial Monte Carlo audits prove $B_2^{\rm robust}$ holds Type-I false positives strictly $\le 8\times 10^{-5} \ll \delta_{\rm stat}=0.01$ (where naive nominal thresholds suffer $100\%$ false positives).
 4. **Stage 5 Certified Quantum Benchmarks, Gentle-Projection Tail Audit & Publication Figures (`code/quantum_benchmarks.py`, `code/make_figures.py`, `paper/figures/`, `notes/STAGE5_QUANTUM_AND_FIGURES.md`):**
@@ -34,8 +34,8 @@ Research repository for our *Journal of Physics B: Atomic, Molecular and Optical
    - **Finite-Fock SDP vs. Gentle-Projection Tail Audit (`data/stage5/`):** Implemented exact Fock-compressed SDP dual `solve_fock_truncated_quantum_branch` (gap $\le 2.2\times 10^{-15}$) and quantified Eq. (27)'s gentle-projection remainder $R_N(2) = 2(\sqrt{\delta_N}+\delta_N/2)$ across $N\in[15,200]$.
    - **5 Publication-Grade Vector Figures (`paper/figures/fig1`–`fig5`):** Generated all 5 multi-panel vector PDF figures and PNG previews reproducibly via `code/make_figures.py`.
 5. **Stage 6 Complete JPB Manuscript Draft, Automated Reproduction & Adversarial Audit (`paper/main.tex`, `paper/main.pdf`, `run_all.py`, `notes/STAGE6_REFEREE_AUDIT.md`):**
-   - Compiled clean 20-page submission-ready manuscript draft (`paper/main.pdf`, modular Introduction slot ready for co-author physics polish, Sections 2–7 + Appendix A, Theorems 1–8, Propositions 1–3, Lemmas 1–2, Tables 1–6, Figures 1–5, 24/24 cited BibTeX references, zero LaTeX/BibTeX warnings or overfull boxes).
-   - Delivered single-command reproduction CLI `run_all.py` (`--fast`, `--full`, `--skip-latex`), manuscript-sync unit suite (`code/tests/test_stage6_manuscript_sync.py`, **51/51** unit tests passing), and three-reviewer adversarial referee audit (`notes/STAGE6_REFEREE_AUDIT.md`).
+   - Compiled clean 21-page submission-ready manuscript draft (`paper/main.pdf`, modular Introduction slot ready for co-author physics polish, Sections 2–7 + Appendices A.1–A.4, Theorems 1–8, Propositions 1–3, Lemmas 1–2, Tables 1–6, Figures 1–5, 24/24 cited BibTeX references, zero LaTeX/BibTeX warnings or overfull boxes).
+   - Delivered single-command reproduction CLI `run_all.py` (`--fast`, `--full`, `--skip-latex`), manuscript-sync unit suite (`code/tests/test_stage6_manuscript_sync.py`, **52/52** unit tests passing), and adversarial referee audits (`notes/STAGE6_REFEREE_AUDIT.md`).
 
 ---
 
@@ -78,7 +78,7 @@ quantum-light-majorization/
 │       ├── test_quantum_light.py                 13 baseline unit checks (incl. 0<T<1 Kraus odd-cat)
 │       ├── test_classical_dual.py                8 exact-dual primal/dual, 2-pt, MC & Gaussian tests
 │       ├── test_stage3_scans.py                  12 Stage 3 Fock-Kraus, Thm 3.1–3.3 & CP/MC tests
-│       ├── test_stage4_calibration.py            10 Stage 4 asymmetric dual, B_2^robust, no-go & MC tests
+│       ├── test_stage4_calibration.py            11 Stage 4 asymmetric dual, B_2^robust, unclipped C^2 & MC tests
 │       ├── test_stage5_quantum_and_figures.py    4 Stage 5 quantum ceilings, Fock SDP & figure tests
 │       └── test_stage6_manuscript_sync.py        4 Stage 6 deliverable, BibTeX, figure & numeric-sync tests
 ├── data/
@@ -91,7 +91,7 @@ quantum-light-majorization/
 │   └── stage5/                                   Quantum ceilings & Fock tail audit CSV + stage5_summary.json
 └── paper/
     ├── main.tex                                  Complete JPB submission-ready manuscript source
-    ├── main.pdf                                  Compiled 20-page manuscript PDF (zero warnings)
+    ├── main.pdf                                  Compiled 21-page manuscript PDF (zero warnings)
     ├── references.bib                            Verified bibliography (24 entries, all cited)
     └── figures/                                  5 publication vector PDFs + PNG previews (fig1–fig5)
 ```
@@ -106,13 +106,13 @@ On this workstation, use the `quantumcomputing` conda environment:
 conda activate quantumcomputing
 
 # One-command fast end-to-end reproduction (regenerates baselines, dual checks,
-# Stage 5 quantum benchmarks & figures, runs all 51 unit tests, compiles paper/main.pdf)
+# Stage 5 quantum benchmarks & figures, runs all 52 unit tests, compiles paper/main.pdf)
 python run_all.py --fast
 
 # Optional: full multi-minute scratch recomputation of all Stage 3 & Stage 4 CSV scans
 python run_all.py --full
 
-# Run the full unit test suite standalone (51 tests total)
+# Run the full unit test suite standalone (52 tests total)
 python -m unittest discover -s code/tests -v
 
 # Compile Marcelo's starting technical note (from notes/)
@@ -137,14 +137,14 @@ Accelerated execution of Marcelo's full research plan to deliver a **100% submis
   - Demonstrated 6.9x–9.2x odd-cat margin gains via independent $(a, c, \phi)$ optimization (surviving to $\eta=0.70$ for $\phi=\pi/2$), $+0.219$ / $+0.138$ triple-baseline margins for $\cos\theta\ket{0}+\sin\theta\ket{2}$, 7x thermal-noise tolerance ($n_{\rm th}=0.35$) and 5x energy-cap slack for $r<0$, and 3.9x–7.0x shot reductions via sawtooth-safe exact Clopper–Pearson displacement optimization $a^*_{\rm CP}$ (**559–1,238 guaranteed shots/setting** at 99% power).
 
 - [x] **Days 4–5 (23–24 Nov) — Asymmetric Calibration Boxes, Energy Bound & Finite-Sample Certification [COMPLETE]**
-  - Generalized certified dual solver to 7D asymmetric calibration intervals $\Theta$ ($a_+\neq a_-$, $\delta_\phi\neq 0$, $\eta_+\neq\eta_-$, $\nu_+\neq\nu_-$) and upper energy bound $\bar n_U$ to certify $B_2^{\rm robust}(\Theta,\bar n_U) = \sup_{\theta\in\Theta} S_2^{\mathcal C}(\theta,\bar n_U)$ globally (`code/calibration_robust.py`, max relaxation gap $1.00\times 10^{-8}$ across 565 Stage 4 rows).
+  - Generalized certified dual solver to 7D asymmetric calibration intervals $\Theta$ ($a_+\neq a_-$, $\delta_\phi\neq 0$, $\eta_+\neq\eta_-$, $\nu_+\neq\nu_-$) and upper energy bound $\bar n_U$ to certify $B_2^{\rm robust}(\Theta,\bar n_U) = \sup_{\theta\in\Theta} S_2^{\mathcal C}(\theta,\bar n_U)$ globally using unclipped adaptive $C^2$ angular/radial branch-and-bound (`code/calibration_robust.py`, max relaxation gap $1.305\times 10^{-12}$ across 565 Stage 4 rows).
   - Proved **Theorem 4.1** (closed-form asymmetric circle maxima incl. interior complex `on_on` maximizer $u^*\neq 0, v^*\neq 0$ and LO phase-error monotonicity), **Theorem 4.2** (exact corner reductions + decoupled box-envelope dual), **Proposition 4.3** (bright-tail threshold-saturation no-go proof) + Routes A/B for certifying $\bar n_U$, and **Theorem 4.4** (union-bound error budget $\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$) (`notes/STAGE4_CALIBRATION_AND_FINITE_SAMPLE.md`).
-  - Verified via 50,000-trial Monte Carlo audits (`code/stage4_calibration_scans.py`, `data/stage4/`) and 10 unit tests (`code/tests/test_stage4_calibration.py`, 43/43 passing) that $B_2^{\rm robust}(\Theta_2)$ holds Type-I false positives $\le 8\times 10^{-5} \le \delta_{\rm stat}=0.01$ while certifying flagship $r=-0.42$ squeezed vacuum in **$1,630$–$3,033$ shots/setting** ($\eta\in[0.90,1.00]$) and **$11,327$–$13,201$ shots/setting** ($\eta=0.70$).
+  - Verified via 50,000-trial Monte Carlo audits (`code/stage4_calibration_scans.py`, `data/stage4/`) and 11 unit tests (`code/tests/test_stage4_calibration.py`, 44/44 passing) that $B_2^{\rm robust}(\Theta_2)$ holds Type-I false positives $\le 8\times 10^{-5} \le \delta_{\rm stat}=0.01$ while certifying flagship $r=-0.42$ squeezed vacuum in **$1,630$–$3,033$ shots/setting** ($\eta\in[0.90,1.00]$) and **$11,327$–$13,201$ shots/setting** ($\eta=0.70$).
 
 - [x] **Day 6 (25 Nov) — Certified Quantum Benchmarks & Publication Figures [COMPLETE]**
   - Finalized exact zero-truncation ideal quantum `off_off` ($1+e^{-2a^2}$, even cat), `off_on` ($1+\sqrt{1-e^{-4a^2}}$, energy $a^2\coth(2a^2)$), and 3-level dark-state $\ket{\chi_a}$ results, plus exact Fock-compressed SDP duals $h_{\mathcal Q,N}(P_N A P_N)$ and gentle-projection tail bound audits (`code/quantum_benchmarks.py`, `data/stage5/`, `notes/STAGE5_QUANTUM_AND_FIGURES.md`).
   - Generated all 5 publication-grade vector PDF figures (and PNG previews) in `paper/figures/` via reproducible `code/make_figures.py` (`fig1_scheme_and_phases`, `fig2_lorenz_and_hierarchy`, `fig3_state_scans_and_cats`, `fig4_calibration_and_stats`, `fig5_quantum_ceilings_audit`), verified by 4 new unit tests (`code/tests/test_stage5_quantum_and_figures.py`, 47/47 passing).
 
 - [x] **Days 7–10 (26–30 Nov) — Complete JPB LaTeX Manuscript, Adversarial Audit & End-to-End Freeze [COMPLETE]**
-  - Drafted and compiled full submission-ready JPB manuscript ([paper/main.tex](paper/main.tex) -> [paper/main.pdf](paper/main.pdf), 20 pages, modular physics-oriented Introduction slot ready for Marcelo's polish, complete Theorems 1–8 / Propositions 1–3 / Lemmas 1–2 / Tables 1–6 / Figures 1–5, 24/24 cited BibTeX entries, zero LaTeX warnings or overfull boxes).
-  - Completed three-perspective adversarial referee audit (`notes/STAGE6_REFEREE_AUDIT.md`), resolved pre-freeze quantum `off_on` energy identity and Stage 4 CSV/figure/doc sync, delivered `run_all.py` (`--fast`, `--full`, `--skip-latex`), and added `code/tests/test_stage6_manuscript_sync.py` (**51/51** unit tests passing).
+  - Drafted and compiled full submission-ready JPB manuscript ([paper/main.tex](paper/main.tex) -> [paper/main.pdf](paper/main.pdf), 21 pages, modular physics-oriented Introduction slot ready for Marcelo's polish, complete Theorems 1–8 / Propositions 1–3 / Lemmas 1–2 / Tables 1–6 / Figures 1–5, 24/24 cited BibTeX entries, zero LaTeX warnings or overfull boxes).
+  - Completed adversarial referee audits (`notes/STAGE6_REFEREE_AUDIT.md`), pure-analytic Theorem 2/3 & self-contained Rényi proofs, unclipped $C^2$ calibration certification (`1.305e-12` max gap), `run_all.py` (`--fast`, `--full`, `--skip-latex`), and [code/tests/test_stage6_manuscript_sync.py](code/tests/test_stage6_manuscript_sync.py) (**52/52** unit tests passing).

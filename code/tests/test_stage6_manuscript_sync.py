@@ -114,8 +114,12 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "11,327",
             "12,934",
             "0.524741",
-            "51 unit tests",
+            "52 unit tests",
+            r"1.31 \times 10^{-12}",
+            r"\label{app:renyi}",
+            "Finite-$N$ SDP Gap",
         ]
+        self.assertLess(d4["max_box_relaxation_gap"], 1e-10)
         for token in expected_tokens:
             self.assertIn(token, tex_text, f"Canonical JSON/CSV metric '{token}' missing from paper/main.tex")
 
@@ -123,14 +127,27 @@ class TestStage6ManuscriptSync(unittest.TestCase):
         tex_text = (PAPER_DIR / "main.tex").read_text(encoding="utf-8")
         tex_no_comments = re.sub(r"(?m)^%.*$", "", tex_text)
         self.assertNotIn("`", tex_text, "Found raw Markdown backtick in paper/main.tex")
-        for forbidden_tex in ("h_{\\Cset_E}(A_{11}", "Stage~3", "Stage~4", "Marcelo's", "12,931", "1,718"):
+        for forbidden_tex in (
+            "h_{\\Cset_E}(A_{11}",
+            "Stage~3",
+            "Stage~4",
+            "Marcelo's",
+            "12,931",
+            "1,718",
+            "extending numerically",
+            "Primal--Dual Gap",
+        ):
             self.assertNotIn(forbidden_tex, tex_no_comments, f"Found stale/internal token '{forbidden_tex}' in paper/main.tex")
+
+        robust_code = (REPO_ROOT / "code" / "calibration_robust.py").read_text(encoding="utf-8")
+        for forbidden_code in ("minimum(pad", "min(pad"):
+            self.assertNotIn(forbidden_code, robust_code, f"Found clipped C^2 angular padding cap '{forbidden_code}' in calibration_robust.py")
 
         fig_code = (REPO_ROOT / "code" / "make_figures.py").read_text(encoding="utf-8")
         for forbidden_fig in ("Marcelo pilot", "Eq. (27)", "1,718"):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
 
-        # Verify total unit tests match documented count (51)
+        # Verify total unit tests match documented count (52)
         proc_help = subprocess.run(
             [sys.executable, str(REPO_ROOT / "run_all.py"), "--help"],
             cwd=str(REPO_ROOT),
