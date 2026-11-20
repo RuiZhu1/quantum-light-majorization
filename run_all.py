@@ -81,7 +81,6 @@ def main(argv: list[str] | None = None) -> int:
     steps.extend([
         ("Stage 5: Quantum Ceilings & Fock SDP Audit", [sys.executable, "code/quantum_benchmarks.py"], REPO_ROOT),
         ("Stage 5: Publication Figures (fig1-fig5)", [sys.executable, "code/make_figures.py"], REPO_ROOT),
-        ("Verification: Full Unit Test Suite", [sys.executable, "-m", "unittest", "discover", "-s", "code/tests", "-v"], REPO_ROOT),
     ])
 
     if not args.skip_latex:
@@ -97,6 +96,10 @@ def main(argv: list[str] | None = None) -> int:
                 REPO_ROOT / "paper",
             )
         )
+
+    steps.append(
+        ("Verification: Full Unit Test Suite", [sys.executable, "-m", "unittest", "discover", "-s", "code/tests", "-v"], REPO_ROOT)
+    )
 
     timings: list[tuple[str, float]] = []
     t_total_start = time.perf_counter()

@@ -63,7 +63,7 @@ class TestStage5QuantumAndFigures(unittest.TestCase):
             prev_val = sol.dual_upper_bound
 
     def test_03_gentle_projection_tail_bound_audit(self) -> None:
-        """Verify Eq. (27) gentle-projection tail bound decreases as O(1/sqrt(N)) and remains > 0.06 at N=200."""
+        """Verify Eq. (36) gentle-projection tail bound decreases as O(1/sqrt(N)) and remains > 0.06 at N=200."""
         rows = audit_gentle_projection_tail_bound(1.15, 1.00, 0.22, cutoffs=(15, 60, 200))
         self.assertEqual(len(rows), 3)
         self.assertGreater(rows[0]["gentle_projection_penalty_R_N"], rows[1]["gentle_projection_penalty_R_N"])

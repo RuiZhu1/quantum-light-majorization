@@ -44,3 +44,17 @@ This document records the adversarial referee audit conducted at the freeze of *
 - **End-to-end automated pipeline & test coverage:**
   - Created root CLI entrypoint [run_all.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/run_all.py) supporting `--fast`, `--full`, and `--skip-latex`.
   - Created [code/tests/test_stage6_manuscript_sync.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/tests/test_stage6_manuscript_sync.py) (4 automated manuscript/bibliography/figure/numeric-sync tests) bringing the full unit suite to **51/51 tests passing**.
+
+---
+
+## 4. Pre-Submission External Review Revisions (`fix/pre-submission-polish`)
+
+All 7 points raised in the external pre-submission audit have been resolved and verified:
+
+1. **Theorem 6 Eq. (30) Scaling Correction (`eq:onon-dphi`):** Fixed the LaTeX typo substituting $E$ inside $\exp[-\eta(\dots)]$ to unscaled $\bar n_{\max}$ (`h_{\Cset_{\bar n_{\max}}}(A_{11};\delta_\phi)`), matching [code/calibration_robust.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/calibration_robust.py).
+2. **Elimination of Symbol Collision on $r$:** Removed all non-squeezing uses of $r$—replacing $r = \sqrt{\eta\,\bar n_{\max}}$ with $\sqrt{E}$ in Theorem 3 (Eqs. (20)–(21)), dummy $r_1$ with $x_1$ in Prop. 1's proof, and radial $r$ with phase-space energy $s = |\beta|^2$ in Theorem 7 (Eq. (32)).
+3. **Route A Peak-Energy Assumption ($M_{\max}$):** Clarified in Section 5.2 and Eq. (34) that $M_{\max}$ reflects a physical per-pulse peak-energy bound on the source inside the tap monitor's unsaturated linear range (not a detector saturation cap that would re-open Prop. 2's bright-tail loophole), and noted that any finite-sample energy certification relies on source tail regularity.
+4. **Figure 5(b) Legend Equation Number:** Corrected `Eq. (27)` to `Eq. (36)` in [code/make_figures.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/make_figures.py) and regenerated Fig. 5.
+5. **Abstract / Prose / Table 3 Synchronization:** Added the $\Theta_2$-optimized $a^*_{\rm robust,CP}$ benchmarks (`1,630` / `2,831` / `11,327`) explicitly in Section 5.3 and Table 3 footnotes matching the Abstract.
+6. **Exact Clopper–Pearson Shot Consistency (`12,934` & `1,727`):** Unified pilot nominal displacement precision (`0.4341818241377049`) and flagship $\Theta_2$ worst-case power evaluation (`a = 1.34182`, `(qp_worst, qm_worst)`) across [code/stage4_calibration_scans.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/stage4_calibration_scans.py), Table 1, Table 3, and Fig. 4 (`12,934` and `1,727`).
+7. **Removal of Internal Workflow Labels:** Removed `Stage 3`, `Stage 4`, `Scans 1–6`, and personal pilot labels (`Marcelo's` / `Marcelo pilot`) from manuscript prose and Fig. 3(a) legend, locking all regression checks in [code/tests/test_stage6_manuscript_sync.py](file:///home/marcelo-group/Desktop/quantum-light-majorization/code/tests/test_stage6_manuscript_sync.py).

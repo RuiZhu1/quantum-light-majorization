@@ -179,8 +179,8 @@ def _benchmark_specs() -> List[Dict[str, Any]]:
             "eta_nom": 1.00,
             "dark_nom": 0.0,
             "cap_nom": 0.50,
-            "a_w2": 0.43418,
-            "a_cp": 0.43418,
+            "a_w2": 0.4341818241377049,
+            "a_cp": 0.4341818241377049,
         },
         {
             "state_id": "fock1_eta100",
@@ -552,13 +552,13 @@ def run_scan4_monte_carlo_false_positive_and_power() -> List[Dict[str, Any]]:
     power_cases = [
         (
             "quantum_flagship_sq_vac_a1342_eta100",
-            1.342,
+            1.34182,
             1.00,
             0.0,
             0.22,
             _make_q_fn_squeezed(-0.42),
             squeezed_thermal_mean_photons(-0.42),
-            [250, 500, 750, 943, 1250, 1718, 2500, 5000],
+            [250, 500, 750, 942, 1250, 1727, 2500, 5000],
         ),
         (
             "quantum_flagship_sq_vac_a115_eta100",
@@ -587,7 +587,8 @@ def run_scan4_monte_carlo_false_positive_and_power() -> List[Dict[str, Any]]:
             q_fn, a_nom, eta_nom, dark_nom, cap_nom, mean_n, box, compute_cp_shots=False
         )
         q_nom = ev["q_nom"]
-        q_worst = ev["q_worst_in_box"]
+        qp_worst = ev["qp_worst_in_box"]
+        qm_worst = ev["qm_worst_in_box"]
         for idx_n, n_shots in enumerate(shot_list):
             mc_nom_sig = simulate_calibration_monte_carlo(
                 q_nom,
@@ -608,8 +609,8 @@ def run_scan4_monte_carlo_false_positive_and_power() -> List[Dict[str, Any]]:
                 **mc_nom_sig,
             })
             mc_worst_sig = simulate_calibration_monte_carlo(
-                q_worst,
-                q_worst,
+                qp_worst,
+                qm_worst,
                 ev["S2_nominal_cert"],
                 ev["B2_robust_cert"],
                 n_shots=n_shots,

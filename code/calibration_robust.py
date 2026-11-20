@@ -1334,6 +1334,8 @@ def evaluate_state_over_calibration_box(
         "mean_photons": mean_photons,
         "q_nom": q_nom,
         "q_worst_in_box": q_worst,
+        "qp_worst_in_box": qp_worst,
+        "qm_worst_in_box": qm_worst,
         "L2_nom": L2_nom,
         "L2_worst_in_box": L2_worst,
         "S2_nominal_cert": nom_env.S2_certified,
