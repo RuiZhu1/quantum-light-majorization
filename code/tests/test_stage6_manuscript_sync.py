@@ -48,7 +48,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
 
         # 2. Every \cite{...} key exists in paper/references.bib, and all bib entries are cited
         bib_keys = set(re.findall(r"@\w+\{([^,\s]+)\s*,", bib_text))
-        self.assertGreaterEqual(len(bib_keys), 24)
+        self.assertGreaterEqual(len(bib_keys), 27)
         cited_keys: set[str] = set()
         for group in re.findall(r"\\cite[a-zA-Z]*(?:\[[^\]]*\])?\{([^}]+)\}", tex_text):
             for key in group.split(","):
@@ -152,11 +152,23 @@ class TestStage6ManuscriptSync(unittest.TestCase):
         for forbidden_fig in (
             "Marcelo pilot",
             "Eq. (27)",
+            "Eq. (36)",
             "1,718",
             "b_{\\rm crit,01}\\approx {B_CRIT_E0",
             "Energy cap $|\\beta|\\leq",
         ):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
+
+        # Verify physics-journal narrative structure in main text (before \appendix)
+        main_body = tex_no_comments.split(r"\appendix", 1)[0]
+        for env in ("theorem", "lemma", "proposition", "corollary", "remark", "itemize", "enumerate"):
+            self.assertNotIn(
+                f"\\begin{{{env}}}",
+                main_body,
+                f"Main text should remain prose-only without \\begin{{{env}}} environments",
+            )
+        main_tables = re.findall(r"\\begin\{table\}", main_body)
+        self.assertLessEqual(len(main_tables), 2, f"Expected <=2 main-text tables, found {len(main_tables)}")
 
         # Verify total unit tests match documented count (54)
         proc_help = subprocess.run(
