@@ -114,9 +114,13 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "11,327",
             "12,934",
             "0.524741",
-            "52 unit tests",
+            "54 unit tests",
             r"1.31 \times 10^{-12}",
             r"\label{app:renyi}",
+            r"\label{app:cp-tail}",
+            r"b_{\rm crit,0} \approx 1.84",
+            "statistically independent",
+            "Danskin",
             "Finite-$N$ SDP Gap",
         ]
         self.assertLess(d4["max_box_relaxation_gap"], 1e-10)
@@ -136,6 +140,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "1,718",
             "extending numerically",
             "Primal--Dual Gap",
+            r"b_{\rm crit,01} \approx 1.84",
         ):
             self.assertNotIn(forbidden_tex, tex_no_comments, f"Found stale/internal token '{forbidden_tex}' in paper/main.tex")
 
@@ -144,10 +149,16 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             self.assertNotIn(forbidden_code, robust_code, f"Found clipped C^2 angular padding cap '{forbidden_code}' in calibration_robust.py")
 
         fig_code = (REPO_ROOT / "code" / "make_figures.py").read_text(encoding="utf-8")
-        for forbidden_fig in ("Marcelo pilot", "Eq. (27)", "1,718"):
+        for forbidden_fig in (
+            "Marcelo pilot",
+            "Eq. (27)",
+            "1,718",
+            "b_{\\rm crit,01}\\approx {B_CRIT_E0",
+            "Energy cap $|\\beta|\\leq",
+        ):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
 
-        # Verify total unit tests match documented count (52)
+        # Verify total unit tests match documented count (54)
         proc_help = subprocess.run(
             [sys.executable, str(REPO_ROOT / "run_all.py"), "--help"],
             cwd=str(REPO_ROOT),

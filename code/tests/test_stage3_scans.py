@@ -56,6 +56,8 @@ from optical_states import (
 )
 from tests.test_quantum_light import coherent_vector, off_matrix
 from witness_analysis import (
+    _block_cp_power_lower_bound,
+    analytic_cp_power_tail_bound,
     clopper_pearson_l2_lcb,
     clopper_pearson_required_shots,
     cp_power_certified_margin,
@@ -560,6 +562,47 @@ class Stage3OpticalAndAnalysisTests(unittest.TestCase):
                     self.assertEqual(env.S1_active_branch, "E1")
                     self.assertEqual(env.S2_active_branch, "on_on")
                     self.assertFalse(check_classical_attainment(env)["attained"])
+
+    def test_13_exact_forall_cp99_tail_bound_and_coupling_block(self):
+        """Verify analytic KL tail bound, coupling-block LB <= true power, conservative Type-I PMF, and exact forall N >= N_0 shots."""
+        q_real = squeezed_thermal_off(
+            1.51717, -0.45, 0.85, n_th=0.02, source_transmission=0.90, dark_mean=1e-3
+        )
+        s2_real = exact_classical_envelope(1.51717, 0.85, 0.26, 1e-3).S2_certified
+        cases = [
+            # Flagship nominal a*_CP
+            (0.074209040405888, 0.074209040405888, 1.7348166304807207, 559),
+            # Realistic lab scenario (r=-0.45, T=0.90, eta=0.85, n_th=0.02, nu=1e-3, a*_CP=1.51717)
+            (q_real, q_real, s2_real, 1056),
+            # Pilot r=+0.18 nominal a*_CP
+            (0.8427740281462182, 0.8427740281462182, 1.6563780552622633, 12934),
+        ]
+        for qp, qm, s2_b, expected_n in cases:
+            n_req = clopper_pearson_required_shots(qp, qm, s2_b, delta_stat=0.01, power=0.99)
+            self.assertEqual(n_req, expected_n)
+            n_tail = analytic_cp_power_tail_bound(qp, qm, s2_b, delta_stat=0.01, power=0.99)
+            self.assertIsNotNone(n_tail)
+            assert n_tail is not None
+            self.assertGreater(n_tail, n_req)
+            # Check coupling block lower bound <= exact power across interior samples
+            n1 = n_req
+            n2 = min(n_tail - 1, n_req + 120)
+            p_blk = _block_cp_power_lower_bound(qp, qm, s2_b, n1, n2, delta_stat=0.01)
+            for n_test in (n1, (n1 + n2) // 2, n2):
+                self.assertLessEqual(
+                    p_blk,
+                    exact_cp_certification_power(qp, qm, s2_b, n_test, delta_stat=0.01) + 1e-13,
+                )
+            # Check power >= 0.99 at n_req and n_tail (plus N < n_req fails when n_req > 1)
+            self.assertGreaterEqual(exact_cp_certification_power(qp, qm, s2_b, n_req, 0.01), 0.99)
+            self.assertGreaterEqual(exact_cp_certification_power(qp, qm, s2_b, n_tail, 0.01), 0.99)
+            self.assertLess(exact_cp_certification_power(qp, qm, s2_b, n_req - 1, 0.01), 0.99)
+
+        # Conservative upper mode adds omitted tail mass >= default PMF sum
+        p_def = exact_cp_certification_power(0.16, 0.16, 1.612, 3000, 0.01, conservative_upper=False)
+        p_cons = exact_cp_certification_power(0.16, 0.16, 1.612, 3000, 0.01, conservative_upper=True)
+        self.assertGreaterEqual(p_cons, p_def)
+        self.assertLessEqual(p_cons - p_def, 1e-11)
 
 
 if __name__ == "__main__":

@@ -36,6 +36,7 @@ import math
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
+from scipy.optimize import minimize
 
 from classical_dual import (
     SupportSolution,
@@ -43,6 +44,7 @@ from classical_dual import (
     exact_classical_envelope,
     solve_classical_branch,
 )
+from optical_states import squeezed_thermal_off_complex
 from witness_analysis import (
     clopper_pearson_required_shots,
     exact_cp_certification_power,
@@ -1408,6 +1410,59 @@ def certify_robust_classical_envelope(
 # 3. Target-State Evaluation Over Calibration Box & Robust Displacement Optimizer
 # ---------------------------------------------------------------------------
 
+def squeezed_thermal_box_extremes(
+    r: float,
+    box: CalibrationBox,
+    n_th: float = 0.0,
+    source_transmission: float = 1.0,
+) -> Tuple[Tuple[float, float], Tuple[float, float]]:
+    """Exact analytical min/max of (q_+, q_-) over `box` for a centered squeezed thermal state.
+
+    By exact partial derivatives (Appendix A.3):
+      - q is strictly decreasing in displacement amplitude a, detector efficiency eta,
+        and dark-count rate nu (since partial_eta(eta/(1+c*eta)) > 0 and partial_eta(u*w) >= 0);
+      - For alpha_- = -a_- e^{i delta_phi} with |delta_phi| <= delta_phi_max <= pi/2,
+        sgn(partial_{|delta_phi|} q_-) = -sgn(r), so |delta_phi| = 0 vs. delta_phi_max
+        gives exact endpoints for both r < 0 and r > 0.
+    Returns ((qp_min, qp_max), (qm_min, qm_max)).
+    """
+    ap_l, ap_u = box.a_plus_bounds
+    am_l, am_u = box.a_minus_bounds
+    ep_l, ep_u = box.eta_plus_bounds
+    em_l, em_u = box.eta_minus_bounds
+    np_l, np_u = box.nu_plus_bounds
+    nm_l, nm_u = box.nu_minus_bounds
+
+    qp_min = squeezed_thermal_off_complex(
+        complex(ap_u, 0.0), r, ep_u, n_th=n_th, source_transmission=source_transmission, dark_mean=np_u
+    )
+    qp_max = squeezed_thermal_off_complex(
+        complex(ap_l, 0.0), r, ep_l, n_th=n_th, source_transmission=source_transmission, dark_mean=np_l
+    )
+
+    # For setting -, alpha_- = -a_- * exp(i * delta_phi)
+    dp_min = box.delta_phi_max if r > 0.0 else 0.0
+    dp_max = 0.0 if r > 0.0 else box.delta_phi_max
+    alpha_m_min = -am_u * complex(math.cos(dp_min), math.sin(dp_min))
+    alpha_m_max = -am_l * complex(math.cos(dp_max), math.sin(dp_max))
+    qm_min = squeezed_thermal_off_complex(
+        alpha_m_min, r, em_u, n_th=n_th, source_transmission=source_transmission, dark_mean=nm_u
+    )
+    qm_max = squeezed_thermal_off_complex(
+        alpha_m_max, r, em_l, n_th=n_th, source_transmission=source_transmission, dark_mean=nm_l
+    )
+    return (float(qp_min), float(qp_max)), (float(qm_min), float(qm_max))
+
+
+def _worst_q_bounds(q_lo: float, q_hi: float) -> Tuple[float, float]:
+    """Worst point inside connected interval [q_lo, q_hi] closest to 1/2."""
+    if q_lo <= 0.5 <= q_hi:
+        return 0.5, 0.5
+    if abs(q_lo - 0.5) <= abs(q_hi - 0.5):
+        return q_lo, max(q_lo, 1.0 - q_lo)
+    return q_hi, max(q_hi, 1.0 - q_hi)
+
+
 def evaluate_state_over_calibration_box(
     q_fn: Callable[..., float],
     a_nom: float,
@@ -1422,11 +1477,16 @@ def evaluate_state_over_calibration_box(
     delta_energy: float = 0.005,
     power: float = 0.99,
     compute_cp_shots: bool = True,
+    exact_box_extremes_fn: Optional[
+        Callable[[CalibrationBox], Tuple[Tuple[float, float], Tuple[float, float]]]
+    ] = None,
 ) -> Dict[str, Any]:
     """Evaluate nominal and worst-case quantum witness performance across CalibrationBox.
 
     `q_fn` can accept either `(a, eta, nu)` (isotropic/radial dependence on |alpha|=a)
     or `(a, eta, nu, delta_phi)` (phase-sensitive displacement alpha_- = -a_- e^{i*delta_phi}).
+    When `exact_box_extremes_fn` (or `q_fn._exact_box_extremes`) is supplied, uses exact
+    analytical box corners; otherwise searches an 11x7x5 grid polished continuously with L-BFGS-B.
     """
     if mean_photons > box.energy_cap_upper + 1e-12:
         raise ValueError(
@@ -1445,39 +1505,67 @@ def evaluate_state_over_calibration_box(
     q_nom = _call_q(a_nom, eta_nom, dark_nom, 0.0)
     L2_nom = 2.0 * max(q_nom, 1.0 - q_nom)
 
-    # Evaluate state's q_+ range over setting + and q_- range over setting - (including delta_phi)
-    ap_grid = np.linspace(box.a_plus_bounds[0], box.a_plus_bounds[1], 7)
-    ep_grid = np.linspace(box.eta_plus_bounds[0], box.eta_plus_bounds[1], 5)
-    np_grid = [box.nu_plus_bounds[0], box.nu_plus_bounds[1]]
-    qp_vals = [
-        _call_q(float(av), float(ev), float(nv), 0.0)
-        for av in ap_grid
-        for ev in ep_grid
-        for nv in np_grid
-    ]
+    ext_fn = exact_box_extremes_fn or getattr(q_fn, "_exact_box_extremes", None)
+    if ext_fn is not None:
+        (qp_lo, qp_hi), (qm_lo, qm_hi) = ext_fn(box)
+    else:
+        def _optimize_setting(
+            a_b: Tuple[float, float],
+            e_b: Tuple[float, float],
+            n_b: Tuple[float, float],
+            dp_b: Tuple[float, float],
+        ) -> Tuple[float, float]:
+            a_pts = np.linspace(a_b[0], a_b[1], 11)
+            e_pts = np.linspace(e_b[0], e_b[1], 7)
+            n_pts = [n_b[0], n_b[1]] if n_b[1] > n_b[0] else [n_b[0]]
+            dp_pts = (
+                list(np.linspace(dp_b[0], dp_b[1], 5))
+                if dp_b[1] > dp_b[0]
+                else [dp_b[0]]
+            )
+            samples: List[Tuple[float, Tuple[float, float, float, float]]] = []
+            for av in a_pts:
+                for ev in e_pts:
+                    for nv in n_pts:
+                        for dpv in dp_pts:
+                            samples.append(
+                                (
+                                    _call_q(float(av), float(ev), float(nv), float(dpv)),
+                                    (float(av), float(ev), float(nv), float(dpv)),
+                                )
+                            )
+            min_pt = min(samples, key=lambda t: t[0])
+            max_pt = max(samples, key=lambda t: t[0])
+            q_lo, q_hi = min_pt[0], max_pt[0]
+            bounds = [a_b, e_b, n_b, dp_b]
+            mid = [0.5 * (b[0] + b[1]) for b in bounds]
+            for sign, seed in ((1.0, list(min_pt[1])), (-1.0, list(max_pt[1]))):
+                for x0 in (seed, mid):
+                    res = minimize(
+                        lambda x: sign * _call_q(float(x[0]), float(x[1]), float(x[2]), float(x[3])),
+                        x0,
+                        bounds=bounds,
+                        method="L-BFGS-B",
+                    )
+                    val = _call_q(float(res.x[0]), float(res.x[1]), float(res.x[2]), float(res.x[3]))
+                    if val < q_lo:
+                        q_lo = val
+                    if val > q_hi:
+                        q_hi = val
+            return q_lo, q_hi
 
-    am_grid = np.linspace(box.a_minus_bounds[0], box.a_minus_bounds[1], 7)
-    em_grid = np.linspace(box.eta_minus_bounds[0], box.eta_minus_bounds[1], 5)
-    nm_grid = [box.nu_minus_bounds[0], box.nu_minus_bounds[1]]
-    dphi_grid = [0.0, box.delta_phi_max] if box.delta_phi_max > 0.0 else [0.0]
-    qm_vals = [
-        _call_q(float(av), float(ev), float(nv), float(dpv))
-        for av in am_grid
-        for ev in em_grid
-        for nv in nm_grid
-        for dpv in dphi_grid
-    ]
+        qp_lo, qp_hi = _optimize_setting(
+            box.a_plus_bounds, box.eta_plus_bounds, box.nu_plus_bounds, (0.0, 0.0)
+        )
+        qm_lo, qm_hi = _optimize_setting(
+            box.a_minus_bounds,
+            box.eta_minus_bounds,
+            box.nu_minus_bounds,
+            (0.0, box.delta_phi_max),
+        )
 
-    def _worst_q_dist(q_list: List[float]) -> Tuple[float, float]:
-        q_lo, q_hi = min(q_list), max(q_list)
-        if q_lo <= 0.5 <= q_hi:
-            return 0.5, 0.5
-        if abs(q_lo - 0.5) <= abs(q_hi - 0.5):
-            return q_lo, max(q_lo, 1.0 - q_lo)
-        return q_hi, max(q_hi, 1.0 - q_hi)
-
-    qp_worst, mp_worst = _worst_q_dist(qp_vals)
-    qm_worst, mm_worst = _worst_q_dist(qm_vals)
+    qp_worst, mp_worst = _worst_q_bounds(qp_lo, qp_hi)
+    qm_worst, mm_worst = _worst_q_bounds(qm_lo, qm_hi)
     L2_worst = mp_worst + mm_worst
     q_worst = qp_worst if mp_worst <= mm_worst else qm_worst
 
@@ -1712,6 +1800,7 @@ def simulate_calibration_monte_carlo(
     n_trials: int = 50_000,
     delta_stat: float = 0.01,
     seed: int = 20261125,
+    conservative_upper: bool = False,
 ) -> Dict[str, float]:
     """Run `n_trials` synthetic two-setting experiments comparing nominal vs. robust rejection.
 
@@ -1753,8 +1842,12 @@ def simulate_calibration_monte_carlo(
     rate_cp_nom = float(np.mean(l2_lcb_cp > s2_nominal_bound))
     rate_cp_rob = float(np.mean(l2_lcb_cp > b2_robust_bound))
 
-    exact_cp_nom = exact_cp_certification_power(q_plus_true, q_minus_true, s2_nominal_bound, n_shots, delta_stat)
-    exact_cp_rob = exact_cp_certification_power(q_plus_true, q_minus_true, b2_robust_bound, n_shots, delta_stat)
+    exact_cp_nom = exact_cp_certification_power(
+        q_plus_true, q_minus_true, s2_nominal_bound, n_shots, delta_stat, conservative_upper=conservative_upper
+    )
+    exact_cp_rob = exact_cp_certification_power(
+        q_plus_true, q_minus_true, b2_robust_bound, n_shots, delta_stat, conservative_upper=conservative_upper
+    )
 
     return {
         "n_shots": n_shots,
@@ -1786,5 +1879,6 @@ __all__ = [
     "optimize_displacement_robust",
     "simulate_calibration_monte_carlo",
     "solve_asymmetric_branch",
+    "squeezed_thermal_box_extremes",
     "tap_beam_energy_upper_bound",
 ]

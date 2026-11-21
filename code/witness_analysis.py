@@ -184,11 +184,17 @@ def exact_cp_certification_power(
     n_shots: int,
     delta_stat: float = 0.01,
     extra_margin: float = 0.0,
+    *,
+    conservative_upper: bool = False,
 ) -> float:
     """Exact finite-sample probability P(L2_LCB^CP(K_+, K_-) - s2_bound > extra_margin).
 
-    Computed directly from the exact independent Binomial PMFs (truncated at tail < 1e-13),
-    with zero Monte Carlo sampling noise.
+    Truncates each Binomial PMF at tail < 1e-13:
+      - By default (`conservative_upper=False`, used for Type-II certification power),
+        the dropped nonnegative tail mass strictly lower-bounds true power.
+      - When `conservative_upper=True` (used for classical Type-I rejection bounds),
+        all omitted tail mass `1 - sum(pmf_p)` and `1 - sum(pmf_m)` is explicitly added
+        to guarantee a conservative upper bound (capped at 1.0).
     """
     _validate_prob("q_plus", q_plus)
     _validate_prob("q_minus", q_minus)
@@ -205,6 +211,156 @@ def exact_cp_certification_power(
 
     thresh = (s2_bound + extra_margin) - 1.0
     # Strict inequality: d_p + d_m > thresh  <=>  d_m > thresh - d_p
+    idx = np.searchsorted(d_m_sorted, thresh - d_p, side="right")
+    p_match = np.where(
+        idx < len(d_m_sorted),
+        cdf_rev[np.minimum(idx, len(d_m_sorted) - 1)],
+        0.0,
+    )
+    prob = float(np.dot(pmf_p, p_match))
+    if conservative_upper:
+        omitted_p = max(0.0, 1.0 - float(np.sum(pmf_p)))
+        omitted_m = max(0.0, 1.0 - float(np.sum(pmf_m)))
+        return min(1.0, prob + omitted_p + omitted_m)
+    return prob
+
+
+def _binary_kl(p: float, q: float) -> float:
+    """Binary Kullback-Leibler divergence D_KL(p || q) in nats."""
+    if abs(p - q) <= 1e-15:
+        return 0.0
+    res = 0.0
+    if p > 0.0:
+        if q <= 0.0:
+            return float("inf")
+        res += p * math.log(p / q)
+    if p < 1.0:
+        if q >= 1.0:
+            return float("inf")
+        res += (1.0 - p) * math.log((1.0 - p) / (1.0 - q))
+    return res
+
+
+def analytic_cp_power_tail_bound(
+    q_plus: float,
+    q_minus: float,
+    s2_bound: float,
+    delta_stat: float = 0.01,
+    power: float = 0.99,
+) -> Optional[int]:
+    """Analytic Chernoff-KL threshold N_tail guaranteeing CP power >= `power` for ALL N >= N_tail.
+
+    Allocates per-setting Clopper-Pearson distance targets t_+ + t_- = s2_bound - 1
+    proportionally to d_{j,0} = |q_j - 1/2|. For each active side with minority count
+    rate p_j = min(q_j, 1 - q_j) < p_{thr,j} = 1/2 - t_j, balances the Chernoff
+    Clopper-Pearson boundary condition N * D_KL(m || p_{thr,j}) >= ln(4 / delta_stat)
+    against the Binomial concentration tail N * D_KL(m || p_j) >= ln(c / (1 - power)).
+    """
+    _validate_prob("q_plus", q_plus)
+    _validate_prob("q_minus", q_minus)
+    if not (0.0 < delta_stat < 1.0) or not (0.0 < power < 1.0):
+        raise ValueError("delta_stat and power must lie in (0, 1)")
+    dp0 = abs(q_plus - 0.5)
+    dm0 = abs(q_minus - 0.5)
+    if 1.0 + dp0 + dm0 <= s2_bound + 1e-15:
+        return None
+    if s2_bound <= 1.0:
+        # Either side strictly separated from 0.5 certifies L_2 > 1 >= s2_bound
+        q_strong = q_plus if dp0 >= dm0 else q_minus
+        tp, tm = (0.0, 0.0)
+        p = min(q_strong, 1.0 - q_strong)
+        p_thr = 0.5
+        c_cp = math.log(4.0 / delta_stat)
+        c_pw = math.log(1.0 / (1.0 - power))
+        if p <= 0.0:
+            return max(1, int(math.floor(math.log(delta_stat / 4.0) / math.log(1.0 - p_thr))) + 1)
+        lo, hi = p, p_thr
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            if c_cp / max(1e-30, _binary_kl(mid, p_thr)) > c_pw / max(1e-30, _binary_kl(mid, p)):
+                hi = mid
+            else:
+                lo = mid
+        m = 0.5 * (lo + hi)
+        return math.ceil(max(c_cp / _binary_kl(m, p_thr), c_pw / _binary_kl(m, p))) + 1
+
+    scale = (s2_bound - 1.0) / (dp0 + dm0)
+    tp = dp0 * scale
+    tm = dm0 * scale
+    c_cp = math.log(4.0 / delta_stat)
+
+    def _side_n_tail(q: float, t: float, c_pw: float) -> int:
+        if t <= 0.0:
+            return 1
+        p = min(q, 1.0 - q)
+        p_thr = 0.5 - t
+        if p <= 0.0:
+            return max(1, int(math.floor(math.log(delta_stat / 4.0) / math.log(1.0 - p_thr))) + 1)
+        lo, hi = p, p_thr
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            n_cp = c_cp / max(1e-30, _binary_kl(mid, p_thr))
+            n_pw = c_pw / max(1e-30, _binary_kl(mid, p))
+            if n_cp > n_pw:
+                hi = mid
+            else:
+                lo = mid
+        m = 0.5 * (lo + hi)
+        return math.ceil(max(c_cp / _binary_kl(m, p_thr), c_pw / _binary_kl(m, p))) + 1
+
+    if tp <= 0.0:
+        return _side_n_tail(q_minus, tm, math.log(1.0 / (1.0 - power)))
+    if tm <= 0.0:
+        return _side_n_tail(q_plus, tp, math.log(1.0 / (1.0 - power)))
+    c_pw_two = math.log(2.0 / (1.0 - power))
+    return max(_side_n_tail(q_plus, tp, c_pw_two), _side_n_tail(q_minus, tm, c_pw_two))
+
+
+def _block_cp_power_lower_bound(
+    q_plus: float,
+    q_minus: float,
+    s2_bound: float,
+    n1: int,
+    n2: int,
+    delta_stat: float = 0.01,
+    tail_tol: float = 1e-13,
+) -> float:
+    """Rigorous lower bound on min_{N in [n1, n2]} exact_cp_certification_power(N).
+
+    Combines stochastic dominance F_N <=_st F_{n2} on minority counts F_N ~ Bin(N, min(q,1-q))
+    with monotonicity of upper Beta quantiles q_hi^CP(f; N) <= q_hi^CP(f; n1) for N >= n1.
+    """
+    a_tail = 0.25 * delta_stat
+
+    def _side_lower_dist(q: float) -> Tuple[np.ndarray, np.ndarray]:
+        p = min(q, 1.0 - q)
+        if p <= 0.0:
+            fs = np.array([0], dtype=np.int64)
+            pmf = np.array([1.0], dtype=np.float64)
+        else:
+            f_lo = max(0, int(stats.binom.ppf(tail_tol, n2, p)) - 1)
+            f_hi = min(n2, int(stats.binom.isf(tail_tol, n2, p)) + 1)
+            fs = np.arange(f_lo, f_hi + 1, dtype=np.int64)
+            pmf = stats.binom.pmf(fs, n2, p)
+        hi = np.where(
+            fs >= n1,
+            1.0,
+            stats.beta.ppf(1.0 - a_tail, fs + 1, np.maximum(n1 - fs, 1)),
+        )
+        return np.maximum(0.0, 0.5 - hi), pmf
+
+    d_p, pmf_p = _side_lower_dist(q_plus)
+    if abs(min(q_plus, 1.0 - q_plus) - min(q_minus, 1.0 - q_minus)) <= 1e-15:
+        d_m, pmf_m = d_p, pmf_p
+    else:
+        d_m, pmf_m = _side_lower_dist(q_minus)
+
+    order = np.argsort(d_m)
+    d_m_sorted = d_m[order]
+    pmf_m_sorted = pmf_m[order]
+    cdf_rev = np.cumsum(pmf_m_sorted[::-1])[::-1]
+
+    thresh = s2_bound - 1.0
     idx = np.searchsorted(d_m_sorted, thresh - d_p, side="right")
     p_match = np.where(
         idx < len(d_m_sorted),
@@ -344,27 +500,36 @@ def clopper_pearson_required_shots(
     if (q_plus <= 0.0 or q_plus >= 1.0) and (q_minus <= 0.0 or q_minus >= 1.0):
         return n_bin
 
-    # Sawtooth-safe forward sweep past the last failure:
-    # By binary-search invariant, either n_bin == 1 or P(n_bin - 1) < power.
-    # Sawtooth period in N is ~ 1 / q_tooth, where q_tooth = (2 - s2_bound) / 2.
-    q_tooth = max(0.5 * (2.0 - s2_bound), 1e-3)
-    min_streak = max(25, min(300, int(math.ceil(2.5 / q_tooth))))
+    # Exact sawtooth-safe certification for ALL N >= N_0:
+    # Step 1: Compute analytic Chernoff-KL threshold n_tail proving power(N) >= power for all N >= n_tail.
+    # Step 2: Certify every integer N in [n_bin, n_tail - 1] via stochastic-coupling block lower bounds.
+    n_tail = analytic_cp_power_tail_bound(q_plus, q_minus, s2_bound, delta_stat, power)
+    if n_tail is None:
+        return None
+    if n_tail > max_shots:
+        # Still run certified coupling blocks inside [n_bin, min(n_tail, max_shots + 10_000_000)]
+        # when n_bin <= max_shots; return None only if last_fail + 1 > max_shots.
+        n_tail = min(n_tail, max_shots + 2_000_000)
 
     last_fail = n_bin - 1
-    streak = 1  # n_bin itself satisfies P(n_bin) >= power
-    n = n_bin + 1
-    while n <= max_shots:
-        p_cur = exact_cp_certification_power(q_plus, q_minus, s2_bound, n, delta_stat)
-        if p_cur < power:
-            last_fail = n
-            streak = 0
+    cur = n_bin + 1
+    step = 1
+    while cur < n_tail:
+        n2 = min(n_tail - 1, cur + step - 1)
+        if n2 == cur:
+            p_lb = exact_cp_certification_power(q_plus, q_minus, s2_bound, cur, delta_stat)
         else:
-            streak += 1
-            if streak >= min_streak and p_cur >= power + 0.05 * (1.0 - power):
-                break
-            if streak >= 2 * min_streak:
-                break
-        n += 1
+            p_lb = _block_cp_power_lower_bound(q_plus, q_minus, s2_bound, cur, n2, delta_stat)
+        if p_lb >= power:
+            cur = n2 + 1
+            if cur < n_tail:
+                step = min(max(1, (n_tail - cur) // 2), step * 2)
+        else:
+            if step == 1:
+                last_fail = cur
+                cur += 1
+            else:
+                step = max(1, step // 2)
 
     if last_fail >= max_shots:
         return None
