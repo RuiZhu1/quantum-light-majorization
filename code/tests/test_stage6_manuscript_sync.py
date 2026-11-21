@@ -40,7 +40,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
 
         # 1. Every \includegraphics target resolves to a real file under paper/
         fig_paths = re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", tex_text)
-        self.assertEqual(len(fig_paths), 5, f"Expected 5 manuscript figures, found {fig_paths}")
+        self.assertEqual(len(fig_paths), 6, f"Expected 6 manuscript figures, found {fig_paths}")
         for rel in fig_paths:
             fig_file = PAPER_DIR / rel
             self.assertTrue(fig_file.exists(), f"Missing manuscript figure: {fig_file}")
@@ -60,24 +60,30 @@ class TestStage6ManuscriptSync(unittest.TestCase):
         uncited_bib = bib_keys - cited_keys
         self.assertEqual(uncited_bib, set(), f"Uncited bibliography keys in references.bib: {uncited_bib}")
 
-        # 3. No LaTeX errors, undefined refs/citations, or severe overfull hboxes in main.log
+        # 3. Zero LaTeX errors, warnings, undefined refs/citations, or overfull/underfull boxes in main.log
         log_path = PAPER_DIR / "main.log"
         if log_path.exists():
             log_text = log_path.read_text(encoding="utf-8", errors="ignore")
             for forbidden in (
                 "! LaTeX Error:",
+                "! ",
                 "Undefined control sequence",
                 "There were undefined citations",
                 "There were undefined references",
                 "multiply-defined labels",
                 "LaTeX Font Warning:",
+                "LaTeX Warning:",
+                "Package hyperref Warning:",
+                "Rerun to get",
+                "Overfull \\vbox",
+                "Underfull \\hbox",
+                "Underfull \\vbox",
             ):
                 self.assertNotIn(forbidden, log_text, f"Found '{forbidden}' in paper/main.log")
             overfull_matches = [
                 float(x) for x in re.findall(r"Overfull \\hbox \(([0-9.]+)pt too wide\)", log_text)
             ]
-            severe_overfull = [x for x in overfull_matches if x > 5.0]
-            self.assertEqual(severe_overfull, [], f"Severe overfull hboxes (>5pt): {severe_overfull}")
+            self.assertEqual(overfull_matches, [], f"Overfull hboxes found: {overfull_matches}")
 
     def test_03_manuscript_numeric_sync_with_data_json(self) -> None:
         tex_text = (PAPER_DIR / "main.tex").read_text(encoding="utf-8")
@@ -118,10 +124,12 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             r"1.31 \times 10^{-12}",
             r"\label{app:renyi}",
             r"\label{app:cp-tail}",
+            r"\label{app:hoeffding-drift}",
+            r"data/stage5/quantum\_ceilings\_and\_tail\_audit.csv",
             r"b_{\rm crit,0} \approx 1.84",
             "statistically independent",
             "Danskin",
-            "Finite-$N$ SDP Gap",
+            "finite-$N$ SDP gap",
             "conditional",
             r"2 \times 10^7",
             r"\clearpage",
@@ -159,8 +167,39 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             r"b_{\rm crit,01} \approx 1.84",
             "three-level dark",
             "3-level dark",
+            "even-photon Fock pairs",
+            "C^2-certified",
+            "Mandel parameter $Q =",
+            "or ordinary",
+            "global onset threshold",
+            r"W_2(a) = O(\ee^{-\eta(a^2+\nbar)})",
+            "tab:extended-benchmarks",
+            "tab:fock-tail",
         ):
             self.assertNotIn(forbidden_tex, tex_no_comments, f"Found stale/internal token '{forbidden_tex}' in paper/main.tex")
+
+        for required_tex in (
+            r"S(r) = \exp[\frac{r}{2}(\hat a^{\dagger 2} - \hat a^2)]",
+            "even photon-number (Fock) states",
+            "uniformly at least as strong as each Schur-concave scalar entropic bound induced by the same classical majorant, and strictly stronger in demonstrated regimes such as the Shannon entropy window",
+            "the no-click probability of the coherent state optimizing the asymptotic",
+            r"q_\pm(\rho) = \tr[\rho E_0(\pm)] = \kappa\,\pi\,Q_{\calL_\eta(\rho)}(\mp\sqrt{\eta}\,a)",
+            r"Q_{\rm M} = 2\langle\hat n\rangle + 1",
+            r"Q_{\rm M} < 0",
+            r"W_2(a) \sim 2\kappa\,\ee^{-\eta(a^2+\nbar)}",
+            r"data/stage5/quantum\_ceilings\_and\_tail\_audit.csv",
+            "Maclaurin",
+            r"(2n_{\rm th}+1)\ee^{-2\abs{r}} < 1",
+            r"(2n_{\rm th}+1)\ee^{-2\abs{r}} > 1",
+            r"(2n_{\rm th}+1)\ee^{-2\abs{r}} = 1",
+        ):
+            self.assertIn(required_tex, tex_no_comments, f"Required R1-R3 text missing from paper/main.tex: {required_tex}")
+
+        abs_match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex_no_comments, re.S)
+        self.assertIsNotNone(abs_match, "Missing abstract environment in paper/main.tex")
+        abs_raw_words = abs_match.group(1).strip().split()
+        self.assertGreaterEqual(len(abs_raw_words), 120, f"Abstract too short ({len(abs_raw_words)} words)")
+        self.assertLessEqual(len(abs_raw_words), 150, f"Abstract too long ({len(abs_raw_words)} words)")
 
         robust_code = (REPO_ROOT / "code" / "calibration_robust.py").read_text(encoding="utf-8")
         for forbidden_code in ("minimum(pad", "min(pad"):
@@ -179,7 +218,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
 
         # Verify physics-journal narrative structure in main text (before \appendix)
-        main_body = tex_no_comments.split(r"\appendix", 1)[0]
+        main_body, appendix_body = tex_no_comments.split(r"\appendix", 1)
         for env in ("theorem", "lemma", "proposition", "corollary", "remark", "itemize", "enumerate"):
             self.assertNotIn(
                 f"\\begin{{{env}}}",
@@ -187,7 +226,18 @@ class TestStage6ManuscriptSync(unittest.TestCase):
                 f"Main text should remain prose-only without \\begin{{{env}}} environments",
             )
         main_tables = re.findall(r"\\begin\{table\}", main_body)
-        self.assertLessEqual(len(main_tables), 2, f"Expected <=2 main-text tables, found {len(main_tables)}")
+        appendix_tables = re.findall(r"\\begin\{table\}", appendix_body)
+        all_tables = re.findall(r"\\begin\{table\}", tex_no_comments)
+        self.assertEqual(len(main_tables), 1, f"Expected exactly 1 main-text table, found {len(main_tables)}")
+        self.assertEqual(len(appendix_tables), 2, f"Expected exactly 2 appendix tables, found {len(appendix_tables)}")
+        self.assertEqual(len(all_tables), 3, f"Expected strictly 3 tables total, found {len(all_tables)}")
+        self.assertIn(r"\label{app:fock-audit}", appendix_body)
+        self.assertIn(r"\label{eq:fock-sdp-tail}", appendix_body)
+        self.assertIn(r"\label{fig:figA1}", appendix_body)
+        self.assertIn("figA1_fock_tail_audit.pdf", appendix_body)
+        self.assertNotIn(r"\label{eq:fock-sdp-tail}", main_body)
+        self.assertNotIn(r"\label{fig:figA1}", main_body)
+        self.assertNotIn("figA1_fock_tail_audit.pdf", main_body)
 
         # Verify total unit tests match documented count (54)
         proc_help = subprocess.run(
