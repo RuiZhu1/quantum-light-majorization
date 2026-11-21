@@ -30,7 +30,7 @@ Generates 5 publication-grade multi-panel vector PDF figures (and PNG previews) 
   5. `fig5_quantum_ceilings_audit` : (a) Exact zero-truncation ideal quantum branch ceilings (off_off
                                          even cat 1+e^{-2a^2}, off_on 1+sqrt(1-e^{-4a^2}), on_on dark
                                          state |chi_a> = 2) vs. energy-constrained classical envelope;
-                                     (b) Finite-Fock SDP dual h_{Q,N}(P_N A P_N) vs. Eq. (36) gentle-
+                                     (b) Finite-Fock SDP dual h_{Q,N}(P_N A P_N) vs. Eq. (29) gentle-
                                          projection tail penalty R_N across Fock cutoffs N in [15, 200].
 """
 
@@ -571,7 +571,7 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
     ax0.set_xticks(x_idx)
     ax0.set_xticklabels(tier_labels)
     ax0.set_ylim(-0.07, 0.13)
-    ax0.set_ylabel("Worst-case certified margin $W_2^{\\rm rob,worst}(\\Theta)$")
+    ax0.set_ylabel("Worst-case robust margin $W_2^{\\rm rob,worst}(\\Theta)$")
     ax0.set_title("(a) Calibration-Box Robustness Across Tiers", fontweight="bold")
     ax0.legend(loc="lower left", fontsize=6.5)
     ax0.grid(True)
@@ -601,7 +601,7 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
     ax1.plot(fp_shots, fp_naive_cp, color=PALETTE["red"], marker="x", markersize=6.0, lw=1.8, linestyle="--",
              label="Type-I FP: Naive nominal bound (classical state!)")
     ax1.plot(fp_shots, fp_rob_cp, color=PALETTE["green"], marker="s", markersize=5.0, lw=2.0,
-             label="Type-I FP: Certified $B_2^{\\rm rob}(\\Theta_2)$ ($\\leq 0.008\\% \\ll \\delta_{\\rm stat}$)")
+             label="Type-I FP: Robust $B_2^{\\rm rob}(\\Theta_2)$ (MC obs. $\\leq 0.008\\%$)")
     ax1.plot(pow_shots, pow_mc_cp, color=PALETTE["blue"], marker="o", markersize=5.0, lw=2.0,
              label="Type-II Power: Robust CP ($r=-0.42, a^*_{\\rm CP}$, $99\\%$ at $1,727$)")
     ax1.plot(pow_shots, pow_mc_hoeff, color=PALETTE["orange"], marker="^", markersize=5.0, lw=1.5, linestyle="-.",
@@ -701,7 +701,7 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     ax0.legend(loc="lower right", fontsize=6.7)
     ax0.grid(True)
 
-    # Panel (b): Finite-Fock SDP h_{Q,N} vs. Eq. (36) gentle-projection tail penalty R_N
+    # Panel (b): Finite-Fock SDP h_{Q,N} vs. Eq. (29) gentle-projection tail penalty R_N
     ax1 = axes[1]
     n_cuts = [int(r["fock_cutoff_N"]) for r in tail_rows]
     h_qn = [float(r["S2_quantum_truncated_N"]) for r in tail_rows]
@@ -710,7 +710,7 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     s2_c_val = float(tail_rows[0]["S2_classical_at_even_cat_energy"])
 
     ax1.plot(n_cuts, eq27_ub, color=PALETTE["red"], marker="^", markersize=5.5, linestyle="--", lw=1.8,
-             label="Eq. (36) unclipped bound $h_{Q,N}(P_N A P_N) + R_N$")
+             label="Eq. (29) unclipped bound $h_{Q,N}(P_N A P_N) + R_N$")
     ax1.plot(n_cuts, h_qn, color=PALETTE["blue"], marker="o", markersize=5.5, lw=2.0,
              label="Compressed Fock SDP $h_{Q,N}(P_N A P_N)$ ($\\bar{n}_{\\max}=0.22$)")
     ax1.axhline(s2_c_val, color=PALETTE["green"], linestyle="-.", lw=1.6,

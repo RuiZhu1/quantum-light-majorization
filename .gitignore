@@ -24,3 +24,9 @@ paper/*.bbl
 .DS_Store
 Thumbs.db
 *.swp
+
+# Local reference textbook PDFs (not tracked in repository)
+/*.pdf
+GerryKnightQO.pdf
+2000 - R.Loudon - The Quantum Theory of Light - 3rd ed Oxford Science Publications.pdf
+Marian O. Scully and M. Suhail Zubairy - Quantum optics.pdf

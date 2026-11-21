@@ -1634,6 +1634,8 @@ def optimize_displacement_robust(
     n_grid: int = 45,
     delta_stat: float = 0.01,
     power: float = 0.99,
+    a_w2_override: Optional[float] = None,
+    a_cp_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     """Compare a*_{W2} vs. a*_{CP} vs. calibration-box robust optimum a*_{robust} under `tier`."""
     def _q_real(av: float, ev: float, nv: float) -> float:
@@ -1642,22 +1644,29 @@ def optimize_displacement_robust(
         except TypeError:
             return float(q_fn(av, ev, nv))
 
-    q0 = _q_real(0.0, eta_nom, dark_nom)
-    stage3_opt = optimize_displacement_statistical_margin(
-        lambda a: _q_real(a, eta_nom, dark_nom),
-        q0,
-        mean_photons,
-        eta_nom,
-        cap_nom,
-        dark_nom,
-        a_min=a_min,
-        a_max=a_max,
-        delta_stat=delta_stat,
-        power=power,
-        n_grid=90,
-    )
-    a_w2 = float(stage3_opt["a_w2"])
-    a_cp = float(stage3_opt["a_cp"]) if stage3_opt["a_cp"] is not None else a_w2
+    if a_w2_override is not None and a_cp_override is not None:
+        a_w2 = float(a_w2_override)
+        a_cp = float(a_cp_override)
+    else:
+        q0 = _q_real(0.0, eta_nom, dark_nom)
+        stage3_opt = optimize_displacement_statistical_margin(
+            lambda a: _q_real(a, eta_nom, dark_nom),
+            q0,
+            mean_photons,
+            eta_nom,
+            cap_nom,
+            dark_nom,
+            a_min=a_min,
+            a_max=a_max,
+            delta_stat=delta_stat,
+            power=power,
+            n_grid=90,
+        )
+        a_w2 = float(a_w2_override) if a_w2_override is not None else float(stage3_opt["a_w2"])
+        if a_cp_override is not None:
+            a_cp = float(a_cp_override)
+        else:
+            a_cp = float(stage3_opt["a_cp"]) if stage3_opt["a_cp"] is not None else a_w2
 
     grid = np.unique(np.concatenate((np.linspace(a_min, a_max, n_grid), np.array([a_w2, a_cp]))))
     best_a_rob_w2 = a_w2
@@ -1758,21 +1767,37 @@ def tap_beam_energy_upper_bound(
     n_tap_shots: int,
     peak_photon_ceiling: float,
     delta_energy: float = 0.005,
+    *,
+    variance_bound: Optional[float] = None,
 ) -> Dict[str, float]:
     """Route A independent energy upper confidence bound nbar_U before displacement.
 
     A calibrated beam splitter of reflectivity `tap_fraction` = R in (0, 1) diverts a
-    fraction R of the input mode to a linear intensity monitor of quantum efficiency
+    fraction R of the input mode to an unsaturated linear monitor of quantum efficiency
     `eta_tap`, while the transmitted fraction T_tap = 1 - R enters the displacement stage.
-    Under a physically justified peak-energy ceiling M_max = `peak_photon_ceiling` per pulse
-    on the tap detector, Hoeffding's one-sided inequality certifies with probability >= 1 - delta_energy:
+    Under a strict per-pulse observable support bound X_t in [0, M_max] (e.g., an integer
+    pre-tap photon-count ceiling M_max >= 1 with out-of-range saturation aborting the run,
+    never clipping) and optional second-moment variance bound `variance_bound`,
+    Hoeffding's or one-sided Bernstein's inequality certifies with probability >= 1 - delta_energy:
         <n>_transmitted <= ((1 - R) / (R * eta_tap)) * (tap_mean_estimate + eps_E) =: nbar_U.
     """
     if not (0.0 < tap_fraction < 1.0 and 0.0 < eta_tap <= 1.0):
         raise ValueError("Require tap_fraction in (0, 1) and eta_tap in (0, 1]")
     if n_tap_shots <= 0 or peak_photon_ceiling <= 0.0 or not (0.0 < delta_energy < 1.0):
         raise ValueError("Invalid tap-beam statistical parameters")
-    eps_tap = peak_photon_ceiling * math.sqrt(math.log(1.0 / delta_energy) / (2.0 * n_tap_shots))
+    log_inv = math.log(1.0 / delta_energy)
+    eps_hoeff = peak_photon_ceiling * math.sqrt(log_inv / (2.0 * n_tap_shots))
+    if variance_bound is not None:
+        if variance_bound < 0.0:
+            raise ValueError(f"variance_bound must be nonnegative, got {variance_bound}")
+        eps_bern = math.sqrt(2.0 * variance_bound * log_inv / n_tap_shots) + (
+            peak_photon_ceiling * log_inv
+        ) / (3.0 * n_tap_shots)
+        eps_tap = min(eps_hoeff, eps_bern)
+        bound_method = "bernstein" if eps_bern < eps_hoeff else "hoeffding"
+    else:
+        eps_tap = eps_hoeff
+        bound_method = "hoeffding"
     scale = (1.0 - tap_fraction) / (tap_fraction * eta_tap)
     nbar_est = scale * tap_mean_estimate
     nbar_u = scale * (tap_mean_estimate + eps_tap)
@@ -1780,7 +1805,9 @@ def tap_beam_energy_upper_bound(
         "tap_fraction_R": tap_fraction,
         "transmitted_fraction": 1.0 - tap_fraction,
         "n_tap_shots": n_tap_shots,
+        "peak_observable_ceiling_M_max": peak_photon_ceiling,
         "delta_energy": delta_energy,
+        "concentration_bound": bound_method,
         "transmitted_mean_estimate": nbar_est,
         "certified_energy_cap_upper_nbar_U": nbar_u,
         "relative_cap_slack": (nbar_u / nbar_est) if nbar_est > 0.0 else float("inf"),

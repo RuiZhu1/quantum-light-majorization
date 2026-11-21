@@ -449,6 +449,8 @@ def run_scan3_robust_displacement_optimization() -> List[Dict[str, Any]]:
             a_min=0.15,
             a_max=2.10,
             n_grid=42,
+            a_w2_override=spec["a_w2"],
+            a_cp_override=spec["a_cp"],
         )
         ev_w2 = res["at_a_w2"]
         ev_cp = res["at_a_cp"]
@@ -735,8 +737,8 @@ def generate_all_stage4_datasets() -> Dict[str, Any]:
         tap_mean_estimate=0.0091,
         tap_fraction=0.05,
         eta_tap=0.95,
-        n_tap_shots=50_000,
-        peak_photon_ceiling=0.25,
+        n_tap_shots=20_000_000,
+        peak_photon_ceiling=5.0,
         delta_energy=0.005,
     )
 

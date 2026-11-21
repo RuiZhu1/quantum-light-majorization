@@ -1,34 +1,24 @@
 % Submission-ready manuscript for Journal of Physics B: Atomic, Molecular and Optical Physics
 % Focus Collection: Spotlight in China (https://iopscience.iop.org/collections/jpb-251017-972)
-% Formatted with standard TeX Live article + amsmath/amsthm/natbib/booktabs for zero external .cls dependency;
-% body sections, theorems, tables, and references.bib convert directly to IOP Publishing iopart.cls at production stage.
+% Formatted with standard TeX Live article + amsmath/amssymb/natbib/booktabs for zero external .cls dependency;
+% body sections, tables, figures, and references.bib convert directly to IOP Publishing iopart.cls at production stage.
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage[margin=22mm]{geometry}
-\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{amsmath,amssymb,bm}
 \usepackage{authblk}
 \usepackage{booktabs,array,tabularx}
-\usepackage{enumitem}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{xcolor,graphicx}
 \usepackage{microtype}
 \usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
 
 \setlength{\emergencystretch}{2em}
-\setlist{itemsep=2pt,topsep=4pt}
 
-% --- Theorem environments ---
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{proposition}{Proposition}
-\newtheorem{corollary}{Corollary}
-\theoremstyle{definition}
-\newtheorem{remark}{Remark}
-
-% --- Macros (symbol-hygiene checked against Comm. Phys. qubit notation) ---
+% --- Macros ---
 \newcommand{\tr}{\operatorname{tr}}
 \newcommand{\spec}{\operatorname{spec}}
 \newcommand{\conv}{\operatorname{conv}}
@@ -58,8 +48,6 @@
 
 \author[1,*]{Rui Zhu}
 \author[1,2,\dag]{Marcelo F.\ Ciappina}
-% Optional co-author slot pending final author-list confirmation:
-% \author[1]{Gilad Gour}
 \affil[1]{Physics Program, Guangdong Technion -- Israel Institute of Technology, 241 Daxue Road, Shantou, Guangdong 515063, China}
 \affil[2]{Department of Physics, Technion -- Israel Institute of Technology, Haifa 3200003, Israel}
 \affil[*]{\texttt{rui.zhu@gtiit.edu.cn}}
@@ -71,82 +59,78 @@
 \maketitle
 
 \begin{abstract}
-Binary direct-sum majorization uncertainty relations avoid the loss of discrimination power suffered by single-scalar entropic inequalities, yet their unconstrained continuous-variable form collapses to a trivial classical bound ($c = 1$) as soon as nearly orthogonal coherent states enter the convex classical mixture. Here we show how an independently certified upper bound $\bar n_{\max}$ on the pre-displacement mean photon number restores informative, analytically solvable majorization witnesses for a single optical mode measured by two opposite displaced on/off threshold detectors of amplitudes $\pm a$, efficiency $\eta$, and Poisson dark counts $\nu$. Using an exact 2D-to-1D concave-envelope Lagrangian duality paired with $C^2$ interval certificates (primal--dual gaps $\le 9.28 \times 10^{-14}$), we derive the exact classical majorization envelope $\omega_{\mathcal C_{\bar n_{\max}}}$ for \emph{all} $a > 0$, $\eta \in (0,1]$, $\nu \ge 0$, and $\bar n_{\max} \ge 0$---completely lifting prior small-displacement ($2\eta a^2 \le 1$) and zero-dark-count restrictions---and classify positive-energy attainment and non-attainment phases. Lifting $2\eta a^2 \le 1$ unlocks an experimentally routine Gaussian squeezed-vacuum benchmark displaced along the squeezed quadrature ($r < 0$, $\approx 3.5$--$3.6\;\mathrm{dB}$ squeezing), which suffers zero sorting penalty ($\Pi_{\rm sort} \equiv 0$) relative to the complete outcome-resolved classical hull, demonstrates Shannon information loss, survives source loss ($T=0.90$), thermal noise ($n_{\rm th} \le 0.35$), and dark counts ($\nu=10^{-2}$), and simultaneously evades three baseline detectors (unconstrained two-setting, undisplaced $a=0$ with energy cap, and single displaced setting with energy cap) down to $\eta = 0.70$. We further extend the dual solver to 7-parameter asymmetric calibration boxes $\Theta$ via global branch-and-bound in IEEE-754 \texttt{float64} precision (relaxation gap $\le 1.31 \times 10^{-12}$), formalize pre-displacement tap-beam energy certification ($\bar n_U$) bypassing threshold-detector saturation, and establish a distribution-free finite-sample error budget via exact Clopper--Pearson intervals (for stationary independent detection trials) with Chernoff--KL and stochastic-coupling certification for all $N \ge N_s^{\rm CP99}$, certifying the Gaussian benchmark under realistic $2\%$ calibration uncertainty in $1,727$--$3,033$ shots per setting at $\eta \in [0.90, 1.00]$ ($1,630$--$2,831$ after $\Theta_2$-aware displacement optimization) and $13,201$ ($11,327$ optimized) at $\eta=0.70$, guaranteeing classical false positives $\le \delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$ (conditioned on the box and energy events under independent calibration data, $\le \delta_{\rm stat}=0.01$; audited at $\le 8\times 10^{-5}$ in $50{,}000$-trial Monte Carlo and $\le 3.5\times 10^{-5}$ by conservative binomial PMF summation on tested $\Theta_2$ boundary states).
+Direct-sum majorization of binary photocounting statistics provides a stronger nonclassicality witness than single-scalar entropic inequalities, yet collapses to a trivial classical bound in infinite-dimensional optical modes unless the mean photon number is bounded. Here we study a single optical mode probed by two opposite coherent displacements $\pm a$ followed by binary click/no-click threshold detectors---physically sampling the field's smoothed Husimi $Q$ function at two symmetric phase-space points---under an independently certified energy constraint $\langle\hat n\rangle \le \bar n_{\max}$. Solving the exact classical majorization envelope across all displacements, detector efficiencies $\eta$, and dark counts $\nu$ lifts prior small-displacement limits ($2\eta a^2 \le 1$) and reveals routine quadrature-squeezed vacuum ($\approx 3.5\;\mathrm{dB}$) displaced along its squeezed quadrature as a resilient benchmark: every $P$-nonclassical squeezed thermal state is certified at sufficiently large displacement without homodyne or photon-number-resolving detectors, suffers zero sorting penalty relative to the outcome-resolved classical hull, and survives realistic loss, thermal noise, and dark counts alongside optimized Schr\"odinger cat and $\cos\theta\ket{0}+\sin\theta\ket{2}$ states. Pairing a pre-displacement tap-beam energy monitor with asymmetric calibration uncertainty boxes and distribution-free Clopper--Pearson bounds certifies this benchmark under $2\%$ calibration drift in a few thousand pulses per setting.
 \end{abstract}
 
-% === [MODULAR INTRODUCTION SLOT: ready for Marcelo's physics-oriented polish] ===
+% ===========================================================================
 \section{Introduction}\label{sec:intro}
-
-Nonclassical states of light---most notably quadrature-squeezed radiation, single-photon Fock states, and optical Schr\"odinger cat superpositions emerging both in quantum-optical state engineering and in intense laser--matter interactions~\cite{Glauber1963,Sudarshan1963,Ourjoumtsev2007,Lewenstein2021}---are fundamental resources across quantum metrology, photonic state preparation, and continuous-variable quantum information processing. Certifying nonclassicality, understood rigorously as the failure of a state's Glauber--Sudarshan $P$ representation to form a classical probability measure over coherent states~\cite{Glauber1963,Sudarshan1963}, ideally relies on detectors that are both experimentally minimal and quantitatively robust against losses, dark counts, and calibration drift.
-
-Unbalanced homodyne detection, implemented by mixing an optical signal mode with a local oscillator (LO) of complex amplitude $\alpha$ at a beam splitter followed by a single binary click/no-click (on/off) threshold detector, is among the simplest photon-counting architectures available~\cite{Sperling2012,Kovtoniuk2024}. Unlike full quantum-state tomography or photon-number-resolving (PNR) detectors, a displaced threshold detector probes the Husimi $Q$ function at chosen phase-space points while discarding all multi-photon click multiplicities. Recent advances by Kovtoniuk \emph{et al.}~\cite{Kovtoniuk2024,Kovtoniuk2026} and Fiur\'a\v{s}ek~\cite{Fiurasek2024} have constructed tight Bell-like nonclassicality inequalities over the convex hull of coherent-state statistics for displaced and attenuated on/off detectors, and energy-assisted tests using undisplaced threshold clicks were formulated for quantum non-Gaussianity in~\cite{FiurasekLachmanFilip2021}.
-
-Parallel to optical convex-hull criteria, universal uncertainty relations based on majorization~\cite{Friedland2013,Rudnicki2014,Baek2019,YangQiaoOptimization2026,Conlon2026} have been applied to photocounting statistics~\cite{Medranda2015} and continuous phase-space distributions~\cite{VanHerstraeten2023}. For two binary positive operator-valued measures (POVMs) on finite-dimensional Hilbert spaces, we recently showed~\cite{ZhuManuscript} that the direct-sum majorization envelope $\omega_\oplus$ is governed completely by two scalar partial sums $(S_1, S_2)$, yields universal lower bounds for all Schur-concave entropies (Shannon, Tsallis, and R\'enyi across all orders $\alpha > 0$), and exhibits clean attainment vs.\ strict non-attainment transitions. However, as noted in the optical outlook of~\cite{ZhuManuscript}, naive extension of direct-sum majorization to an \emph{unrestricted} infinite-dimensional bosonic mode encounters a fundamental $c = 1$ obstruction: because orthogonal Fock-tail states or far-displaced coherent states can be nearly dark under both displacement settings ($\alpha_\pm = \pm a$) or trigger clicks with near-unit probability, the unconstrained classical and quantum partial-sum bounds collapse to the trivial envelope $(1,1,0,0)$.
-
-The present work resolves this $c = 1$ obstruction by \emph{restricting the admissible state set} through an independently certified upper bound $\tr(\rho\hat n) \le \nbar$ on the pre-displacement mean photon number while retaining the experimentally minimal two-setting displaced on/off measurement. This complements alternative strategies that instead modify the measurement via periodic homodyne binning. Carefully positioning our contribution against prior art~\cite{Kovtoniuk2024,Kovtoniuk2026,Medranda2015,FiurasekLachmanFilip2021}, we avoid claiming either that majorization outperforms full outcome-resolved convex-hull membership on identical data or that calibration intervals~\cite{Kovtoniuk2026} or antisqueezed-quadrature detection within $2\eta a^2 \le 1$~\cite{Kovtoniuk2024} are new in isolation. Rather, we establish five concrete advances:
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Complete exact energy-constrained classical dual across all $a > 0$ (Section~\ref{sec:classical-dual}):} Using a 2D-to-1D radial reduction and $C^2$-certified Lagrangian duality, we solve the exact classical majorization envelope $\omega_{\Cset_{\nbar}}$ for all $a > 0$, $\eta \in (0,1]$, $\nu \ge 0$, and $\nbar \ge 0$. We prove exact concavity thresholds ($b^2 \le 27/8$ for $E_0$ and \texttt{off/on}; $b^2 \le (3+\sqrt{6})/2$ for \texttt{off/off}; globally concave for $E_1$ and \texttt{on/on}), demonstrate that individual branches strictly require two-point coherent mixtures above these thresholds, prove analytically that click branches dominate every bitangent for the full majorization vector---giving a universal closed-form envelope---and classify all positive-energy attainment phases and dark-count transitions.
-\item \textbf{Universal Gaussian squeezed-vacuum benchmark beyond $2\eta a^2 \le 1$ (Section~\ref{sec:benchmarks}):} Lifting $2\eta a^2 \le 1$ unlocks ordinary squeezed vacuum displaced along the \emph{squeezed} quadrature ($r < 0$, $\approx 3.5$--$3.6\;\mathrm{dB}$ squeezing). Whereas $r < 0$ squeezed vacuum never beats exact $S_2^{\Cset}$ inside $2\eta a^2 \le 1$ and $r > 0$ offers no energy-constrained advantage over~\cite{Kovtoniuk2024}, our $r < 0$ benchmark is asymptotically complete (necessary and sufficient for sufficiently large $a > a_{\rm thr}$) within the aligned squeezed-thermal family for detecting $P$-nonclassicality across all $\eta > 0$, $T > 0$, $\nu \ge 0$, and finite $\nbar$ (Theorem~\ref{thm:sq-thermal}), suffers zero sorting penalty relative to the outcome-resolved hull (Theorem~\ref{thm:outcome-resolved}), displays Shannon information loss, and simultaneously beats all three simple baselines down to $\eta = 0.70$. We also optimize odd coherent-state superpositions $\ket{\Cset_-(c\ee^{\ii\phi})}$ over independent $(a,c,\phi)$ and analyze $\cos\theta\ket{0} + \sin\theta\ket{2}$.
-\item \textbf{Asymmetric calibration-box bounds $B_2^{\rm robust}(\Theta, \nU)$ (Section~\ref{sec:calibration}):} Extending the solver to 7-parameter asymmetric intervals $\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$ plus an energy cap $\nU$, we prove exact analytical reductions in dark counts, phase mismatch, and single-setting corners alongside a decoupled box-envelope global branch-and-bound upper bound executed in IEEE-754 \texttt{float64} precision ($U_A - L_A \le 1.31 \times 10^{-12}$), avoiding grid or endpoint heuristics for classical bounds.
-\item \textbf{Threshold-saturation no-go theorem, experimental energy protocol, and distribution-free statistics (Section~\ref{sec:calibration}):} We prove that displaced on/off clicks alone can never bound $\langle\hat n\rangle$ due to bright-tail saturation, formulate a pre-displacement calibrated tap-beam energy monitor (Route~A) and characterized-source protocol (Route~B), and combine them with sawtooth-safe~\cite{ChernickLiu2002} exact Clopper--Pearson~\cite{ClopperPearson1934} confidence bounds into a complete error budget $\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$.
-\item \textbf{Zero-truncation ideal quantum ceilings and Fock-tail audit (Section~\ref{sec:quantum-ceilings}):} Using rank-2 coherent-projector identities in $\operatorname{span}\{\ket{a},\ket{-a}\}$, we obtain exact ideal ($\eta=1, \nu=0$) quantum ceilings for \texttt{off/off} ($1+\ee^{-2a^2}$, even cat), \texttt{off/on} ($1+\sqrt{1-\ee^{-4a^2}}$), and \texttt{on/on} ($2$, 3-level dark state $\ket{\chi_a}$), and quantitatively audit compressed Fock-space SDPs against the gentle-projection tail bound~\cite{Winter1999} to explain why our classical witness thresholds and state probes avoid uncertified Fock cutoffs.
-\end{enumerate}
-
-\emph{Notation hygiene:} Throughout this paper, optical channel parameters follow quantum-optics conventions: $T \in (0,1]$ denotes pre-displacement pure-loss transmissivity, $\eta \in (0,1]$ detector quantum efficiency, $\nu \ge 0$ ($\kappa = \ee^{-\nu}$) Poisson dark-count mean, $b = \sqrt{\eta}\,a$ scaled displacement magnitude, $\nbar$ (or $\nU$) mean-photon-number upper bound, $E = \eta\nbar$ scaled energy cap, and $\mu$ probability measures over coherent amplitudes $\beta \in \mathbb{C}$ (dual multiplier $\lambda \ge 0$). These optical symbols are self-contained and should not be conflated with the qubit POVM parameters $(\eta,\mu,\nu)$ used in~\cite{ZhuManuscript}.
-% === [END MODULAR INTRODUCTION SLOT] ===
-
-% ===========================================================================
-\section{Physical Setup, Unrestricted Obstruction, and Restricted Majorization}\label{sec:setup}
 % ===========================================================================
 
-\subsection{Displaced On/Off Detection and Pre-Displacement Source Loss}\label{subsec:povm}
-Consider a single optical bosonic mode with annihilation operator $\hat a$ and photon-number operator $\hat n = \hat a^\dagger \hat a$. An incoming quantum state $\rho_0$ propagates through a pre-displacement pure-loss channel $\calL_T$ of transmissivity $T \in (0,1]$ (modelling source-preparation and coupling inefficiency) to yield the pre-displacement state $\rho = \calL_T(\rho_0)$, whose mean photon number $\tr(\rho\hat n) = T\tr(\rho_0\hat n)$ is bounded independently by $\tr(\rho\hat n) \le \nbar$ prior to displacement.
+Coherent and squeezed states of the electromagnetic field, together with non-Gaussian superpositions such as optical Schr\"odinger cat states, form the physical backbone of modern quantum optics~\cite{Glauber1963,Sudarshan1963,ScullyZubairy1997,Loudon2000,GerryKnight2005,Ourjoumtsev2007,Lewenstein2021}. Coherent states represent the closest quantum analogue of classical monochromatic waves: they are eigenstates of the annihilation operator, saturate the quadrature uncertainty relation with equal vacuum-level fluctuations in every phase-space direction, and generate the convex set of classical light fields through nonnegative Glauber--Sudarshan $P$ mixtures~\cite{Glauber1963,Sudarshan1963,GerryKnight2005}. Squeezed states depart from this classical picture by redistributing quantum noise between conjugate quadratures so that fluctuations along one axis fall strictly below the vacuum level at the expense of enhanced noise along the orthogonal axis~\cite{ScullyZubairy1997,Loudon2000,GerryKnight2005}. Certifying such nonclassicality in the laboratory ideally uses minimal detection hardware that remains quantitatively reliable under optical loss, thermal background, detector dark counts, and calibration drift.
 
-To probe phase space at two settings $j \in \{+, -\}$, the state $\rho$ undergoes a coherent displacement $D(\alpha_j) = \exp(\alpha_j\hat a^\dagger - \alpha_j^*\hat a)$ and is directed onto a binary on/off threshold detector of quantum efficiency $\eta_j \in (0,1]$ and Poisson dark-count mean $\nu_j \ge 0$ ($\kappa_j := \ee^{-\nu_j}$). In the symmetric baseline of Sections~\ref{sec:setup}--\ref{sec:benchmarks}, we take $\alpha_\pm = \pm a$ ($a > 0$), $\eta_+ = \eta_- = \eta$, and $\nu_+ = \nu_- = \nu$ ($\kappa = \ee^{-\nu}$); Section~\ref{sec:calibration} restores full asymmetry $(a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$. Because all detection pulses are retained without postselection or PNR reconstruction, each setting defines a valid binary POVM $\{E_0(j), E_1(j)\}$ with no-click effect~\cite{Sperling2012,Kovtoniuk2024}
+Unbalanced homodyne detection---mixing an optical mode with a coherent local oscillator (LO) of amplitude $\alpha$ on a highly transmissive beam splitter followed by a single binary click/no-click (on/off) threshold detector---is among the simplest phase-space probes available~\cite{Sperling2012,Kovtoniuk2024}. Rather than reconstructing full quadrature histograms via high-efficiency linear homodyne detection~\cite{ScullyZubairy1997} or resolving multi-photon click multiplicities with photon-number-resolving (PNR) counters, a displaced on/off detector directly samples the smoothed Husimi $Q$ function at chosen phase-space points~\cite{GerryKnight2005,ScullyZubairy1997}. Recent work by Kovtoniuk \emph{et al.}~\cite{Kovtoniuk2024,Kovtoniuk2026} and Fiur\'a\v{s}ek~\cite{Fiurasek2024} derived tight classical convex-hull inequalities for displaced and attenuated on/off detection, while energy-assisted undisplaced threshold tests were formulated for quantum non-Gaussianity~\cite{FiurasekLachmanFilip2021}.
+
+In parallel, majorization-based uncertainty relations~\cite{Friedland2013,Rudnicki2014,Baek2019,YangQiaoOptimization2026,Conlon2026} have been applied to photocounting statistics~\cite{Medranda2015} and continuous phase-space distributions~\cite{VanHerstraeten2023}. For two binary measurements on finite-dimensional systems, the direct-sum majorization envelope is controlled completely by two Lorenz partial sums $(S_1, S_2)$, simultaneously bounds all Schur-concave entropies (Shannon, Tsallis, and R\'enyi), and avoids the discrimination loss of single-scalar entropic inequalities~\cite{ZhuManuscript}. However, extending this construction directly to an unrestricted optical mode hits a fundamental collapse: coherent states of arbitrarily large amplitude in phase space can be made arbitrarily dark at two opposite displacement settings $\pm a$, driving the unconstrained classical bound to its trivial maximum.
+
+In this paper, we resolve this obstruction by pairing the minimal two-setting displaced on/off measurement with an independently certified upper bound $\tr(\rho\hat n) \le \nbar$ on the pre-displacement mean photon number. Solving the resulting classical moment problem exactly across all displacements $a > 0$, detector efficiencies $\eta \in (0,1]$, dark-count means per detection pulse $\nu \ge 0$, and energy bounds $\nbar \ge 0$ lifts prior small-displacement ($2\eta a^2 \le 1$) and zero-dark-count restrictions. Physically, crossing into the $2\eta a^2 > 1$ regime reveals a striking dichotomy in quadrature-squeezed light: while displacing along the antisqueezed quadrature ($r > 0$) yields only fragile, small-displacement signals already captured by unconstrained inequalities~\cite{Kovtoniuk2024}, displacing along the \emph{squeezed} quadrature ($r < 0$) exploits sub-vacuum quadrature variance ($u < 1$) to depress both displaced $Q$-function values simultaneously. As a result, any $P$-nonclassical squeezed thermal state is certified for sufficiently large displacement without homodyne or PNR hardware, suffers zero sorting penalty relative to the complete outcome-resolved classical hull, and simultaneously evades unconstrained, undisplaced, and single-setting baselines down to $\eta = 0.70$.
+
+To connect these phase-space properties directly to realistic experiments, we also analyze non-Gaussian optical Schr\"odinger cat superpositions and truncated squeezed-like states $\cos\theta\ket{0}+\sin\theta\ket{2}$, establish why threshold clicks alone cannot certify $\langle\hat n\rangle$ due to bright-tail saturation, formulate a pre-displacement tap-beam energy monitor, and combine high-precision asymmetric calibration-box bounds with distribution-free finite-sample confidence intervals. To keep the main text focused on the optical physics and experimental implications, all technical duality proofs, branch-and-bound algorithmic specifications, R\'enyi-entropy derivations, finite-sample tail certifications, and full numerical audit tables are collected in Appendices~\ref{app:classical-dual}--\ref{app:fock-audit}.
+
+% ===========================================================================
+\section{Phase-Space Physics of Displaced Threshold Detection and Energy-Constrained Majorization}\label{sec:setup}
+% ===========================================================================
+
+\subsection{Displaced On/Off Detection, Husimi $Q$-Function Sampling, and Loss Asymmetry}\label{subsec:povm}
+
+Consider a single optical bosonic mode with annihilation operator $\hat a$, photon-number operator $\hat n = \hat a^\dagger \hat a$, and dimensionless canonical quadratures $\hat X = (\hat a + \hat a^\dagger)/\sqrt{2}$ and $\hat P = (\hat a - \hat a^\dagger)/(\ii\sqrt{2})$ satisfying $[\hat X, \hat P] = \ii$~\cite{GerryKnight2005,ScullyZubairy1997,Loudon2000}. An initial source state $\rho_0$ propagates through a pre-displacement pure-loss channel $\calL_T$ of transmissivity $T \in (0,1]$, modelling finite source-preparation or collection efficiency, to produce the pre-displacement state $\rho = \calL_T(\rho_0)$ with mean photon number $\tr(\rho\hat n) = T\tr(\rho_0\hat n) \le \nbar$.
+
+The mode is probed at two opposite phase-space settings $j \in \{+, -\}$ by mixing $\rho$ with a coherent LO on a high-transmissivity beam splitter to implement the displacement operator $D(\alpha_j) = \exp(\alpha_j\hat a^\dagger - \alpha_j^*\hat a)$~\cite{GerryKnight2005}, followed by a binary click/no-click threshold detector of quantum efficiency $\eta_j \in (0,1]$ and Poisson dark-count mean $\nu_j \ge 0$ ($\kappa_j := \ee^{-\nu_j}$). In the symmetric baseline of Sections~\ref{sec:setup}--\ref{sec:benchmarks}, we set $\alpha_\pm = \pm a$ ($a > 0$), $\eta_+ = \eta_- = \eta$, and $\nu_+ = \nu_- = \nu$ ($\kappa = \ee^{-\nu}$); Section~\ref{sec:calibration} restores full seven-parameter experimental asymmetry. Because every pulse is recorded without postselection, each setting realizes a binary positive operator-valued measure (POVM) $\{E_0(j), E_1(j)\}$ with no-click effect~\cite{Loudon2000,Sperling2012,Kovtoniuk2024}
 \begin{equation}\label{eq:noclick-povm}
 E_0(j) = \kappa_j\, D^\dagger(\alpha_j) :\!\ee^{-\eta_j \hat a^\dagger \hat a}\!: D(\alpha_j), \qquad E_1(j) = \I - E_0(j),
 \end{equation}
-where $:\!\cdots\!:$ denotes normal ordering. On any coherent state $\ket{\beta}$ ($\beta \in \mathbb{C}$), the exact no-click probability is the Gaussian Q-function value
+where $:\!\cdots\!:$ denotes normal ordering. For an ideal detector ($\eta_j = 1, \nu_j = 0$), $E_0(j) = \ket{-\alpha_j}\!\bra{-\alpha_j}$ projects onto the coherent state $\ket{-\alpha_j}$, so the no-click probability
+\begin{equation}\label{eq:q-husimi}
+q_j(\rho) := \tr[\rho E_0(j)] = \pi\,Q_\rho(-\alpha_j) \qquad (\eta_j = 1,\ \nu_j = 0)
+\end{equation}
+directly samples the Husimi $Q$ function $Q_\rho(\beta) := \bra{\beta}\rho\ket{\beta}/\pi$ at the phase-space points $\beta = \mp a$~\cite{ScullyZubairy1997,GerryKnight2005}. On any coherent state $\ket{\beta}$ ($\beta \in \mathbb{C}$), finite efficiency and dark counts broaden and attenuate this Gaussian overlap into
 \begin{equation}\label{eq:q-coherent}
 q_j(\beta) := \bra{\beta} E_0(j) \ket{\beta} = \kappa_j \exp\!\bigl(-\eta_j \abs{\beta + \alpha_j}^2\bigr).
 \end{equation}
-For general states $\rho$, we denote $q_\pm(\rho) := \tr[\rho E_0(\pm)]$, binary outcome distributions $p_\pm(\rho) := \bigl(q_\pm(\rho),\, 1 - q_\pm(\rho)\bigr)$, and $q_0(\rho) := \tr[\rho E_0(0)]$ for undisplaced detection ($a=0$).
+For general states $\rho$, we write $p_\pm(\rho) := \bigl(q_\pm(\rho),\, 1 - q_\pm(\rho)\bigr)$ for the two binary outcome distributions and $q_0(\rho) := \tr[\rho E_0(0)]$ for undisplaced detection ($a = 0$).
 
-\begin{remark}[Channel Commutation and Non-Interchangeability of $T$ and $\eta$]\label{rem:commutation}
-Pure-loss channels satisfy the exact operator identity
+A physically important feature of displaced detection is that pre-displacement source loss $T$ and post-displacement detector inefficiency $\eta$ are \emph{not interchangeable}. Using the exact beam-splitter commutation identity for pure-loss channels,
 \begin{equation}\label{eq:commutation}
-\calL_\eta\!\bigl(D(a)\,\calL_T(\rho_0)\,D^\dagger(a)\bigr) = D(\sqrt{\eta}\,a)\,\calL_{\eta T}(\rho_0)\,D^\dagger(\sqrt{\eta}\,a).
+\calL_\eta\!\bigl(D(a)\,\calL_T(\rho_0)\,D^\dagger(a)\bigr) = D(\sqrt{\eta}\,a)\,\calL_{\eta T}(\rho_0)\,D^\dagger(\sqrt{\eta}\,a),
 \end{equation}
-Hence for any source state $\rho_0$, the outcome probabilities $q_\pm$ depend on $(T,\eta,a)$ solely through total transmissivity $\tau = \eta T$ and effective displacement $b = \sqrt{\eta}\,a$. However, $T$ and $\eta$ are \emph{strictly non-interchangeable} whenever either (i) the physical LO amplitude $a$ is held fixed or (ii) the independent energy bound $\nbar$ (which constrains $\rho = \calL_T(\rho_0)$ \emph{after} $\calL_T$ and \emph{before} $D(\alpha_j)$) is held fixed, because the scaled classical cap $E = \eta\nbar$ scales with $\eta$ rather than $T$.
-\end{remark}
+the outcome probabilities $q_\pm$ depend on $(T,\eta,a)$ through the total transmissivity $\tau = \eta T$ and the effective scaled displacement $b := \sqrt{\eta}\,a$. However, whenever either the physical LO amplitude $a$ or the pre-displacement energy bound $\nbar$ is held fixed, $T$ and $\eta$ play distinct physical roles: $T$ attenuates the quantum state itself before the energy monitor and displacement stage (pulling a squeezed state toward vacuum), whereas $\eta$ rescales both the effective displacement $b = \sqrt{\eta}\,a$ and the scaled classical energy cap $E := \eta\nbar$ seen by the detector.
 
-\subsection{Restricted-Set Binary Direct-Sum Majorization}\label{subsec:lemma1}
-Define the classical convex set of $P$-nonnegative states~\cite{Glauber1963,Sudarshan1963} and the energy-constrained classical and quantum state sets:
+\subsection{Phase-Space Collapse Without Energy Bounds and Direct-Sum Majorization}\label{subsec:lemma1}
+
+A state $\rho$ is classical if its Glauber--Sudarshan $P$ representation is a nonnegative probability measure $\mu$ over coherent states~\cite{Glauber1963,Sudarshan1963,GerryKnight2005}. Imposing an independent upper bound $\tr(\rho\hat n) \le \nbar$ defines the energy-constrained classical and quantum state sets
 \begin{align}\label{eq:state-sets}
 \Cset_{\nbar} &:= \left\{\rho = \int_{\mathbb{C}} \ket{\beta}\!\bra{\beta}\,\dd\mu(\beta) : \mu \in \Pset(\mathbb{C}),\ \int_{\mathbb{C}} \abs{\beta}^2\,\dd\mu(\beta) \le \nbar \right\}, \\
 \Qset_{\nbar} &:= \bigl\{\rho \succeq 0 : \tr\rho = 1,\ \tr(\rho\hat n) \le \nbar\bigr\}. \nonumber
 \end{align}
-For any nonempty state class $\Sset$ and bounded self-adjoint effect $0 \preceq A \preceq m\I$, define the support function $h_{\Sset}(A) := \sup_{\rho \in \Sset} \tr(\rho A)$. For two binary distributions $p_\pm(\rho) = (q_\pm, 1-q_\pm)$, form the direct-sum vector $v(\rho) := p_+(\rho) \oplus p_-(\rho) \in [0,1]^4$ ($\sum_{i=1}^4 v_i = 2$) and its nonincreasing rearrangement $v^\downarrow(\rho) = (v_1^\downarrow, v_2^\downarrow, v_3^\downarrow, v_4^\downarrow)$ with Lorenz partial sums $L_k(\rho) := \sum_{i=1}^k v_i^\downarrow(\rho)$. Extending Corollary~4 of~\cite{ZhuManuscript} to arbitrary (possibly nonconvex, noncompact, infinite-dimensional) restricted state sets yields our foundational tool.
-
-\begin{lemma}[Restricted-Set Binary Direct-Sum Majorization Envelope]\label{lem:restricted-binary}
-Let $\Sset$ be any nonempty set of states in an arbitrary separable Hilbert space, measured by two binary POVMs $\{E_0(+),E_1(+)\}$ and $\{E_0(-),E_1(-)\}$. Set
-\begin{equation}\label{eq:S1-S2-def}
-S_1^{\Sset} := \max_{j \in \{+,-\},\; b \in \{0,1\}} h_{\Sset}\bigl(E_b(j)\bigr), \qquad
-S_2^{\Sset} := \max_{b,c \in \{0,1\}} h_{\Sset}\bigl(E_b(+) + E_c(-)\bigr),
-\end{equation}
-and define $\omega_{\Sset} := \bigl(S_1^{\Sset},\; S_2^{\Sset} - S_1^{\Sset},\; 1 + S_1^{\Sset} - S_2^{\Sset},\; 1 - S_1^{\Sset}\bigr)$. Then:
-\begin{enumerate}[leftmargin=*]
-\item For every state $\rho \in \Sset$, writing $M_\pm(\rho) := \max\bigl(q_\pm(\rho), 1-q_\pm(\rho)\bigr) = \frac{1}{2} + \abs{q_\pm(\rho) - \frac{1}{2}}$,
+To compare the full statistical sharpness of two binary measurements without discarding information into a single scalar entropy, we form the direct-sum probability vector $v(\rho) := p_+(\rho) \oplus p_-(\rho) \in [0,1]^4$ ($\sum_{i=1}^4 v_i = 2$) and its nonincreasing rearrangement $v^\downarrow(\rho)$ with Lorenz partial sums $L_k(\rho) := \sum_{i=1}^k v_i^\downarrow(\rho)$~\cite{MarshallOlkin2011,Friedland2013,Rudnicki2014,ZhuManuscript}. Writing $M_\pm(\rho) := \max\bigl(q_\pm(\rho), 1-q_\pm(\rho)\bigr) = \frac{1}{2} + \abs{q_\pm(\rho) - \frac{1}{2}} \ge \frac{1}{2}$, sorting $v(\rho)$ always places $M_\pm$ in the top two slots, giving
 \begin{equation}\label{eq:L2-formula}
 L_1(\rho) = \max\bigl(M_+(\rho), M_-(\rho)\bigr), \qquad
 L_2(\rho) = M_+(\rho) + M_-(\rho) = 1 + \abs{q_+(\rho) - \tfrac{1}{2}} + \abs{q_-(\rho) - \tfrac{1}{2}},
 \end{equation}
-$L_3(\rho) = 1 + L_1(\rho)$, $L_4(\rho) = 2$, and $L_1(\rho) + \frac{1}{2} \le L_2(\rho) \le 2 L_1(\rho)$.
-\item $\omega_{\Sset}$ is nonincreasing ($\omega_{\Sset,1} \ge \omega_{\Sset,2} \ge \omega_{\Sset,3} \ge \omega_{\Sset,4} \ge 0$), satisfies $v(\rho) \prec \omega_{\Sset}$ for every $\rho \in \Sset$, and is the \emph{tightest} such vector: if $v(\rho) \prec \tilde\omega$ for all $\rho \in \Sset$, then $\omega_{\Sset} \prec \tilde\omega$.
-\item \emph{(Universal Schur-concave bounds, connecting~\cite{ZhuManuscript} Cor.~1 \& Eq.~17):} For every $\rho \in \Sset$,
+along with $L_3(\rho) = 1 + L_1(\rho)$ and $L_4(\rho) = 2$.
+
+For any nonempty state class $\Sset$ (classical or quantum, compact or infinite-dimensional) and bounded self-adjoint effect $A$, define the support function $h_{\Sset}(A) := \sup_{\rho \in \Sset}\tr(\rho A)$ together with the two scalar maxima
+\begin{equation}\label{eq:S1-S2-def}
+S_1^{\Sset} := \max_{j \in \{+,-\},\; b \in \{0,1\}} h_{\Sset}\bigl(E_b(j)\bigr), \qquad
+S_2^{\Sset} := \max_{b,c \in \{0,1\}} h_{\Sset}\bigl(E_b(+) + E_c(-)\bigr).
+\end{equation}
+Because maximizing over $\Sset$ commutes with the finite maximum over outcome branches, $S_1^{\Sset} = \sup_{\Sset} L_1$ and $S_2^{\Sset} = \sup_{\Sset} L_2$, obeying $S_1^{\Sset} + \frac{1}{2} \le S_2^{\Sset} \le 2S_1^{\Sset}$. Consequently, the four-component vector
+\begin{equation}\label{eq:omega-def}
+\omega_{\Sset} := \bigl(S_1^{\Sset},\; S_2^{\Sset} - S_1^{\Sset},\; 1 + S_1^{\Sset} - S_2^{\Sset},\; 1 - S_1^{\Sset}\bigr)
+\end{equation}
+is automatically ordered in nonincreasing fashion and provides the unique \emph{tightest} majorization upper bound over $\Sset$: every state $\rho \in \Sset$ satisfies $v(\rho) \prec \omega_{\Sset}$, and any other uniform majorizer $\tilde\omega$ obeys $\omega_{\Sset} \prec \tilde\omega$ (generalizing the finite-dimensional binary result of~\cite{ZhuManuscript}). By Schur-concavity~\cite{MarshallOlkin2011,CicaleseVaccaro2002,Bosyk2019,Friedland2013,Rudnicki2014}, $v(\rho) \prec \omega_{\Sset}$ immediately implies universal lower bounds for every $\rho \in \Sset$ across the Shannon, Tsallis ($\gamma > 0, \gamma \neq 1$), and R\'enyi ($\alpha > 0$) entropy sums (the R\'enyi bounds are proved self-containedly in Appendix~\ref{app:renyi}, adapting~\cite{Baek2019,ZhuManuscript}):
 \begin{align}
-H(p_+) + H(p_-) &\ge -\sum_{i=1}^4 \omega_{\Sset,i}\log_2 \omega_{\Sset,i}, \label{eq:shannon-bound}\\
-T_\gamma(p_+) + T_\gamma(p_-) &\ge \frac{2 - \sum_{i=1}^4 \omega_{\Sset,i}^\gamma}{\gamma - 1} \qquad (\gamma > 0,\ \gamma \neq 1), \label{eq:tsallis-bound}\\
+H(p_+) + H(p_-) &\ge -\sum_{i=1}^4 \omega_{\Sset,i}\log_2 \omega_{\Sset,i}, \qquad
+T_\gamma(p_+) + T_\gamma(p_-) \ge \frac{2 - \sum_{i=1}^4 \omega_{\Sset,i}^\gamma}{\gamma - 1}, \label{eq:shannon-tsallis-bound}\\
 H_\alpha(p_+) + H_\alpha(p_-) &\ge
 \begin{cases}
 \dfrac{1}{1-\alpha}\log_2\!\left(\sum_{i=1}^4 \omega_{\Sset,i}^\alpha - 1\right), & 0 < \alpha < 1, \\[9pt]
@@ -154,183 +138,98 @@ H_\alpha(p_+) + H_\alpha(p_-) &\ge
 -2\log_2\!\left(\dfrac{S_2^{\Sset}}{2}\right), & \alpha = \infty.
 \end{cases} \label{eq:renyi-bound}
 \end{align}
-\end{enumerate}
-\end{lemma}
-\begin{proof}
-Since $M_\pm \ge \frac{1}{2} \ge 1 - M_\pm$, sorting the vector $v(\rho) = (q_+, 1-q_+, q_-, 1-q_-)$ always produces
-\begin{equation*}
-v^\downarrow(\rho) = \bigl(\max(M_+,M_-),\; \min(M_+,M_-),\; 1-\min(M_+,M_-),\; 1-\max(M_+,M_-)\bigr),
-\end{equation*}
-establishing Eq.~\eqref{eq:L2-formula} and $L_1 + \frac{1}{2} \le L_2 \le 2L_1$. Taking $\sup_{\rho \in \Sset}$ commutes with finite $\max$, yielding $S_1^{\Sset} = \sup_{\Sset} L_1$, $S_2^{\Sset} = \sup_{\Sset} L_2$, $S_3^{\Sset} = 1 + S_1^{\Sset}$, and $S_1^{\Sset} + \frac{1}{2} \le S_2^{\Sset} \le 2S_1^{\Sset}$. The pairwise differences $\omega_{\Sset,1}-\omega_{\Sset,2} = \omega_{\Sset,3}-\omega_{\Sset,4} = 2S_1^{\Sset}-S_2^{\Sset} \ge 0$, $\omega_{\Sset,2}-\omega_{\Sset,3} = 2(S_2^{\Sset}-S_1^{\Sset}-\frac{1}{2}) \ge 0$, and $\omega_{\Sset,4} = 1 - S_1^{\Sset} \ge 0$ confirm automatic ordering and $v(\rho) \prec \omega_{\Sset}$ with extremality. Equations~\eqref{eq:shannon-bound}--\eqref{eq:tsallis-bound} follow from Schur-concavity of Shannon and Tsallis entropies~\cite{MarshallOlkin2011,CicaleseVaccaro2002,Bosyk2019,Friedland2013,Rudnicki2014}, while Eq.~\eqref{eq:renyi-bound} is proved self-containedly in Appendix~\ref{app:renyi} (adapting~\cite{Baek2019,ZhuManuscript}).
-\end{proof}
 
-\subsection{Why the Unrestricted Classical and Quantum Envelopes Collapse}\label{subsec:collapse}
-Without the energy bound ($\nbar \to \infty$), choosing imaginary coherent states $\beta = \ii y$ ($y \to \infty$) gives $q_\pm(\ket{\ii y}) = \kappa\ee^{-\eta(a^2+y^2)} \to 0$, so $S_1^{\Cset_\infty} \ge 1-\kappa\ee^{-\eta a^2}$ approaches $1$ and $S_2^{\Cset_\infty} = 2$ whenever $\nu = 0$. Worse still, even at $\eta = 1, \nu = 0$ and any finite displacement $a > 0$, any symmetric no-click pair $(q, q)$ satisfying $0 < q \le \ee^{-\eta a^2}$ is reproduced \emph{exactly} by the single coherent state $\ket{\ii y_{\rm mimic}}$ with $y_{\rm mimic}^2 = -\ln(q/\kappa)/\eta - a^2 \ge 0$ (Fig.~\ref{fig:fig1}(b)). Independently, in the quantum set $\Qset_\infty$, the 3-level Fock superposition
+Why does an \emph{unconstrained} optical mode ($\nbar \to \infty$) make this envelope trivial? In phase space, a coherent state $\ket{\beta}$ carries a circular vacuum-level noise disk centered at $\beta$~\cite{GerryKnight2005}. Placing $\beta = \ii y$ far out on the imaginary axis ($y \to \infty$) separates it arbitrarily far from both displacement targets $\pm a$, driving $q_\pm(\ket{\ii y}) = \kappa\ee^{-\eta(a^2+y^2)} \to 0$ and forcing $S_2^{\Cset_\infty} \to 2$ at $\nu = 0$. Even for any finite symmetric no-click probability $0 < q \le \kappa\ee^{-\eta a^2}$, a single coherent state $\ket{\ii y_{\rm mimic}}$ with $y_{\rm mimic}^2 = -\ln(q/\kappa)/\eta - a^2 \ge 0$ reproduces $(q,q)$ identically (Fig.~\ref{fig:fig1}(b)). Independently, in the quantum set $\Qset_\infty$, the three-level dark superposition
 \begin{equation}\label{eq:darkstate}
 \ket{\chi_a} := \frac{-a^2\ket{0} + \sqrt{2}\ket{2}}{\sqrt{a^4 + 2}}, \qquad \langle\hat n\rangle_{\ket{\chi_a}} = \frac{4}{a^4 + 2},
 \end{equation}
-satisfies $\braket{\pm a}{\chi_a} = \ee^{-a^2/2}(-a^2 + \frac{a^2}{\sqrt{2}}\sqrt{2})/\sqrt{a^4+2} = 0$, giving $q_\pm(\ket{\chi_a}) = 0$, $L_1 = 1$, and $L_2 = 2$ ideally. Bounding $\tr(\rho\hat n) \le \nbar$ restricts the classical mixture to $|\beta|^2$-weighted averages inside $\Cset_{\nbar}$ (Fig.~\ref{fig:fig1}(b)), turning
+satisfies $\braket{\pm a}{\chi_a} = 0$ identically, yielding $q_\pm(\ket{\chi_a}) = 0$, $L_1 = 1$, and $L_2 = 2$ at $\eta = 1, \nu = 0$. Imposing $\tr(\rho\hat n) \le \nbar$ excludes high-amplitude classical mimics (Fig.~\ref{fig:fig1}(b)) and converts the second Lorenz excess,
 \begin{equation}\label{eq:W2-def}
-W_2(\rho) := L_2(\rho) - S_2^{\Cset_{\nbar}} > 0
+W_2(\rho) := L_2(\rho) - S_2^{\Cset_{\nbar}} > 0,
 \end{equation}
-into a sufficient nonclassicality witness.
+into a sharp, sufficient nonclassicality witness.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig1_scheme_and_phases.pdf}
 \caption{\textbf{Certified energy-constrained displaced on/off protocol, phase-space geometry, and classical attainment phase diagram.}
-\textbf{(a)}~Experimental schematic: an auxiliary pre-displacement tap beam splitter ($R_{\rm tap}$) feeds a linear intensity monitor certifying $\tr(\rho\hat n) \le \nU$ with failure probability $\le \delta_E$, while two opposite displaced threshold-detector settings $\alpha_\pm \in \Theta$ are tested against the global branch-and-bound classical upper bound $B_2^{\rm robust}(\Theta, \nU)$ at total error $\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$.
-\textbf{(b)}~Phase-space Wigner contours of the flagship squeezed-vacuum benchmark ($r = -0.42$, displaced along the squeezed quadrature at $a = 1.15$, $\nbar = 0.22$). The dashed circle marks the root-mean-square amplitude radius $|\beta| = \sqrt{\nbar}$ (note that $\Cset_{\nbar}$ restricts the mean energy $\int \abs{\beta}^2\dd\mu \le \nbar$ rather than point support, permitting multi-component mixtures with amplitudes outside the circle; however, because $g_{11}(s)$ is strictly concave globally, Jensen's inequality guarantees that the circle-radius pure state $\ket{\pm\ii\sqrt{\nbar}}$ achieves strictly higher \texttt{on/on} sum than any classical mixture in $\Cset_{\nbar}$, giving $S_2^{\Cset} = 1.5723 < L_2 = 1.7106$, while the unconstrained mimic $\ket{\pm\ii y_0}$ with $y_0^2 = 0.61 > \nbar$ is excluded).
+\textbf{(a)}~Experimental schematic: an auxiliary pre-displacement tap beam splitter ($R_{\rm tap}$) feeds a linear intensity monitor certifying $\tr(\rho\hat n) \le \nU$ with failure probability $\le \delta_E$, while two opposite displaced threshold-detector settings $\alpha_\pm \in \Theta$ are tested against the high-precision branch-and-bound classical upper bound $B_2^{\rm robust}(\Theta, \nU)$ at total error $\delta_{\rm tot} = \delta_{\rm stat} + \delta_{\rm cal} + \delta_E$.
+\textbf{(b)}~Phase-space Wigner contours of the flagship squeezed-vacuum benchmark ($r = -0.42$, displaced along the squeezed quadrature at $a = 1.15$, $\nbar = 0.22$). The dashed circle marks the root-mean-square amplitude radius $|\beta| = \sqrt{\nbar}$. Although $\Cset_{\nbar}$ restricts the mean energy $\int \abs{\beta}^2\dd\mu \le \nbar$ rather than point support, global strict concavity of the \texttt{on/on} radial profile $g_{11}(s)$ ensures via Jensen's inequality that the pure coherent states $\ket{\pm\ii\sqrt{\nbar}}$ outperform every classical mixture in $\Cset_{\nbar}$, giving $S_2^{\Cset} = 1.5723 < L_2 = 1.7106$ while excluding the unconstrained mimic $\ket{\pm\ii y_0}$ ($y_0^2 = 0.61 > \nbar$).
 \textbf{(c)}~Positive-energy classical attainment phase diagram in $(b = \sqrt{\eta}\,a, E = \eta\nbar)$ at $\nu = 0$, showing the $2b^2 = 1$ boundary, the exact concavity thresholds $b_{\rm crit,00} \approx 1.65$ and $b_{\rm crit,0} \approx 1.84$, the positive-energy attained sliver \texttt{E0/off\_off/attained}, and the flagship \texttt{E1/on\_on/non\_attained} point ($b=1.15, E=0.22$).}
 \label{fig:fig1}
 \end{figure}
 
 % ===========================================================================
-\section{Exact Classical Majorization Envelope for All Parameters}\label{sec:classical-dual}
+\section{Exact Classical Majorization Envelope and Attainment Regimes}\label{sec:classical-dual}
 % ===========================================================================
 
-Previous analytic bounds~\cite{Kovtoniuk2024} were restricted to small effective displacement $2\eta a^2 \le 1$, zero dark counts $\nu = 0$, or unconstrained energy. In this section, we solve the exact energy-constrained classical moment problem for \emph{all} $a > 0$, $\eta \in (0,1]$, $\nu \ge 0$, and $\nbar \ge 0$. Set $b := \sqrt{\eta}\,a > 0$, $E := \eta\,\nbar \ge 0$, and $\kappa := \ee^{-\nu} \in (0,1]$. Using scaled coordinates $x = \sqrt{\eta}\RePart\beta$, $y = \sqrt{\eta}\ImPart\beta$, and $s = x^2 + y^2 = \eta\abs{\beta}^2 \ge 0$, Eq.~\eqref{eq:q-coherent} becomes
-\begin{equation}\label{eq:q-scaled}
-q_\pm(x, y) = \kappa\,\ee^{-y^2}\ee^{-(x\pm b)^2} = \kappa\,\ee^{-(s+b^2) \mp 2bx}.
-\end{equation}
-By the $x \mapsto -x$ reflection symmetry exchanging $\pm a$, $\omega_{\Cset_{\nbar}}$ is determined completely by five support functions:
+Previous analytical classical bounds for displaced on/off detection~\cite{Kovtoniuk2024} were confined to small effective displacement $2\eta a^2 \le 1$, zero dark counts, or unconstrained energy. Using scaled phase-space coordinates $x = \sqrt{\eta}\RePart\beta$, $y = \sqrt{\eta}\ImPart\beta$, and radial scaled energy $s = x^2 + y^2 = \eta\abs{\beta}^2 \ge 0$, Eq.~\eqref{eq:q-coherent} takes the universal form $q_\pm(x,y) = \kappa\,\ee^{-(s+b^2)\mp 2bx}$, where $b = \sqrt{\eta}\,a$, $E = \eta\nbar$, and $\kappa = \ee^{-\nu}$. By the reflection symmetry $x \mapsto -x$ exchanging $\pm a$, the classical envelope $\omega_{\Cset_{\nbar}}$ is governed by five support functions,
 \begin{equation}\label{eq:five-supports}
 S_1^{\Cset} = \max\bigl\{h_0(E),\; h_1(E)\bigr\}, \qquad S_2^{\Cset} = \max\bigl\{h_{00}(E),\; h_{01}(E),\; h_{11}(E)\bigr\},
 \end{equation}
-corresponding to $A_0 = E_0(-a)$, $A_1 = E_1(+a)$, $A_{00} = E_0(+a)+E_0(-a)$, $A_{01} = E_0(-a)+E_1(+a)$, and $A_{11} = E_1(+a)+E_1(-a)$.
+corresponding to single-setting no-click ($A_0 = E_0(-a)$), single-setting click ($A_1 = E_1(+a)$), double no-click ($A_{00} = E_0(+a)+E_0(-a)$), opposite outcomes ($A_{01} = E_0(-a)+E_1(+a)$), and double click ($A_{11} = E_1(+a)+E_1(-a)$).
 
-\subsection{2D-to-1D Reduction, Strong Duality, and Exact Concavity Thresholds}\label{subsec:duality}
-
-\begin{lemma}[Exact Radial Reduction]\label{lem:radial}
-Maximizing $f_k(x,y) := \bra{\beta}A_k\ket{\beta}$ over the circle $x^2+y^2 = s$ yields the exact 1D radial functions $g_k(s) := \max_{x^2+y^2=s} f_k(x,y)$:
+At any fixed energy circle $x^2 + y^2 = s$, maximizing each branch over the phase angle reduces the two-dimensional phase-space problem exactly to five one-dimensional radial profiles $g_k(s) := \max_{x^2+y^2=s}\bra{\beta}A_k\ket{\beta}$:
 \begin{align}
-g_0(s) &= \kappa\,\ee^{-(\sqrt{s}-b)^2} \quad (x = +\sqrt{s},\ y=0), \label{eq:g0}\\
-g_1(s) &= 1 - \kappa\,\ee^{-(\sqrt{s}+b)^2} \quad (x = +\sqrt{s},\ y=0), \label{eq:g0-g1}\\
-g_{00}(s) &= 2\kappa\,\ee^{-(s+b^2)}\cosh(2b\sqrt{s}) \quad (x = \pm\sqrt{s},\ y=0), \label{eq:g00}\\
-g_{01}(s) &= 1 + 2\kappa\,\ee^{-(s+b^2)}\sinh(2b\sqrt{s}) \quad (x = +\sqrt{s},\ y=0), \label{eq:g00-g01}\\
-g_{11}(s) &= 2 - 2\kappa\,\ee^{-(s+b^2)} \quad (x = 0,\ y=\pm\sqrt{s}). \label{eq:g11}
+g_0(s) &= \kappa\,\ee^{-(\sqrt{s}-b)^2}, \qquad
+g_1(s) = 1 - \kappa\,\ee^{-(\sqrt{s}+b)^2}, \label{eq:g0-g1}\\
+g_{00}(s) &= 2\kappa\,\ee^{-(s+b^2)}\cosh(2b\sqrt{s}), \qquad
+g_{01}(s) = 1 + 2\kappa\,\ee^{-(s+b^2)}\sinh(2b\sqrt{s}), \label{eq:g00-g01}\\
+g_{11}(s) &= 2 - 2\kappa\,\ee^{-(s+b^2)}. \label{eq:g11}
 \end{align}
-Consequently, for each $k \in \{0, 1, 00, 01, 11\}$ and every $E \ge 0$,
-\begin{equation}\label{eq:1d-moment}
-h_k(E) = \sup\left\{\int_0^\infty g_k(s)\,\dd\sigma(s) : \sigma \in \Pset([0,\infty)),\ \int_0^\infty s\,\dd\sigma(s) \le E\right\}.
-\end{equation}
-\end{lemma}
-\begin{proof}
-Immediate from the monotonicity of $x \mapsto \ee^{\pm 2bx}$, $x \mapsto \sinh(2bx)$, and $\abs{x} \mapsto \cosh(2bx)$ on $[-\sqrt{s}, +\sqrt{s}]$; every 2D measure pushes forward onto $s \ge 0$ without increasing energy, and any 1D measure lifts back onto the maximizing ray.
-\end{proof}
+Physically, the optimal coherent states align along two orthogonal axes in phase space: the four branches $A_0, A_1, A_{00}, A_{01}$ are maximized on the real displacement axis ($y = 0$, $x = \pm\sqrt{s}$) where a coherent state sits as close to (or as far from) one of the displacement targets $\pm a$ as its energy allows, whereas the double-click branch $A_{11}$ is maximized on the orthogonal imaginary axis ($x = 0$, $y = \pm\sqrt{s}$), equidistant from $+a$ and $-a$ so that both displaced $Q$-function overlaps are suppressed equally (Fig.~\ref{fig:fig1}(b)).
 
-Define the Lagrangian dual $D_k(E) := \inf_{\lambda \ge 0} \bigl[\lambda E + \phi_k(\lambda)\bigr]$, with $\phi_k(\lambda) := \sup_{s \ge 0}[g_k(s) - \lambda s]$.
+As proved in Appendix~\ref{app:classical-dual}, each classical support function $h_k(E)$ equals the least concave nondecreasing majorant $\widehat{g}_k(E)$ of $g_k(s)$ on $[0,\infty)$ and is attained by a mixture of at most two coherent states with mean scaled energy at most $E$. Remarkably, the five branches split sharply in their concavity behavior as the displacement $b$ grows. Both click branches $g_1(s)$ and $g_{11}(s)$ are strictly concave on $[0,\infty)$ for \emph{all} $b > 0$, so by Jensen's inequality no classical mixture can ever outperform a single coherent state on the RMS energy circle ($s = E$). By contrast, the no-click branches $g_{00}$, $g_0$, and $g_{01}$ lose concavity above exact analytical thresholds: $b_{\rm crit,00} := \sqrt{(3+\sqrt{6})/2} \approx 1.6507$ for $g_{00}$, $b_{\rm crit,0} := \sqrt{27/8} \approx 1.8371$ for $g_0$, and the unique root $b_{\rm crit,01} \in (\sqrt{27/8}, 2)$ ($b_{\rm crit,01} \approx 1.8743$) for $g_{01}$ (proved in Appendix~\ref{app:concavity}). Above these thresholds, individual outcome branches strictly require two-point coherent mixtures---for instance, at $\eta=1,\nu=0$, a vacuum-plus-coherent mixture boosts $h_{00}$ from $0.2892$ to $0.3043$ at $(b,\nbar)=(2.0, 0.7845)$, and interior two-point mixtures boost $h_0$ and $h_{01}$ by $+0.0415$ and $+0.0336$ at $b=2.2$. Optimizing single coherent states alone would therefore produce an unsafe lower bound for isolated outcome-resolved inequalities.
 
-\begin{theorem}[Strong Duality, Compact Reduction, and Two-Point Sufficiency]\label{thm:strong-duality}
-For every $k \in \{0, 1, 00, 01, 11\}$ and every $E \ge 0$ (including the $E = 0$ and $\lambda = 0$ boundaries):
-\begin{enumerate}[leftmargin=*]
-\item $h_k(E) = D_k(E) = \widehat{g}_k(E)$, where $\widehat{g}_k$ is the least concave nondecreasing majorant of $g_k$ on $[0,\infty)$.
-\item There exists a probability measure $\sigma^* = (1-p)\delta_{s_1} + p\delta_{s_2}$ supported on at most two energies $0 \le s_1 \le s_2 < \infty$ with $(1-p)s_1 + p s_2 \le E$ attaining $h_k(E)$.
-\item Each of $g_0, g_{00}, g_{01}$ has a unique global maximizer $s_{\max} = x_{\max}^2 \in [0,\infty)$---namely $x_{\max} = b$ for $g_0$, $x_{\max} = x_0 \in [0,b)$ solving $x_0 = b\tanh(2bx_0)$ ($x_0 = 0$ iff $2b^2 \le 1$) for $g_{00}$, and $x_{\max} = x_* > b$ solving $(x_*+b)\ee^{-4bx_*} = x_* - b$ for $g_{01}$---and obeys $g_k'(s) < 0$ strictly on $(s_{\max},\infty)$. Thus $\phi_k(\lambda) = \max_{s \in [0,s_{\max}]}[g_k(s) - \lambda s]$ with zero tail truncation error, and $h_k(E) = g_k(s_{\max})$ ($\lambda^* = 0$) for all $E \ge s_{\max}$.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-Weak duality $h_k(E) \le D_k(E)$ is standard. At $E = 0$, any feasible $\sigma$ is $\delta_0$ so $h_k(0) = g_k(0)$; conversely, for any $\varepsilon > 0$ choosing $\delta > 0$ with $g_k(s) \le g_k(0)+\varepsilon$ on $[0,\delta]$ and $\lambda \ge \max(0, (2-g_k(0))/\delta)$ forces $g_k(s) - \lambda s \le g_k(0)$ for $s \ge \delta$, so $D_k(0) = g_k(0)$. For $k \in \{1, 11\}$, direct differentiation yields $g_k'(s) > 0$ and $g_k''(s) < 0$ globally on $(0,\infty)$, so setting $\lambda^* = g_k'(E)$ certifies strong duality and unique one-point attainment $\delta_E$. For $k \in \{0, 00, 01\}$, $g_k'(s) < 0$ strictly for $s > s_{\max}$ confines every maximizer to $[0, s_{\max}]$; for $0 < E < s_{\max}$, applying Carath\'eodory's theorem to the upper boundary of the compact convex hull $\conv\{(s, g_k(s)) : s \in [0, s_{\max}]\}$ yields two-point attainment, while a finite nondecreasing supergradient $\lambda^* \in \partial \widehat{g}_k(E)$ proves $D_k(E) \le \widehat{g}_k(E) = h_k(E)$.
-\end{proof}
-
-Crucially, $g_0$, $g_{00}$, and $g_{01}$ are \emph{not} globally concave above specific $b$ thresholds:
-
-\begin{theorem}[Exact Branch Concavity Thresholds and Mixture Necessity]\label{thm:concavity}
-Set $b_{\rm crit,00} := \sqrt{(3+\sqrt{6})/2} \approx 1.650680$, $b_{\rm crit,0} := \sqrt{27/8} \approx 1.837117$, and let $b_{\rm crit,01} \in (\sqrt{27/8}, 2)$ ($b_{\rm crit,01} \approx 1.874331$) be the unique concavity threshold of $g_{01}$. Then:
-\begin{enumerate}[leftmargin=*]
-\item $g_1(s)$ and $g_{11}(s)$ are strictly concave on $[0,\infty)$ for all $b > 0$.
-\item $g_0(s)$ is concave on $[0, b^2]$ if and only if $b \le b_{\rm crit,0}$ ($b^2 \le 27/8$). For $b > b_{\rm crit,0}$, $\widehat{g}_0$ has a unique interior bitangent segment $[s_L, s_R] \subset (0, b^2)$.
-\item $g_{01}(s)$ is strictly concave on $[b^2, x_*^2]$ for all $b > 0$, concave on $[0, x_*^2]$ if and only if $b \le b_{\rm crit,01}$, and fails concavity on $(0, b^2)$ for every $b > b_{\rm crit,01}$ (so $\widehat{g}_{01}$ strictly requires two-point coherent mixtures on interior bitangent bridges $[s_L, s_R] \subset (0, b^2)$).
-\item For $2b^2 > 1$, $g_{00}(s)$ is strictly concave on $[0, x_0^2]$ if and only if $b \le b_{\rm crit,00}$ ($b^2 \le (3+\sqrt{6})/2$). For $b > b_{\rm crit,00}$, $g_{00}''(0^+) > 0$ and $\widehat{g}_{00}$ begins with a vacuum-to-coherent two-point mixture $(1-p)\ket{0}\!\bra{0} + p\ket{x_R/\sqrt{\eta}}\!\bra{x_R/\sqrt{\eta}}$ on $[0, x_R^2]$.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-See Appendix~\ref{app:concavity} for the complete algebraic proofs (including an exact power-series $\tanh$ bound establishing strict concavity of $g_{00}$ up to $b^2 = (3+\sqrt{6})/2$).
-\end{proof}
-
-Theorem~\ref{thm:concavity} exposes a subtle trap for outcome-resolved criteria above these thresholds: optimizing over single coherent states yields an \emph{unsafe lower bound}. Specifically, at $\eta=1, \nu=0$: for $A_{00}$ at $b=2.0, \nbar=0.7845$, the optimal single coherent state gives $0.289158$ vs.\ exact two-point mixture $0.304330$ (gain $+0.015172$); for $E_0$ at $b=2.2, \nbar=1.0$, $0.236928$ vs.\ $0.278424$ ($+0.041496$); and for $A_{01}$ at $b=2.2, \nbar=1.237$, $1.306250$ vs.\ $1.339871$ ($+0.033621$, all verified by $C^2$ dual gaps $\le 3.9 \times 10^{-14}$). Remarkably, however, no two-point mixture ever governs the \emph{full majorization envelope}:
-
-\begin{theorem}[Universal Closed-Form Formula for $\omega_{\Cset_{\nbar}}$ Across All $a > 0$]\label{thm:universal-closed-form}
-For every $a > 0$, $\eta \in (0,1]$, $\nu \ge 0$, and $\nbar \ge 0$, the globally concave click branches $h_1$ and $h_{11}$ strictly dominate every bitangent interval $[s_L, s_R]$ of $g_0, g_{00}, g_{01}$ in Eq.~\eqref{eq:five-supports}. Writing $b = \sqrt{\eta}\,a$, $E = \eta\,\nbar$, and $\kappa = \ee^{-\nu}$, the exact classical envelope is given in closed form for all parameters by
+Crucially, however, Appendix~\ref{app:universal} proves analytically that whenever $b$ exceeds any of these concavity thresholds, the globally concave click branches $h_1$ and $h_{11}$ strictly dominate every bitangent mixture interval of $g_0$, $g_{00}$, and $g_{01}$ in Eq.~\eqref{eq:five-supports}. Consequently, the full classical majorization envelope admits a \emph{universal closed-form expression} valid for all $a > 0$, $\eta \in (0,1]$, $\nu \ge 0$, and $\nbar \ge 0$:
 \begin{align}
 S_1^{\Cset} &= \max\Bigl\{\,\kappa\,\ee^{-\max(0,\; b-\sqrt{E})^2},\;\; 1 - \kappa\,\ee^{-(b+\sqrt{E})^2}\,\Bigr\}, \label{eq:universal-S1}\\
 S_2^{\Cset} &= \max\Bigl\{\,2\kappa\,\ee^{-(\min(x_0,\sqrt{E})^2 + b^2)}\cosh\bigl(2b\min(x_0,\sqrt{E})\bigr), \nonumber\\
 &\qquad\qquad 1 + \kappa\bigl[\ee^{-(\min(x_*,\sqrt{E})-b)^2} - \ee^{-(\min(x_*,\sqrt{E})+b)^2}\bigr], \nonumber\\
 &\qquad\qquad 2 - 2\kappa\,\ee^{-(b^2+E)}\,\Bigr\}, \label{eq:universal-S2}
 \end{align}
-and both $S_1^{\Cset}$ and $S_2^{\Cset}$ are individually attained by single coherent states in $\Cset_{\nbar}$.
-\end{theorem}
-\begin{proof}
-In Appendix~\ref{app:universal}, we bound the tangent intercepts on $[s_L, s_R]$ analytically to show $h_1(E) > h_0(E)$ for all $b > \sqrt{27/8}$ and $h_{11}(E) > \max\{h_{00}(E), h_{01}(E)\}$ on every bitangent of $g_{00}$ ($b > b_{\rm crit,00}$) and $g_{01}$ (proved analytically for all $b^2 \ge \frac{27}{8}$, independent of $b_{\rm crit,01}$). Independently, across 7,183 points in our $C^2$-certified dual scan, Eq.~\eqref{eq:universal-S1}--\eqref{eq:universal-S2} matches the global Lagrangian dual to within $9.28 \times 10^{-14}$.
-\end{proof}
+where $x_0 \in [0,b)$ solves $x_0 = b\tanh(2bx_0)$ ($x_0 = 0$ iff $2b^2 \le 1$) and $x_* > b$ solves $(x_*+b)\ee^{-4bx_*} = x_* - b$. Both $S_1^{\Cset}$ and $S_2^{\Cset}$ are individually attained by single coherent states, and across $7{,}183$ points in an independent $C^2$-certified Lagrangian dual scan, Eqs.~\eqref{eq:universal-S1}--\eqref{eq:universal-S2} agree with the global dual to within $9.28 \times 10^{-14}$.
 
-\subsection{Attainment Classification and Dark-Count Phase Cascade}\label{subsec:attainment}
-Generalizing Propositions~3 and~6 of~\cite{ZhuManuscript} to $\Cset_{\nbar}$, a classical state $\rho \in \Cset_{\nbar}$ simultaneously attains the entire majorization vector $\omega_{\Cset_{\nbar}}$ if and only if some maximizer of $S_1^{\Cset}$ simultaneously maximizes $S_2^{\Cset}$:
-
-\begin{proposition}[Positive-Energy Classical Attainment Classification and $\nu$-Cascade]\label{prop:attainment}
-For all generic positive-energy parameters $(b > 0, E > 0, \nu \ge 0)$:
-\begin{enumerate}[leftmargin=*]
-\item \textbf{(Analytic)} Three triples never occur:\ \texttt{E0/on\_on/attained}, \texttt{E1/on\_on/attained}, and \texttt{E1/off\_off/attained} are impossible because maximizing \texttt{on/on} requires purely imaginary coherent states $\pm\ii\sqrt{\nbar}$ whereas maximizing $E_0, E_1$ requires real states $\pm\sqrt{\nbar}$ or $\pm a$, and $E_1$ ties with $A_{00}$ only where $h_1 \le \frac{1}{2} < h_0$.
-\item \textbf{(Analytic)} At $\nu = 0$ (Fig.~\ref{fig:fig1}(c)), exactly \textbf{7} positive-energy phases occur: three attained phases---an uncovered \texttt{E0/off\_off/attained} sliver ($\frac{1}{2} < b^2 < \ln 2$, $0 < \sqrt{E} \le \min(x_0, \sqrt{\ln 2}-b)$), \texttt{E0/off\_on/attained} ($E \le b^2$), and \texttt{E1/off\_on/attained} ($E \le x_*^2$), each uniquely attained by $\ket{\pm\sqrt{\nbar}}$---and four strictly non-attained phases (\texttt{E0/off\_off/non\_attained}, \texttt{E0/off\_on/non\_attained}, \texttt{E0/on\_on/non\_attained}, and \texttt{E1/on\_on/non\_attained}).
-\item \textbf{(Analytic bounds \& numerical phase-map cascade)} Adding dark counts ($\nu > 0$) admits two further non-attained phases (\texttt{E1/off\_on/non\_attained} and \texttt{E1/off\_off/non\_attained}). Analytically, \texttt{E0/off\_off/attained} vanishes iff $\nu \ge \nu_2 := \ln 2 - \frac{1}{2} \approx 0.1931$, and for all $\nu \ge \ln 2 \approx 0.6931$ only the \textbf{unique phase} {\normalfont\texttt{E1/on\_on/non\_attained}} survives across the entire $(b>0, E>0)$ plane. Moreover, the vanishing thresholds for \texttt{E0/on\_on/non\_attained} and \texttt{E1/off\_on/non\_attained} satisfy $\nu_1 := \sup\{\nu > 0 : \exists\,(b,E)\in(0,\infty)^2\ \text{with}\ h_0 > h_1,\ h_{11} > \max(h_{00},h_{01})\} \approx 0.0969$ (realized at the four-branch boundary $(b,\sqrt{E}) \approx (0.3939, 1.1178)$) and $\nu_3 := \ln\bigl(\max_{b>0}[2\ee^{-(b^2+x_*(b)^2)} + \ee^{-(x_*(b)-b)^2} - \ee^{-(x_*(b)+b)^2}]\bigr) \approx 0.4676$ (at $b \approx 0.4377$, where $h_1 > h_0$ and $h_{01} > h_{00}$ hold strictly). Numerically sampling the $(b,E)$ plane reproduces the full phase-count cascade \textbf{9} phases ($0 < \nu < \nu_1$), \textbf{8} ($\nu_1 < \nu < \nu_2$), \textbf{7} ($\nu_2 \le \nu < \nu_3$), \textbf{6} ($\nu_3 < \nu < \ln 2$), and \textbf{1} ($\nu \ge \ln 2$).
-\end{enumerate}
-\end{proposition}
-\begin{proof}
-Non-attainment of \texttt{E1/off\_off} when attained follows from $E \le x_0^2 \implies h_{00}(E) \ge h_{01}(E) \implies 2\kappa\ee^{-(\sqrt{E}+b)^2} \ge 1 \implies h_1(E) \le \frac{1}{2} < h_0(E)$. For $\nu \ge \ln 2$ ($\kappa \le \frac{1}{2}$), $h_1(E) > \frac{1}{2} \ge h_0(E)$ and $h_{11}(E) > 1 \ge h_{00}(E)$; with $x_1 = \min(x_*, \sqrt{E})$ and $z = 2bx_1 > 0$, AM--GM ($b^2+E \ge z$) gives $h_{11}(E) - h_{01}(E) \ge 1 - \kappa[2 - (1-\ee^{-z})^2] > 1 - 2\kappa \ge 0$, leaving \texttt{E1/on\_on/non\_attained} everywhere.
-\end{proof}
+Even though $S_1^{\Cset}$ and $S_2^{\Cset}$ are each achieved by pure coherent states, a single classical state attains the \emph{entire} majorization vector $\omega_{\Cset_{\nbar}}$ simultaneously only when the same coherent state maximizes both sums. Because maximizing \texttt{on/on} requires purely imaginary coherent states $\ket{\pm\ii\sqrt{\nbar}}$ while maximizing $E_0$ or $E_1$ requires real coherent states, the three triples \texttt{E0/on\_on/attained}, \texttt{E1/on\_on/attained}, and \texttt{E1/off\_off/attained} never occur. At $\nu = 0$ (Fig.~\ref{fig:fig1}(c)), exactly $7$ positive-energy phases appear: three attained phases (including a narrow \texttt{E0/off\_off/attained} sliver for $\frac{1}{2} < b^2 < \ln 2$) and four strictly non-attained phases, with our high-displacement squeezed-vacuum benchmark sitting deep inside \texttt{E1/on\_on/non\_attained}. Dark counts $\nu > 0$ introduce two additional non-attained phases and trigger a phase cascade across the $(b,E)$ plane---with analytically defined thresholds $\nu_1 \approx 0.0969$, exact $\nu_2 = \ln 2 - \frac{1}{2} \approx 0.1931$, and $\nu_3 \approx 0.4676$ and a numerically resolved $9 \to 8 \to 7 \to 6 \to 1$ phase count---until, for all $\nu \ge \ln 2 \approx 0.6931$, only the unique phase \texttt{E1/on\_on/non\_attained} survives everywhere (details in Appendix~\ref{app:classical-dual}).
 
 % ===========================================================================
-\section{Universal Gaussian Witness, Outcome Equivalence, and State Benchmarks}\label{sec:benchmarks}
+\section{Physics of Coherent, Squeezed, and Non-Gaussian Optical Benchmarks}\label{sec:benchmarks}
 % ===========================================================================
 
-\subsection{Universal Squeezed-Thermal Exactness and Undisplaced Impossibility}\label{subsec:sq-thermal}
-Consider a centered squeezed thermal state $\rho(r, n_{\rm th}, T) = \calL_T\bigl(S(r)\rho_{\rm th}(n_{\rm th})S^\dagger(r)\bigr)$, where $r \in \mathbb{R}$, thermal photon number $n_{\rm th} \ge 0$, source transmission $T \in (0,1]$, and pre-displacement mean photon number $\tr(\rho\hat n) = T\bigl[(n_{\rm th} + \tfrac{1}{2})\cosh(2r) - \tfrac{1}{2}\bigr]$. Here $r > 0$ places the real displacement $\pm a$ along the antisqueezed quadrature, whereas $r < 0$ aligns $\pm a$ with the squeezed quadrature. Defining the quadrature-variance factors
+\subsection{Quadrature Squeezing, Sub-Vacuum Fluctuations, and Zero Sorting Penalty}\label{subsec:sq-thermal}
+
+To understand why displaced threshold detection is uniquely sensitive to quadrature-squeezed light, consider a centered squeezed thermal state $\rho(r, n_{\rm th}, T) = \calL_T\bigl(S(r)\rho_{\rm th}(n_{\rm th})S^\dagger(r)\bigr)$ produced, for instance, by a degenerate optical parametric amplifier or oscillator with thermal background $n_{\rm th} \ge 0$ and pre-displacement transmission $T \in (0,1]$~\cite{ScullyZubairy1997,Loudon2000,GerryKnight2005}. Here $S(r) = \exp[\frac{r}{2}(\hat a^2 - \hat a^{\dagger 2})]$ is the squeeze operator ($r \in \mathbb{R}$) and the pre-displacement mean photon number is $\tr(\rho\hat n) = T[(n_{\rm th} + \frac{1}{2})\cosh(2r) - \frac{1}{2}]$. The quadrature variances of the state immediately before displacement are $\Delta X^2 = \frac{1}{2}[1 + T((2n_{\rm th}+1)\ee^{2r}-1)]$ and $\Delta P^2 = \frac{1}{2}[1 + T((2n_{\rm th}+1)\ee^{-2r}-1)]$: thus $r < 0$ aligns the real displacement axis $\pm a$ along the \emph{squeezed} quadrature ($\Delta X^2 < \frac{1}{2}$ whenever $(2n_{\rm th}+1)\ee^{2r} < 1$), whereas $r > 0$ displaces along the \emph{antisqueezed} quadrature.
+
+Because the Husimi $Q$ function of a centered squeezed thermal state is a bivariate Gaussian whose widths combine the state's quadrature variances with the unit vacuum noise of the coherent-state projector~\cite{ScullyZubairy1997,GerryKnight2005}, Gaussian integration yields the exact, Fock-cutoff-free no-click probability
+\begin{equation}\label{eq:sq-noclick}
+q_\pm\bigl(\rho(r,n_{\rm th},T)\bigr) = \frac{\kappa}{\sqrt{u w}}\exp\!\left(-\frac{\eta a^2}{u}\right),
+\end{equation}
+where the effective detector-smoothed variance factors along and orthogonal to the displacement axis are
 \begin{equation}\label{eq:sq-uw}
 u := 1 + \frac{\eta T}{2}\bigl[(2n_{\rm th}+1)\ee^{2r} - 1\bigr], \qquad
-w := 1 + \frac{\eta T}{2}\bigl[(2n_{\rm th}+1)\ee^{-2r} - 1\bigr],
+w := 1 + \frac{\eta T}{2}\bigl[(2n_{\rm th}+1)\ee^{-2r} - 1\bigr].
 \end{equation}
-Gaussian Q-function integration yields the exact Fock-cutoff-free no-click probability
-\begin{equation}\label{eq:sq-noclick}
-q_\pm\bigl(\rho(r,n_{\rm th},T)\bigr) = \frac{\kappa}{\sqrt{u w}}\exp\!\left(-\frac{\eta a^2}{u}\right).
-\end{equation}
-
-\begin{theorem}[Asymptotic Completeness of Squeezed-Thermal Majorization and Undisplaced Impossibility]\label{thm:sq-thermal}
-Let $\rho = \rho(r, n_{\rm th}, T)$ and let $\nbar \ge \tr(\rho\hat n)$ be \emph{any} finite energy cap.
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Undisplaced ($a=0$) impossibility:} For every $(r, n_{\rm th}, T, \eta, \nu, \nbar)$,
+Equation~\eqref{eq:sq-noclick} makes the phase-space physics completely transparent. At zero displacement ($a = 0$), the no-click probability $q_0(\rho) = \kappa/\sqrt{uw}$ satisfies
 \begin{equation}\label{eq:undisplaced-bound}
-\kappa\,\ee^{-\eta\nbar} \;\le\; q_0(\rho) = \frac{\kappa}{\sqrt{u w}} \;\le\; \kappa.
+\kappa\,\ee^{-\eta\nbar} \;\le\; q_0(\rho) = \frac{\kappa}{\sqrt{uw}} \;\le\; \kappa
 \end{equation}
-Thus undisplaced on/off detection plus an energy cap~\cite{FiurasekLachmanFilip2021} can never detect any squeezed vacuum or squeezed thermal state.
-\item \textbf{Asymptotic completeness within the aligned squeezed-thermal family ($r < 0$):} If $(2n_{\rm th}+1)\ee^{-2\abs{r}} \ge 1$, the state is $P$-classical and $W_2(a) \le 0$ for all $a > 0$. Conversely, whenever $(2n_{\rm th}+1)\ee^{2r} < 1$ (which holds for \emph{every} $P$-nonclassical squeezed thermal state aligned along $r < 0$), $u \in (\tfrac{1}{2}, 1)$ strictly and there exists $a_{\rm thr} > 0$ such that for all $a > a_{\rm thr}$, $S_2^{\Cset} = h_{11}(E)$ (\texttt{on/on} active) and
+for every $(r, n_{\rm th}, T, \eta, \nu, \nbar)$ (since $uw \ge 1$ and AM--GM gives $\sqrt{uw} \le \frac{u+w}{2} = 1 + \eta\tr(\rho\hat n) \le \ee^{\eta\nbar}$). Physically, because a centered squeezed state has a broader peak-to-width product than vacuum at the origin, undisplaced on/off detection paired with an energy cap~\cite{FiurasekLachmanFilip2021} can \emph{never} certify any squeezed vacuum or squeezed thermal state.
+
+Displacing the state away from the origin changes the physics dramatically. When the displacement $\pm a$ is aligned along the squeezed quadrature ($r < 0$), the condition for $P$-nonclassicality---sub-vacuum noise along $\hat X$, $(2n_{\rm th}+1)\ee^{2r} < 1$---is \emph{identical} to $u \in (\frac{1}{2}, 1)$ strictly. As shown in Fig.~\ref{fig:fig1}(b), the squeezed Wigner ellipse is compressed along the displacement axis, so its overlap with the displaced coherent projectors $\ket{\mp a}$ decays as $\ee^{-\eta a^2/u}$, strictly faster than the $\ee^{-\eta(a^2+\nbar)}$ decay of any energy-constrained classical coherent state. By Eq.~\eqref{eq:universal-S2}, for sufficiently large $a > a_{\rm thr}$ the classical bound enters the \texttt{on/on} regime $S_2^{\Cset} = h_{11}(E) = 2 - 2\kappa\ee^{-\eta(a^2+\nbar)}$, giving the exact witness margin
 \begin{equation}\label{eq:W2-sq-exact}
-W_2(a) = 2\kappa\left[\ee^{-\eta(a^2+\nbar)} - \frac{1}{\sqrt{uw}}\ee^{-\eta a^2/u}\right] > 0,
+W_2(a) = 2\kappa\left[\ee^{-\eta(a^2+\nbar)} - \frac{1}{\sqrt{uw}}\ee^{-\eta a^2/u}\right] > 0.
 \end{equation}
-for \emph{every} $\eta \in (0,1]$, $T \in (0,1]$, $\nu \ge 0$, and arbitrarily loose finite cap $\nbar \ge \tr(\rho\hat n)$.
-\item \textbf{Exact multiplicative dark-count stability:} Whenever $S_2^{\Cset} = h_{11}(E)$ and $q < \frac{1}{2}$, $W_2(\nu) = \ee^{-\nu} W_2(0)$, so dark counts $\nu = 10^{-2}$ reduce $W_2$ by only $1 - \ee^{-0.01} \approx 1.0\%$ relative.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-Since $uw$ increases with $n_{\rm th}$ and equals $1 + \eta T(2-\eta T)\sinh^2 r \ge 1$ at $n_{\rm th}=0$, $\sqrt{uw} \ge 1 \implies q_0 \le \kappa$. By AM--GM, $\sqrt{uw} \le \frac{u+w}{2} = 1 + \eta\tr(\rho\hat n) \le \ee^{\eta\nbar}$, proving Eq.~\eqref{eq:undisplaced-bound}. For part~2, fix $E = \eta\nbar$; by Theorem~\ref{thm:universal-closed-form}, as $b = \sqrt{\eta}\,a \to \infty$ we have $\min(x_0, \sqrt{E}) \le \sqrt{E} < b < x_*$, so the \texttt{off/off} term in Eq.~\eqref{eq:universal-S2} vanishes ($\le 2\kappa\ee^{-(b-\sqrt{E})^2} \to 0$) and the \texttt{off/on} term approaches $1$, whereas $h_{11}(E) = 2 - 2\kappa\ee^{-(b^2+E)} \to 2$. Thus $S_2^{\Cset} = h_{11}(E)$ for large $a$, while $u < 1 \implies \frac{1}{u} - 1 > 0$ drives $q_\pm / (\kappa\ee^{-\eta(a^2+\nbar)}) \to 0$, giving $W_2(a) > 0$ via Eq.~\eqref{eq:W2-sq-exact}. Part~3 follows immediately by factoring $\kappa = \ee^{-\nu}$.
-\end{proof}
+This establishes \emph{asymptotic completeness within the aligned squeezed-thermal family}: every $P$-nonclassical squeezed thermal state aligned along $r < 0$ is certified ($W_2(a) > 0$) for sufficiently large $a > a_{\rm thr}$, at \emph{any} nonzero detector efficiency $\eta > 0$, source transmission $T > 0$, dark-count rate $\nu \ge 0$, and arbitrarily loose finite energy cap $\nbar \ge \tr(\rho\hat n)$---without requiring homodyne quadrature reconstruction or PNR detectors. Conversely, if $(2n_{\rm th}+1)\ee^{-2\abs{r}} \ge 1$, the state is $P$-classical and $W_2(a) \le 0$ for all $a > 0$. Moreover, whenever \texttt{on/on} is active ($q < \frac{1}{2}$), dark counts factor out multiplicatively as $W_2(\nu) = \ee^{-\nu}W_2(0)$, so even heavy dark counts ($\nu = 10^{-2}$) attenuate $W_2$ by only $1 - \ee^{-0.01} \approx 1.0\%$ relative.
 
-\subsection{Outcome-Resolved Classical Equivalence and Zero Sorting Penalty}\label{subsec:outcome-resolved}
-Let $\Dset_{\nbar} := \{(q_+(\rho), q_-(\rho)) : \rho \in \Cset_{\nbar}\} \subset [0,1]^2$ be the complete energy-constrained outcome-resolved classical probability region. Because majorization discards setting labels, it can never outperform full convex-hull membership on identical $(q_+, q_-)$ data~\cite{ZhuManuscript}. Nevertheless, the following theorem proves that across our entire flagship \texttt{on/on} regime, majorization loses \emph{zero} statistical margin.
-
-\begin{theorem}[Exact Diagonal Classical Region $\Dset_{\nbar}$ and Zero Sorting Penalty]\label{thm:outcome-resolved}
-A symmetric pair $(q, q)$ lies in $\Dset_{\nbar}$ if and only if
+A natural question is whether sorting the four probabilities into the majorization vector $v^\downarrow(\rho)$ sacrifices discrimination power compared with the complete outcome-resolved classical region $\Dset_{\nbar} := \{(q_+(\rho), q_-(\rho)) : \rho \in \Cset_{\nbar}\}$. On the symmetric diagonal $q_+ = q_- = q$, a pair $(q,q)$ belongs to $\Dset_{\nbar}$ if and only if
 \begin{equation}\label{eq:diagonal-hull}
 q_{\min}^{\Cset}(E) := 1 - \frac{h_{11}(E)}{2} = \kappa\,\ee^{-\eta(a^2+\nbar)} \;\le\; q \;\le\; \frac{h_{00}(E)}{2} =: q_{\max}^{\Cset}(E),
 \end{equation}
-where $h_{00}(E)$ is exact (requiring a two-point coherent mixture when $b > b_{\rm crit,00}$ and $E \in (0, x_R^2)$). Measuring the outcome-resolved excess as $\Delta_{\rm OR} := \max\bigl(2q - h_{00}(E),\, 2(1-q) - h_{11}(E)\bigr)$, the sorting penalty satisfies $\Pi_{\rm sort} := \Delta_{\rm OR} - W_2 \ge 0$, with
+since $\ket{\ii\sqrt{\nbar}}$ attains $q_{\min}^{\Cset}$ and symmetrizing the optimal $h_{00}(E)$ measure under $\beta \mapsto -\beta$ attains $q_{\max}^{\Cset}$ (with convexity filling the segment). Defining the outcome-resolved excess $\Delta_{\rm OR} := \max\bigl(2q - h_{00}(E),\, 2(1-q) - h_{11}(E)\bigr)$, the sorting penalty $\Pi_{\rm sort} := \Delta_{\rm OR} - W_2 \ge 0$ vanishes identically,
 \begin{equation}\label{eq:zero-penalty}
-\Pi_{\rm sort} \equiv 0 \quad \bigl(W_2 \equiv \Delta_{\rm OR} > 0\bigr)
+\Pi_{\rm sort} \equiv 0 \qquad \bigl(W_2 \equiv \Delta_{\rm OR} > 0\bigr),
 \end{equation}
-whenever $W_2 > 0$ on the matching branch ($q < \min(\tfrac{1}{2}, q_{\min}^{\Cset})$ with $S_2^{\Cset}=h_{11}$, or $q > \max(\tfrac{1}{2}, q_{\max}^{\Cset})$ with $S_2^{\Cset}=h_{00}$).
-\end{theorem}
-\begin{proof}
-Necessity follows from $2q \le h_{00}(E)$ and $2(1-q) \le h_{11}(E)$. Sufficiency: $\ket{\ii\sqrt{\nbar}} \in \Cset_{\nbar}$ attains $(q_{\min}^{\Cset}, q_{\min}^{\Cset})$, and if $\sigma^* \in \Cset_{\nbar}$ attains $h_{00}(E)$ (Theorem~\ref{thm:strong-duality}), symmetrizing $\frac{1}{2}(\sigma^* + \tilde\sigma^*)$ under $\beta \mapsto -\beta$ attains $(q_{\max}^{\Cset}, q_{\max}^{\Cset})$; convexity of $\Dset_{\nbar}$ fills the segment. Matching-branch equality $L_2 = \max(2q, 2(1-q))$ yields $\Pi_{\rm sort} = 0$.
-\end{proof}
+throughout the entire flagship \texttt{on/on} regime ($q < \min(\frac{1}{2}, q_{\min}^{\Cset})$ with $S_2^{\Cset} = h_{11}$) as well as on the matching \texttt{off/off} branch. Figure~\ref{fig:fig2} illustrates all three structural properties simultaneously: the Lorenz gap of flagship squeezed vacuum over both nominal and calibration-robust classical envelopes (panel~a), a clear Shannon information-loss window at $\eta = 0.90$ where $W_2(a) > 0$ while the induced Shannon entropy bound $\Delta H_1(a) \le 0$ fails (panel~b), and the exact onset of $\Pi_{\rm sort} \equiv 0$ once $S_2^{\Cset}$ switches from \texttt{off/on} to \texttt{on/on} near $a \approx 1.14$ (panel~c).
 
 \begin{figure}[t]
 \centering
@@ -338,131 +237,271 @@ Necessity follows from $2q \le h_{00}(E)$ and $2(1-q) \le h_{11}(E)$. Sufficienc
 \caption{\textbf{Direct-sum Lorenz curves, entropic hierarchy, and zero sorting penalty.}
 \textbf{(a)}~Exact Lorenz partial sums at $a = 1.15$, $\eta = 1.0$, $\nbar = 0.22$: nominal classical envelope $\omega^{\Cset}$ ($S_2^{\Cset}=1.572$), $\Theta_2$-robust classical envelope $B^{\rm rob}(\Theta_2) = 1.612$, flagship $r = -0.42$ squeezed vacuum ($L_2 = 1.711$, $W_2 = +0.1383$), and ideal 3-level dark state $\ket{\chi_a}$ ($L_2 = 2.000$).
 \textbf{(b)}~At $\eta = 0.90$ ($r=-0.42, \nbar=0.22$), the majorization witness $W_2(a)$ stays strictly positive across a shaded information-loss window ($a \in [1.08, 1.17]$) where the induced Shannon entropy bound $\Delta H_1(a) \le 0$ fails, while R\'enyi-$2$ ($\Delta H_2$) tracks majorization more closely.
-\textbf{(c)}~Exact verification of Theorem~\ref{thm:outcome-resolved} at $\eta = 1.0$: once $S_2^{\Cset}$ switches from \texttt{off/on} to \texttt{on/on} at $a \approx 1.14$, $W_2(a)$ coincides identically with the outcome-resolved excess $\Delta_{\rm OR}(a)$ ($\Pi_{\rm sort} = 0$), while simultaneously violating Kovtoniuk's unconstrained hull~\cite{Kovtoniuk2024} (Baseline~i) and single-setting constrained bounds (Baseline~iii).}
+\textbf{(c)}~Exact verification of Eq.~\eqref{eq:zero-penalty} at $\eta = 1.0$: once $S_2^{\Cset}$ switches from \texttt{off/on} to \texttt{on/on} at $a \approx 1.14$, $W_2(a)$ coincides identically with the outcome-resolved excess $\Delta_{\rm OR}(a)$ ($\Pi_{\rm sort} = 0$), while simultaneously evading Kovtoniuk's unconstrained hull~\cite{Kovtoniuk2024} (Baseline~i) and single-setting constrained bounds (Baseline~iii).}
 \label{fig:fig2}
 \end{figure}
 
-\subsection{Benchmark Comparison: Squeezed Vacuum, Odd/Even Cats, and $\cos\theta\ket{0}+\sin\theta\ket{2}$}\label{subsec:state-scans}
-To establish clear separation from simpler nonclassicality checks, we audit every benchmark against \textbf{three simple baselines} using the identical channel parameters and energy cap $\nbar$: (i) Kovtoniuk \emph{et al.}~\cite{Kovtoniuk2024} unconstrained two-setting classical hull ($q > \kappa\ee^{-\eta a^2}$ for $2b^2 \le 1$, or absent mimic $\ket{\ii y}$ in general), (ii) undisplaced ($a = 0$) + same energy cap ($q_0 < \kappa\ee^{-\eta\nbar}$)~\cite{FiurasekLachmanFilip2021}, and (iii) either single displaced setting $\pm a$ + same energy cap ($L_1 > S_1^{\Cset}$).
+\subsection{Phase-Space Comparison: Squeezed Vacuum, Schr\"odinger Cats, and $\cos\theta\ket{0}+\sin\theta\ket{2}$}\label{subsec:state-scans}
+
+To isolate the genuine advantage of the energy-constrained two-setting majorization witness over simpler detectors, we compare every benchmark against three baselines using the identical channel parameters and energy cap $\nbar$: (i) the unconstrained two-setting classical hull~\cite{Kovtoniuk2024}, (ii) undisplaced detection ($a = 0$) with the same energy cap~\cite{FiurasekLachmanFilip2021}, and (iii) either single displaced setting $\pm a$ with the same energy cap ($L_1 > S_1^{\Cset}$). Figure~\ref{fig:fig3} maps the global parameter space across Gaussian and non-Gaussian families, and Table~\ref{tab:main-benchmarks} consolidates the headline nominal and $2\%$ calibration-robust ($\Theta_2$) performance.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig3_state_scans_and_cats.pdf}
 \caption{\textbf{Global state and channel parameter scans across Gaussian and non-Gaussian benchmarks.}
-\textbf{(a)}~Squeezed-quadrature displacement ($r<0$, active only after crossing $b > 1/\sqrt{2}$) vs.\ antisqueezed-quadrature displacement ($r > 0$, confined to $2b^2 \le 1$, where $r=+0.18$ with $\nbar=0.50$ gives only $+0.0292$ at $a^*=0.434$).
-\textbf{(b)}~Theorem~\ref{thm:sq-thermal} channel and thermal-noise robustness of $\max_a W_2(a;\eta)$ across $\eta \in [0.55, 1.00]$ for $\bar n_{\max} = \max(0.22, 1.2\langle\hat n\rangle)$: heavy dark counts ($\nu=10^{-2}$) cause only a $1.0\%$ relative drop, realistic lab losses ($T=0.90, n_{\rm th}=0.02, \nu=10^{-3}$) retain $W_2 \approx +0.10$, and strong thermal noise ($n_{\rm th} = 0.25$) remains positive.
+\textbf{(a)}~Squeezed-quadrature displacement ($r<0$, where at $\nu = 0$ positive margins appear beyond $b > 1/\sqrt{2}$ across the scanned squeezed-state families) vs.\ antisqueezed-quadrature displacement ($r > 0$, confined to $2b^2 \le 1$, where $r=+0.18$ with $\nbar=0.50$ gives only $+0.0292$ at $a^*=0.434$).
+\textbf{(b)}~Channel and thermal-noise robustness of $\max_a W_2(a;\eta)$ (Eq.~\eqref{eq:W2-sq-exact}) across $\eta \in [0.55, 1.00]$ for $\bar n_{\max} = \max(0.22, 1.2\langle\hat n\rangle)$: heavy dark counts ($\nu=10^{-2}$) cause only a $1.0\%$ relative drop, realistic lab losses ($T=0.90, n_{\rm th}=0.02, \nu=10^{-3}$) retain $W_2 \approx +0.10$, and strong thermal noise ($n_{\rm th} = 0.25$) remains positive.
 \textbf{(c)}~Non-Gaussian families vs.\ $\eta \in [0.70, 1.00]$ at $\bar n_{\max} = 1.05\langle\hat n\rangle$: independent $(a,c)$ optimization boosts the real odd cat ($\phi=0$) $6.9\times$ ($+0.0911$ at $\eta=1$, surviving to $\eta=0.90$), orthogonal orientation $\ket{\Cset_-(\ii c)}$ ($\phi=\pi/2$) boosts it $9.2\times$ ($+0.1219$ at $\eta=1$, surviving to $\eta=0.70$), and $\cos\theta\ket{0}+\sin\theta\ket{2}$ ($\theta=-24^\circ$) achieves $+0.2188$ ($\eta=1$) and $+0.1377$ ($\eta=0.70$).}
 \label{fig:fig3}
 \end{figure}
 
-Table~\ref{tab:stage3-benchmarks} summarizes our key Gaussian and non-Gaussian benchmarks:
-\begin{itemize}[leftmargin=*]
-\item \textbf{Antisqueezed $r > 0$ pilot~\cite{Kovtoniuk2024}:} The antisqueezed pilot point ($r=0.18, a=0.44, \nbar=0.50, \eta=1.0$) gives $W_2 = +0.0128$ (0/3 baselines beaten because $q = 0.8393 > \ee^{-a^2} = 0.8240$ is already caught by Kovtoniuk~\cite{Kovtoniuk2024} \texttt{off/off} excess $+0.0305$). Optimizing $r > 0$ at $a^* = 0.4342$ raises $W_2$ only to $+0.0292$ (CP99 $= 12,934$ vs.\ $294,475$ Hoeffding shots at $a=0.44$). Thus $r > 0$ serves strictly as a validation testbed.
-\item \textbf{Flagship Gaussian squeezed vacuum ($r < 0$, $b > 1/\sqrt{2}$):} Displacing $r = -0.42$ ($\approx 3.65\;\mathrm{dB}$ squeezing, $\langle\hat n\rangle = 0.1870$, $\nbar = 0.22$) at $a = 1.15$ gives $W_2 = +0.1383$ at $\eta = 1.00$, $+0.1107$ at $\eta = 0.95$, $+0.0645$ at $\eta = 0.90$, and $+0.0157$ at $\eta = 0.85$; re-optimizing at $\eta = 0.70$ ($r=-0.40, a=1.35, \langle\hat n\rangle = 0.1687, \nbar=0.194$) still yields $W_2 = +0.1041$. Across the entire $\eta \in [0.70, 1.00]$ range, it beats \emph{all three} baselines simultaneously (3/3), has $\Pi_{\rm sort} = 0$, survives $7\times$ wider thermal noise ($n_{\rm th} \le 0.35$) and $5\times$ energy-cap overestimation ($\nbar = 0.935$, $W_2 = +0.0113$ at $\eta=1.0$), and demonstrates Shannon information loss at $\eta = 0.90$ ($\Delta H_1 = -0.0071\;\mathrm{bits}$ while $W_2 = +0.0645$, Fig.~\ref{fig:fig2}(b)).
-\item \textbf{Optimized odd coherent-state superpositions $\ket{\Cset_-(c\ee^{\ii\phi})}$:} With $q(0) = 0$, odd cats are caught by Baseline~(ii), so their scientific role is diagnosing unconstrained mimic breakdown (at $a=c=0.44$, $q=0.1605$ has coherent mimic $\ket{\ii\sqrt{1.6357}}$ and single-setting mimic $0.8327 < 1.05$) and optical non-attainment ($L_2$-deficit $0.1267$, $L_1$-deficit $0.0951$). Optimizing $(a,c)$ independently with $\nbar = 1.05\langle\hat n\rangle$ boosts $\phi = 0$ by $6.9\times$ ($W_2 = +0.0911$, surviving to $\eta = 0.90$), while orthogonal orientation $\phi = \pi/2$ places the cat lobes along $\ImPart\beta$ orthogonal to $\pm a$ and boosts $W_2$ by $9.2\times$ ($+0.1219$ at $\eta=1.0$, surviving to $\eta=0.70$, Fig.~\ref{fig:fig3}(c)).
-\item \textbf{Non-Gaussian 3-level states $\ket{\psi_\theta} = \cos\theta\ket{0} + \sin\theta\ket{2}$:} Inside $2b^2 \le 1$ ($a=0.44, \theta = -60^\circ$, $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$, $\nbar = 1.55$), the state beats all 3 baselines for $\eta \in [0.95, 1.00]$ ($W_2 = +0.0945$ at $\eta = 1.0$, $+0.0541$ at $\eta = 0.95$). Optimizing $(a, \theta)$ at $\theta \approx -24^\circ, \eta = 0.70$ yields $W_2 = +0.1377$ (CP99 $= 588$ shots/setting at $a^*_{\rm CP} = 1.533$), the highest triple-baseline margin in our study.
-\end{itemize}
+Displacing squeezed vacuum along the \emph{antisqueezed} quadrature ($r > 0$) broadens the $Q$ function along the real axis and increases $q_\pm$ above $\ee^{-\eta a^2}$ inside $2b^2 \le 1$, where the state is already detected by Kovtoniuk's unconstrained \texttt{off/off} inequality~\cite{Kovtoniuk2024} (0/3 baselines beaten). For example, the $r=+0.18$ pilot point ($a=0.44, \nbar=0.50, \eta=1.0$) gives $W_2 = +0.0128$ (rising only to $+0.0292$ at $a^* = 0.434$, requiring $12,934$ shots/setting at $99\%$ power), serving primarily as a small-displacement validation testbed.
+
+Crossing $b > 1/\sqrt{2}$ with \emph{squeezed-quadrature} displacement ($r < 0$, Fig.~\ref{fig:fig3}(a)) transforms the witness into a workhorse protocol. Ordinary squeezed vacuum at $r = -0.42$ ($\approx 3.65\;\mathrm{dB}$ squeezing, $\langle\hat n\rangle = 0.1870$, $\nbar = 0.22$) reaches $W_2 = +0.1388$ at $a^*_{W_2} = 1.140$ ($+0.1383$ at $a = 1.15$) for $\eta = 1.0$, $+0.1272$ at $\eta = 0.90$, and $+0.1048$ at $\eta = 0.70$ ($r = -0.40, \nbar = 0.194$). Across the entire $\eta \in [0.70, 1.00]$ window, it evades \emph{all three} baselines simultaneously (3/3), exhibits $\Pi_{\rm sort} = 0$, survives strong thermal noise ($n_{\rm th} \le 0.35$) and $5\times$ energy-cap overestimation ($\nbar = 0.935$ still gives $W_2 = +0.0113$ at $\eta = 1.0$), and displays clear Shannon information loss at $\eta = 0.90$ ($\Delta H_1 = -0.0071\;\mathrm{bits}$ while $W_2 = +0.0645$, Fig.~\ref{fig:fig2}(b)). Under realistic laboratory imperfections ($T = 0.90, \eta = 0.85, n_{\rm th} = 0.02, \nu = 10^{-3}$ at $r = -0.45, \nbar = 0.26$), the witness retains $W_2 = +0.0987$ and requires only $1,056$ nominal shots per setting (Fig.~\ref{fig:fig3}(b)).
+
+Non-Gaussian states reveal complementary phase-space structure (Fig.~\ref{fig:fig3}(c)). Odd Schr\"odinger cat states $\ket{\Cset_-(c\ee^{\ii\phi})} \propto \ket{c\ee^{\ii\phi}} - \ket{-c\ee^{\ii\phi}}$~\cite{GerryKnight2005,Ourjoumtsev2007,Lewenstein2021} have zero vacuum overlap ($q_0 = 0$) and are therefore detected by Baseline~(ii), making them diagnostic probes of interference-fringe geometry rather than baseline-evading benchmarks. Optimizing $(a,c)$ independently at $\nbar = 1.05\langle\hat n\rangle$ boosts the real cat ($\phi = 0$, lobes along $\RePart\beta$) by $6.9\times$ to $W_2 = +0.0911$ at $\eta = 1.0$ (surviving to $\eta = 0.90$). Rotating the cat by $\phi = \pi/2$ to $\ket{\Cset_-(\ii c)}$ places its coherent lobes along $\ImPart\beta$ and aligns its central Wigner interference fringes perpendicular to the displacement axis $\pm a$; this suppresses the displaced $Q$-function overlap sharply and lifts $W_2$ by $9.2\times$ to $+0.1219$ at $\eta = 1.0$, sustaining positivity all the way down to $\eta = 0.70$. Finally, the truncated squeezed-like superposition $\ket{\psi_\theta} = \cos\theta\ket{0} + \sin\theta\ket{2}$ combines the dark-state destructive interference of Eq.~\eqref{eq:darkstate} with low mean photon number: at $\theta = -24^\circ$ and $\eta = 0.70$, it achieves $W_2 = +0.1377$ (588 nominal shots/setting, beating all 3 baselines), while $\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ beats all 3 baselines even inside the small-displacement regime $2b^2 \le 1$ ($W_2 = +0.0963$ at $\eta = 1.0$).
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Nominal ($T, \eta, \nu, \nbar$ fixed) performance of flagship Gaussian and non-Gaussian benchmarks.} All classical bounds $S_2^{\Cset}$ are exact (Eq.~\eqref{eq:universal-S2}); CP99 denotes the sawtooth-safe~\cite{ChernickLiu2002} exact Clopper--Pearson~\cite{ClopperPearson1934} minimum shots per setting guaranteeing $99\%$ power at $\delta_{\rm stat}=0.01$; Baselines counts how many of the three simple baselines~\cite{Kovtoniuk2024,FiurasekLachmanFilip2021} fail to detect the state.}
-\label{tab:stage3-benchmarks}
+\caption{\textbf{Nominal and realistic $2\%$ calibration-box ($\Theta_2$) performance of flagship Gaussian and non-Gaussian benchmarks.} Nominal margins use exact $S_2^{\Cset}$ (Eq.~\eqref{eq:universal-S2}); $a^*_{\rm CP}$ and $a^*_{\rm rob}$ denote numerically optimized displacements for Clopper--Pearson shot economy. Gaussian $\Theta_2$ worst-case margins $W_2^{\rm rob,worst}$ and conditional main-detector shot counts $N_s^{\rm CP99,worst}$ ($\forall N \ge N_s^{\rm CP99}$ at $\delta_{\rm stat}=0.01$, $\delta_{\rm tot}=0.02$ with $\delta_{\rm cal}=\delta_E=0.005$) are evaluated at exact analytical signal corners against high-precision \texttt{float64} classical upper bounds, whereas non-Gaussian $\Theta_2$ entries are grid-seeded numerical estimates and numerically estimated shot requirements (--- denotes non-positive worst-case margin or nominal-only reference rows); Baselines counts how many of the three simple baselines~\cite{Kovtoniuk2024,FiurasekLachmanFilip2021} fail to detect the state.}
+\label{tab:main-benchmarks}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lccccccc@{}}
 \toprule
-State / Scenario & $(\eta, T, n_{\rm th}, \nu, \nbar)$ & $a^*_{W_2}$ & $W_2(a^*_{W_2})$ & $a^*_{\rm CP}$ & $W_2(a^*_{\rm CP})$ & CP99 ($a^*_{W_2}\!\to\!a^*_{\rm CP}$) & Base. \\
+State / Scenario & $(\eta, T, n_{\rm th}, \nu, \nbar)$ & $a^*_{\rm CP}$ & Nom.\ $W_2$ ($a^*_{W_2}$) & Nom.\ CP99 & $\Theta_2$ $W_2^{\rm rob,worst}$ & $\Theta_2$ CP99 (opt.\ $a^*_{\rm rob}$) & Base. \\
 \midrule
-Pilot $r = +0.18$ (antisq.) & $(1.0, 1.0, 0, 0, 0.50)$ & $0.434$ & $+0.0292$ & $0.434$ & $+0.0292$ & $12,934 \to 12,934$ & 0/3 \\
-Flagship $r = -0.42$ ($\eta=1.0$) & $(1.0, 1.0, 0, 0, 0.22)$ & $1.140$ & $+0.1388$ & $1.342$ & $+0.1168$ & $639 \to \mathbf{559}$ & \textbf{3/3} \\
-Flagship $r = -0.42$ ($\eta=0.90$) & $(0.9, 1.0, 0, 0, 0.22)$ & $1.191$ & $+0.1272$ & $1.446$ & $+0.1033$ & $798 \to \mathbf{688}$ & \textbf{3/3} \\
-High-loss $r = -0.40$ ($\eta=0.70$) & $(0.7, 1.0, 0, 0, 0.194)$ & $1.308$ & $+0.1048$ & $1.629$ & $+0.0859$ & $1,334 \to \mathbf{1,123}$ & \textbf{3/3} \\
-Realistic $r = -0.45$ lab & $(0.85, 0.9, 0.02, 10^{-3}, 0.26)$ & $1.236$ & $+0.0987$ & $1.517$ & $+0.0809$ & $1,304 \to \mathbf{1,056}$ & \textbf{3/3} \\
-Loose $2\times$ cap $r = -0.42$ & $(0.9, 1.0, 0, 10^{-3}, 0.374)$ & $1.330$ & $+0.0743$ & $1.597$ & $+0.0597$ & $1,634 \to \mathbf{1,238}$ & \textbf{3/3} \\
-Opt.\ real odd cat ($c=1.35$) & $(1.0, 1.0, 0, 0, 2.016)$ & $0.354$ & $+0.0911$ & $0.354$ & $+0.0911$ & $851 \to 851$ & 2/3 ($a=0$) \\
-Opt.\ orth.\ odd cat ($c=1.25$) & $(0.9, 1.0, 0, 0, 1.791)$ & $0.450$ & $+0.0711$ & $0.450$ & $+0.0711$ & $2,032 \to 2,032$ & 2/3 ($a=0$) \\
-$\cos(-24^\circ)\ket{0}+\sin(-24^\circ)\ket{2}$ & $(0.7, 1.0, 0, 0, 0.347)$ & $1.375$ & $+0.1377$ & $1.533$ & $+0.1220$ & $622 \to \mathbf{588}$ & \textbf{3/3} \\
-$\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($2b^2\le 1$) & $(1.0, 1.0, 0, 0, 1.55)$ & $0.433$ & $+0.0963$ & $0.699$ & $+0.0638$ & $1,104 \to \mathbf{789}$ & \textbf{3/3} \\
+Pilot $r = +0.18$ (antisq.) & $(1.0, 1.0, 0, 0, 0.50)$ & $0.434$ & $+0.0292$ ($+0.0292$) & $12,934$ & $+0.0014$ & $>2\!\times\!10^6$ & 0/3 \\
+Flagship $r = -0.42$ ($\eta=1.0$) & $(1.0, 1.0, 0, 0, 0.22)$ & $1.342$ & $+0.1168$ ($+0.1388$) & \textbf{559} & $+0.0657$ & \textbf{1,727} (\textbf{1,630}) & \textbf{3/3} \\
+Flagship $r = -0.42$ ($\eta=0.90$) & $(0.9, 1.0, 0, 0, 0.22)$ & $1.446$ & $+0.1033$ ($+0.1272$) & \textbf{688} & $+0.0483$ & \textbf{3,033} (\textbf{2,831}) & \textbf{3/3} \\
+High-loss $r = -0.40$ ($\eta=0.70$) & $(0.7, 1.0, 0, 0, 0.194)$ & $1.629$ & $+0.0859$ ($+0.1048$) & \textbf{1,123} & $+0.0246$ & \textbf{13,201} (\textbf{11,327}) & \textbf{3/3} \\
+Realistic $r = -0.45$ lab & $(0.85, 0.9, 0.02, 10^{-3}, 0.26)$ & $1.517$ & $+0.0809$ ($+0.0987$) & \textbf{1,056} & --- & --- & \textbf{3/3} \\
+Opt.\ real odd cat ($c=1.35$) & $(1.0, 1.0, 0, 0, 2.016)$ & $0.354$ & $+0.0911$ ($+0.0911$) & $851$ & $+0.0276$ & $8,361$ (\textbf{3,003}) & 2/3 \\
+Fock $\ket{1}$ ($\eta=1.0$) & $(1.0, 1.0, 0, 0, 1.05)$ & $0.433$ & $+0.0311$ ($+0.0311$) & $11,334$ & $-0.0052$ & --- & 2/3 \\
+$\cos(-24^\circ)\ket{0}+\sin(-24^\circ)\ket{2}$ & $(0.7, 1.0, 0, 0, 0.347)$ & $1.533$ & $+0.1220$ ($+0.1377$) & \textbf{588} & --- & --- & \textbf{3/3} \\
+$\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($2b^2\le 1$) & $(1.0, 1.0, 0, 0, 1.55)$ & $0.699$ & $+0.0638$ ($+0.0963$) & \textbf{789} & $+0.0361$ & \textbf{2,625} (\textbf{2,097}) & \textbf{3/3} \\
 \bottomrule
 \end{tabular}}
 \end{table}
 
 % ===========================================================================
-\section{Asymmetric Calibration Boxes, Energy-Bound Protocols, and Finite-Sample Stats}\label{sec:calibration}
+\section{Experimental Certification Under Calibration Drift and Finite Sampling}\label{sec:calibration}
 % ===========================================================================
 
-Real detectors never possess perfectly symmetric parameters $\theta_+ = \theta_-$ or exact antiparallel LO phases. Furthermore, relying on a nominal classical threshold $S_2^{\Cset}(\theta_{\rm nom}, \nbar)$ when calibration parameters drift slightly inside an uncertainty box causes severe false positives. We now replace all ideal symmetry assumptions with a globally certified asymmetric calibration-box framework paired with independent energy-bound certification and distribution-free finite-sample bounds.
+\subsection{Asymmetric Calibration Boxes and Pre-Displacement Energy Monitoring}\label{subsec:asym-box}
 
-\subsection{Exact Asymmetric Circle Optimization and Globally Certified $B_2^{\rm robust}(\Theta,\nU)$}\label{subsec:asym-box}
-Fixing the global phase reference along setting $+$, parameterize general asymmetric setups by the 7-tuple
-\begin{equation}\label{eq:theta-7d}
-\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-), \qquad
-\alpha_+ = a_+ > 0, \quad \alpha_- = -a_-\ee^{\ii\delta_\phi} \quad (a_- > 0,\ \abs{\delta_\phi} \le \delta_{\phi,\max} < \pi/2).
+In an actual optical setup, the two displacement settings never share identical amplitudes, efficiencies, or dark counts, nor an exact $\pi$ relative LO phase. Fixing the phase reference along setting $+$, we parameterize a general asymmetric experiment by the seven-tuple $\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$ with $\alpha_+ = a_+ > 0$ and $\alpha_- = -a_-\ee^{\ii\delta_\phi}$ ($\abs{\delta_\phi} \le \delta_{\phi,\max} < \pi/2$). As shown in Appendix~\ref{app:calibration}, asymmetry shifts the optimal classical coherent state for \texttt{on/on} off the imaginary axis to an interior complex amplitude $\beta^*(s)$ with both $\RePart\beta^* \neq 0$ and $\ImPart\beta^* \neq 0$, while LO phase mismatch $\delta_\phi$ strictly increases the classical \texttt{off/off} and \texttt{on/on} maxima (peaking at $\abs{\delta_\phi} = \delta_{\phi,\max}$) and strictly decreases \texttt{off/on} and \texttt{on/off} (peaking at $\delta_\phi = 0$). For symmetric magnitudes $(a,\eta,\nu)$, the exact \texttt{on/on} classical support at phase error $\delta_\phi$ is attained on the bisector $\varphi^* = \delta_\phi/2 - \pi/2$ and reads
+\begin{equation}\label{eq:onon-dphi}
+h_{\Cset_{\nbar}}(A_{11};\delta_\phi) = 2 - 2\kappa\exp\!\Bigl[-\eta\bigl(\nbar + a^2 + 2a\sqrt{\nbar}\sin(\abs{\delta_\phi}/2)\bigr)\Bigr].
 \end{equation}
-For $\beta = \sqrt{s}\,\ee^{\ii\varphi}$ ($s = \abs{\beta}^2$), define $\kappa_\pm = \ee^{-\nu_\pm}$, $C_\pm(s) = \kappa_\pm \ee^{-\eta_\pm(s+a_\pm^2)}$, and $B_\pm(s) = 2\eta_\pm a_\pm \sqrt{s} \ge 0$, so $q_+(\beta;\theta) = C_+(s)\ee^{-B_+(s)\cos\varphi}$ and $q_-(\beta;\theta) = C_-(s)\ee^{B_-(s)\cos(\varphi-\delta_\phi)}$.
 
-\begin{theorem}[Asymmetric Circle Maxima and LO Phase-Mismatch Monotonicity]\label{thm:asym-circle}
-Fix any radial energy $s > 0$ and define $G_A(s;\theta) := \max_{\abs{\beta}^2=s} f_A(\beta;\theta)$:
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Collinear asymmetric settings ($\delta_\phi = 0$, writing $z = \cos\varphi \in [-1,1]$):}
-  $G_{01}(s;\theta)$ is uniquely attained at $z^* = +1$, $G_{10}(s;\theta)$ at $z^* = -1$, and $G_{00}(s;\theta)$ at $z^* \in \{-1, +1\}$, whereas $2 - q_+ - q_-$ is strictly concave in $z$ with exact maximizer
-  \begin{equation}\label{eq:zstar-onon}
-  z^*(s) = \clip\!\left(\frac{\ln\bigl(C_+(s) B_+(s)\bigr) - \ln\bigl(C_-(s) B_-(s)\bigr)}{B_+(s) + B_-(s)},\ -1,\ 1\right), \quad
-  \beta^*(s) = \sqrt{s}\Bigl(z^*(s) \pm \ii\sqrt{1-z^*(s)^2}\Bigr).
-  \end{equation}
-  Whenever $\theta_+ \neq \theta_-$ and $\abs{z^*(s)} < 1$, the \texttt{on/on} maximizer has both $\RePart\beta^* \neq 0$ and $\ImPart\beta^* \neq 0$, strictly beating all real-axis and imaginary-axis coherent states.
-\item \textbf{LO phase mismatch ($\abs{\delta_\phi} \le \delta_{\phi,\max} < \pi/2$):} Over $[-\delta_{\phi,\max}, \delta_{\phi,\max}]$, \texttt{off/on} and \texttt{on/off} are maximized at $\delta_\phi = 0$, whereas \texttt{off/off} and \texttt{on/on} are strictly increasing in $\abs{\delta_\phi}$ and maximized at $\abs{\delta_\phi} = \delta_{\phi,\max}$. In particular, for symmetric magnitudes $(a,\eta,\nu)$, the exact \texttt{on/on} support at phase error $\delta_\phi$ is attained at $\varphi^* = \delta_\phi/2 - \pi/2$ and equals
-  \begin{equation}\label{eq:onon-dphi}
-  h_{\Cset_{\nbar}}(A_{11};\delta_\phi) = 2 - 2\kappa\exp\!\Bigl[-\eta\bigl(\nbar + a^2 + 2a\sqrt{\nbar}\sin(\abs{\delta_\phi}/2)\bigr)\Bigr].
-  \end{equation}
-\end{enumerate}
-\end{theorem}
-
-Now let $\Theta = [a_+^L, a_+^U] \times [a_-^L, a_-^U] \times [-\delta_{\phi,\max}, \delta_{\phi,\max}] \times [\eta_+^L, \eta_+^U] \times [\eta_-^L, \eta_-^U] \times [\nu_+^L, \nu_+^U] \times [\nu_-^L, \nu_-^U]$ be an independently certified confidence region ($\mathbb{P}(\theta_{\rm true} \notin \Theta) \le \delta_{\rm cal}$) and $\nU$ a certified energy bound ($\mathbb{P}(\tr(\rho\hat n) > \nU) \le \delta_E$). We seek the global calibration-box supremum
+Suppose independent calibration bounds localize the true experimental parameters inside a seven-dimensional box $\Theta = [a_+^L, a_+^U] \times [a_-^L, a_-^U] \times [-\delta_{\phi,\max}, \delta_{\phi,\max}] \times [\eta_+^L, \eta_+^U] \times [\eta_-^L, \eta_-^U] \times [\nu_+^L, \nu_+^U] \times [\nu_-^L, \nu_-^U]$ with failure probability $\mathbb{P}(\theta_{\rm true} \notin \Theta) \le \delta_{\rm cal}$, while an independent energy monitor certifies $\tr(\rho\hat n) \le \nU$ with failure probability $\le \delta_E$. Testing against a naive nominal bound $S_2^{\Cset}(\theta_{\rm nom}, \nbar)$ suffers severe spurious false positives whenever $\theta_{\rm true}$ drifts inside $\Theta$; instead, we certify against the global box supremum
 \begin{equation}\label{eq:B2-robust-def}
 S_1^{\rm robust}(\Theta,\nU) := \sup_{\theta \in \Theta} S_1^{\Cset}(\theta,\nU), \qquad
 B_2^{\rm robust}(\Theta,\nU) := \sup_{\theta \in \Theta} S_2^{\Cset}(\theta,\nU).
 \end{equation}
-Never relying on finite parameter grids or endpoint-only heuristics, we certify Eq.~\eqref{eq:B2-robust-def} globally:
+Rather than relying on parameter grids or endpoint heuristics, we reduce $(\nu_+,\nu_-,\delta_\phi)$ analytically to exact branch corners and solve the remaining four-dimensional $(a_+,\eta_+,a_-,\eta_-)$ box via a decoupled pointwise envelope dual and adaptive branch-and-bound in IEEE-754 \texttt{float64} arithmetic (Appendix~\ref{app:calibration}). Across all $565$ calibration-box evaluations in this study, the numerical dual-gap audit gives $0 \le U_A - L_A \le 1.31 \times 10^{-12}$ (noting that standard \texttt{float64} arithmetic provides high-precision numerical consistency rather than directed-rounding interval proofs), and an empirical audit of $1{,}000$ random classical mixtures inside $\Theta_2 \times \Cset_{\nU}$ exhibits zero violations.
 
-\begin{theorem}[Analytical Corner Reductions and Decoupled Box-Envelope Duality]\label{thm:robust-box}
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Single-setting corner exactness:} $h_{\Cset_{\nU}}(E_0(j;\theta))$ attains its global maximum over $\Theta$ at $(a_j^L, \eta_j^L, \nu_j^L, \nU)$ and $h_{\Cset_{\nU}}(E_1(j;\theta))$ at $(a_j^U, \eta_j^U, \nu_j^U, \nU)$, giving exact $S_1^{\rm robust}(\Theta,\nU)$ with zero subdivision.
-\item \textbf{Exact dark-count and LO-phase reduction:} Cross branches reduce analytically in $(\nu_+,\nu_-,\delta_\phi)$ to the 4D sub-box $B = B_+ \times B_- = [a_+^L,a_+^U]\times[\eta_+^L,\eta_+^U] \times [a_-^L,a_-^U]\times[\eta_-^L,\eta_-^U]$ at $(\nu_+^L,\nu_-^L,\delta_{\phi,\max})$ (\texttt{off/off}), $(\nu_+^U,\nu_-^U,\delta_{\phi,\max})$ (\texttt{on/on}), $(\nu_+^U,\nu_-^L,0)$ (\texttt{off/on}), and $(\nu_+^L,\nu_-^U,0)$ (\texttt{on/off}).
-\item \textbf{Decoupled pointwise envelope certificate:} Since $q_+(\beta;\theta_+)$ and $q_-(\beta;\theta_-)$ separate across $B_+ \times B_-$, the pointwise box supremum $F_A^B(\beta) := \sup_{\theta\in B} f_A(\beta;\theta)$ evaluates in closed form from $q_\pm^{\min}(\beta;B_\pm)$ and $q_\pm^{\max}(\beta;B_\pm)$. By weak minimax duality,
-  \begin{equation}\label{eq:decoupled-dual}
-  \sup_{\theta\in B} h_{\Cset_{\nU}}(A(\theta)) \le \inf_{\lambda \ge 0}\left[\lambda \nU + \sup_{s \ge 0}\Bigl(\max_{\abs{\beta}^2=s} F_A^B(\beta) - \lambda s\Bigr)\right] =: U_A(B).
-  \end{equation}
-  Pairing $U_A(B)$ with feasible primal corner/interior solutions $L_A(B)$ in adaptive branch-and-bound executed in IEEE-754 \texttt{float64} arithmetic (rather than directed-rounding interval arithmetic) achieves $0 \le U_A - L_A \le 1.31 \times 10^{-12}$ across all 565 calibration-box evaluations.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-Appendix~\ref{app:calibration} details the proof of Theorems~\ref{thm:asym-circle} and~\ref{thm:robust-box}. Across 1,000 adversarial random trials $(\theta,\mu) \in \Theta_2 \times \Cset_{\nU}$ including box corners and rare bright tails, zero violations of $S_1^{\rm robust}$, $B_2^{\rm robust}$, or induced Shannon/R\'enyi bounds occur.
-\end{proof}
+Equally essential is certifying the pre-displacement energy cap $\nU$ independently of the threshold detectors. Displaced on/off clicks alone can \emph{never} bound $\langle\hat n\rangle$: for any target mean photon number $\bar n_{\rm target} > 0$ and arbitrarily small tolerance $\varepsilon \in (0,1)$, the bright-tail classical mixture $\rho_{\rm no\text{-}go}(\varepsilon, Y) := (1-\varepsilon)\ket{0}\!\bra{0} + \varepsilon\ket{\ii Y}\!\bra{\ii Y}$ with $Y := \sqrt{\bar n_{\rm target}/\varepsilon}$ has exact energy $\tr(\rho_{\rm no\text{-}go}\hat n) = \bar n_{\rm target}$ while perturbing the no-click probabilities from vacuum by less than $\varepsilon\,\ee^{-\nu-\eta a^2}$ (e.g.\ $\bar n_{\rm target} = 100$ at $\varepsilon = 5 \times 10^{-5}$ shifts $q_\pm$ by only $1.33 \times 10^{-5}$ at $a = 1.15$). Threshold saturation hides arbitrary bright tails.
 
-\subsection{Bright-Tail No-Go Proof and Independent Energy-Bound Protocols ($\nU$)}\label{subsec:energy-nogo}
-Because $\tr(\rho\hat n) \le \nU$ is an input to the witness, it is essential to clarify why threshold counts alone cannot supply it.
-
-\begin{proposition}[Bright-Tail Threshold-Saturation No-Go]\label{prop:no-go}
-For any $a > 0$, $\eta \in (0,1]$, $\nu \ge 0$, target energy $\bar n_{\rm target} > 0$, and tolerance $\varepsilon \in (0,1)$, the two-component classical mixture
-\begin{equation}\label{eq:nogo-state}
-\rho_{\rm no\text{-}go}(\varepsilon, Y) := (1-\varepsilon)\ket{0}\!\bra{0} + \varepsilon\ket{\ii Y}\!\bra{\ii Y}, \qquad Y := \sqrt{\frac{\bar n_{\rm target}}{\varepsilon}},
+We therefore certify $\nU$ via a pre-displacement calibrated tap-beam monitor (Fig.~\ref{fig:fig1}(a)): a beam splitter of reflectivity $R_{\rm tap} \in (0,1)$ placed \emph{before} $D(\alpha_j)$ diverts fraction $R_{\rm tap}$ to an unsaturated linear monitor of efficiency $\eta_{\rm tap}$ over $N_{\rm tap}$ pulses while transmitting $T_{\rm tap} = 1 - R_{\rm tap}$ into the displacement stage. Under a physical per-pulse peak-photon ceiling ensuring the discrete tapped photon count $X_t \in \{0, 1, \dots, M_{\max}\}$ stays almost surely inside the monitor's unsaturated linear dynamic range (with any out-of-range saturation event aborting the run rather than clipping, since clipping underestimates bright tails; see Appendix~\ref{app:cp-tail} for analog-photodiode and Bernstein extensions), Hoeffding's inequality~\cite{Hoeffding1963} certifies with probability $\ge 1 - \delta_E$:
+\begin{equation}\label{eq:tap-bound}
+\langle\hat n\rangle_{\rm trans} \le \frac{1 - R_{\rm tap}}{R_{\rm tap}\eta_{\rm tap}}\left(\hat{\bar m}_{\rm tap} + M_{\max}\sqrt{\frac{\ln(1/\delta_E)}{2N_{\rm tap}}}\right) =: \nU.
 \end{equation}
-has exact mean photon number $\tr(\rho_{\rm no\text{-}go}\hat n) = \varepsilon Y^2 = \bar n_{\rm target}$ while its displaced no-click probabilities satisfy $0 \le q_\pm(\ket{0}) - q_\pm(\rho_{\rm no\text{-}go}) \le \varepsilon\,\ee^{-\nu-\eta a^2} < \varepsilon$.
-\end{proposition}
+Replacing $(R_{\rm tap}, \eta_{\rm tap})$ by independent calibration lower bounds $(R_{\rm tap}^L, \eta_{\rm tap}^L)$ (with failure probability absorbed into $\delta_{\rm cal}$) and leaving nonnegative monitor background counts unsubtracted in $\hat{\bar m}_{\rm tap}$ both remain strictly conservative. For representative parameters ($R_{\rm tap} = 0.05$, $\eta_{\rm tap} = 0.95$, $\langle\hat n\rangle_{\rm trans} = 0.182$ yielding $\hat{\bar m}_{\rm tap} = \frac{R_{\rm tap}\eta_{\rm tap}}{1 - R_{\rm tap}}\langle\hat n\rangle_{\rm trans} = 0.0091$, discrete ceiling $M_{\max} = 5$ photons/pulse over $N_{\rm tap} = 2 \times 10^7$ pulses---$2\;\mathrm{s}$ at a $10\;\mathrm{MHz}$ pulsed source---and $\delta_E = 0.005$), Eq.~\eqref{eq:tap-bound} certifies $\nU = 0.2184$ ($1.20\times$ energy slack). All quantitative budgets in this paper rely strictly on this tap-beam monitor; for explicitly characterized pulsed sources (such as SPDC states with a calibrated second-factorial-moment bound), undisplaced click inversion could serve as a qualitative extension, still requiring a physical tail-regularity assumption consistent with the bright-tail obstruction.
 
-At $a = 1.15, \eta = 1, \nu = 0$, setting $\bar n_{\rm target} = 100$ and $\varepsilon = 5 \times 10^{-5}$ ($Y \approx 1414.21$) gives $q_\pm(\rho_{\rm no\text{-}go}) = 0.266455$ vs.\ $q_\pm(\ket{0}) = 0.266468$ (deficit $1.33 \times 10^{-5}$): threshold saturation hides arbitrary bright tails. Consequently, $\nU$ must come from an independent pre-displacement procedure certified at failure probability $\le \delta_E$:
-\begin{itemize}[leftmargin=*]
-\item \textbf{Route A (Pre-Displacement Calibrated Tap-Beam Monitor, Fig.~\ref{fig:fig1}(a)):} A calibrated beam splitter of reflectivity $R_{\rm tap} \in (0,1)$ before $D(\alpha_j)$ diverts fraction $R_{\rm tap}$ to a linear intensity monitor of efficiency $\eta_{\rm tap}$ over $N_{\rm tap}$ shots, while $T_{\rm tap} = 1 - R_{\rm tap}$ enters the displacement stage. Under an independently justified physical per-pulse peak-energy bound on the source ensuring the tapped photon number stays almost surely within $[0, M_{\max}]$ inside the monitor's unsaturated linear dynamic range (e.g., enforced by finite pump-pulse energy conservation, excluding unbounded bright tails that would saturate the monitor), Hoeffding's inequality certifies with probability $\ge 1 - \delta_E$:
-  \begin{equation}\label{eq:tap-bound}
-  \langle\hat n\rangle_{\rm trans} \le \frac{1 - R_{\rm tap}}{R_{\rm tap}\eta_{\rm tap}}\left(\hat{\bar m}_{\rm tap} + M_{\max}\sqrt{\frac{\ln(1/\delta_E)}{2N_{\rm tap}}}\right) =: \nU.
-  \end{equation}
-  When $R_{\rm tap}$ and $\eta_{\rm tap}$ carry independent calibration lower bounds $(R_{\rm tap}^L, \eta_{\rm tap}^L)$ (with failure probability absorbed into $\delta_{\rm cal}$), substituting $(R_{\rm tap}^L, \eta_{\rm tap}^L)$ strictly increases the prefactor $(1-R_{\rm tap})/(R_{\rm tap}\eta_{\rm tap})$ and remains conservative, as does retaining nonnegative monitor dark/background counts unsubtracted in $\hat{\bar m}_{\rm tap}$. For $R_{\rm tap} = 0.05$, $\eta_{\rm tap} = 0.95$, $N_{\rm tap} = 50{,}000$, $\delta_E = 0.005$, $M_{\max} = 0.25$ (corresponding to a $5$-photon/pulse pre-tap source ceiling on the $5\%$ tap beam), and $\hat{\bar m}_{\rm tap} = 0.0091$ ($\langle\hat n\rangle_{\rm trans} = 0.182$), Eq.~\eqref{eq:tap-bound} certifies $\nU = 0.2184$ ($1.20\times$ slack).
-\end{itemize}
-\emph{Remark on alternative characterized-source monitoring:} All quantitative energy-bound budgets in this work rely strictly on Route~A above. In principle, when measuring explicitly characterized pulsed source families (e.g., SPDC states with a calibrated second-factorial-moment bound), undisplaced ($a = 0$) click data might likewise supply $\nU$ via monotone inversion and calibration-error propagation, which we leave as an experimental extension rather than an audited protocol here.
-Consistent with Proposition~\ref{prop:no-go}, any finite-sample certification of $\langle\hat n\rangle$ relies on a physical tail-regularity assumption on the source (such as the unsaturated peak-energy bound $M_{\max}$ or a prior second-moment Chebyshev/Bernstein bound in Route~A).
-Table~\ref{tab:energy-slack} quantifies the resulting trade-off between tap-beam energy slack $\nU/\langle\hat n\rangle$ and main-detector shot requirements under realistic $\Theta_2$ calibration uncertainty: keeping $\nU/\langle\hat n\rangle \le 1.25$ holds the $\Theta_2$ shot budget at $1,633$--$2,845$ ($\eta \in [0.90, 1.00]$) and $12,749$ ($\eta=0.70$), and even a $2.00\times$ energy bound certifies $r=-0.42$ ($\eta=0.90$) in $12,774$ shots.
+\subsection{Distribution-Free Finite-Sample Error Budget and Realistic $\Theta_2$ Performance}\label{subsec:stats-budget}
+
+Let $K_+$ and $K_-$ denote the observed no-click counts over $N_s$ independent detection pulses at settings $\alpha_+$ and $\alpha_-$, with empirical frequencies $\widehat q_\pm = K_\pm/N_s$. Two distribution-free lower confidence bounds (LCBs) on $L_2(\rho) = 1 + \abs{q_+ - \frac{1}{2}} + \abs{q_- - \frac{1}{2}}$ at error level $\delta_{\rm stat}$ handle distinct experimental regimes. Under independent non-stationary shot-to-shot parameter drift $\theta_t \in \Theta$, the Hoeffding bound~\cite{Hoeffding1963} $L_{2,\rm LCB}^{\rm Hoeff}(K_+,K_-) := 1 + \abs{\widehat q_+ - \frac{1}{2}} + \abs{\widehat q_- - \frac{1}{2}} - 2\sqrt{\ln(4/\delta_{\rm stat})/(2N_s)}$ remains valid by convexity of $B_2^{\rm robust}(\Theta,\nU)$. For stationary repeated experiments at fixed unknown $\theta_{\rm true} \in \Theta$, $K_\pm \sim \mathrm{Bin}(N_s, q_\pm)$ are exact independent binomials, allowing the much tighter exact Clopper--Pearson LCB~\cite{ClopperPearson1934} $L_{2,\rm LCB}^{\rm CP}(K_+,K_-) := 1 + d_+^{\rm LCB} + d_-^{\rm LCB}$ with $d_\pm^{\rm LCB} := \max\bigl(0,\, q_{\pm,\rm lo}^{\rm CP} - \frac{1}{2},\, \frac{1}{2} - q_{\pm,\rm hi}^{\rm CP}\bigr)$ evaluated from two-sided exact Beta quantiles at error $\delta_{\rm stat}/2$.
+
+Under the decision rule $L_{2,\rm LCB}(K_+, K_-; N_s, \delta_{\rm stat}) > B_2^{\rm robust}(\Theta,\nU)$, a union bound over the three failure events $\{\theta_{\rm true} \notin \Theta\}$, $\{\tr(\rho\hat n) > \nU\}$, and $\{L_2(\rho,\theta_{\rm true}) < L_{2,\rm LCB}\}$ guarantees that any classical state $\rho \in \Cset$ obeys
+\begin{equation}\label{eq:union-budget}
+\mathbb{P}_{\rm classical}(\text{False Certification}) \le \delta_{\rm stat} + \delta_{\rm cal} + \delta_E =: \delta_{\rm tot}.
+\end{equation}
+If, moreover, the $2N_s$ main-detector trials are statistically independent of the auxiliary calibration and energy-monitoring data generating $(\Theta,\nU)$ (or for fixed deterministic $(\Theta,\nU)$), then conditioned on $\{\theta_{\rm true} \in \Theta\} \cap \{\tr(\rho\hat n) \le \nU\}$, the Type-I error rate is strictly $\le \delta_{\rm stat}$ for every $N_s \ge 1$. When planning experimental sample sizes, we enforce Chernick--Liu~\cite{ChernickLiu2002} sawtooth-stability ($N_s^{\rm CP99} = \min\{N_0 : \operatorname{power}(N) \ge 0.99\ \forall N \ge N_0\}$), certified across \emph{all} integers $N \ge N_s^{\rm CP99}$ by an analytic Chernoff--KL tail bound combined with exact stochastic-coupling block lower bounds (Appendix~\ref{app:cp-tail}). Crucially, $N_s^{\rm CP99}$ refers to the \emph{conditional} main-detector certification power given $\{\theta_{\rm true} \in \Theta\} \cap \{\tr(\rho\hat n) \le \nU\}$, not the end-to-end joint success probability including calibration and energy-monitor coverage (which is lower-bounded by $0.99 - 0.005 - 0.005 = 0.98$, or $0.99 \times 0.995^2 \approx 0.98015$ under statistical independence).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig4_calibration_and_stats.pdf}
+\caption{\textbf{Asymmetric calibration-box robustness, 50,000-trial Monte Carlo false-positive audit, and Clopper--Pearson shot economy.}
+\textbf{(a)}~Worst-case robust margin $W_2^{\rm rob,worst}(\Theta)$ across calibration uncertainty tiers: Nominal ($0\%$), $\Theta_1$ ($1\%$), $\Theta_2$ ($2\%$), and $\Theta_3$ ($5\%$). Flagship $r=-0.42$ ($\eta \in [0.90,1.00]$) and high-loss $r=-0.40$ ($\eta=0.70$) remain robustly positive throughout $\Theta_2$, whereas the $r=+0.18$ pilot collapses to $+0.0014$.
+\textbf{(b)}~50,000-trial Monte Carlo audit under $\Theta_2$: testing a classical boundary state against naive nominal $S_2^{\Cset}(\theta_{\rm nom})$ yields up to $100\%$ spurious false positives, whereas robust $B_2^{\rm robust}(\Theta_2)$ yields an observed Monte Carlo rejection rate $\le 0.008\%$ over $50{,}000$ trials (analytically bounded by $\le \delta_{\rm stat} = 1\%$) while reaching $99\%$ conditional quantum certification power at $1,727$ shots/setting ($r=-0.42, a^*_{\rm CP}=1.342, \eta=1.0$).
+\textbf{(c)}~Required shots per setting $N_s(a)$ showing the $4.45\times$ exact Clopper--Pearson speedup over Hoeffding and the calibration headroom gained by shifting from $a^*_{W_2}$ to $a^*_{\rm CP}$.}
+\label{fig:fig4}
+\end{figure}
+
+Figure~\ref{fig:fig4} summarizes the finite-sample and calibration-box behavior across three asymmetric uncertainty tiers: $\Theta_1$ ($1\%$ amplitude, $0.005$ efficiency, $10^{-4}$ dark count, $1^\circ$ phase, $+5\%$ cap), $\Theta_2$ (realistic: $2\%, 0.01, 10^{-3}, 2^\circ, +10\%$ cap), and $\Theta_3$ (conservative: $5\%, 0.02, 5\times 10^{-3}, 5^\circ, +20\%$ cap). While Type-I soundness depends on $B_2^{\rm robust}(\Theta,\nU)$, evaluating worst-case quantum certification power ($W_2^{\rm rob,worst}$ and $N_s^{\rm CP99,worst}$) uses exact analytical box corners for all centered squeezed thermal states (proved in Appendix~\ref{app:calibration}) and $11\times 7\times 5$ grid-seeded \texttt{L-BFGS-B} numerical estimates for auxiliary non-Gaussian probes.
+
+Two practical design lessons emerge immediately from Fig.~\ref{fig:fig4} and Table~\ref{tab:main-benchmarks}. First, replacing Hoeffding by exact Clopper--Pearson cuts nominal shot counts by $4.45\times$ ($2,488 \to 559$ at $\eta = 1.0$, Fig.~\ref{fig:fig4}(c)), and shifting from the witness-peak displacement $a^*_{W_2}$ to the numerically optimized statistical displacement $a^*_{\rm CP}$ on the gentler high-$a$ shoulder simultaneously shrinks calibration-box inflation (e.g.\ from $0.0394$ to $0.0298$ at $\eta = 1.0$), cutting $\Theta_2$ worst-case shots by $2.46\times$ at $\eta = 0.90$ ($7,448 \to 3,033$) and $6.92\times$ at $\eta = 0.70$ ($91,402 \to 13,201$); re-optimizing directly against $\Theta_2$ ($a^*_{\rm robust,CP}$) lowers these further to $1,630$ ($a=1.482, \eta=1.0$), $2,831$ ($a=1.577, \eta=0.9$), and $11,327$ ($a=1.767, \eta=0.7$). Second, a $50{,}000$-trial Monte Carlo audit (Fig.~\ref{fig:fig4}(b) and Table~\ref{tab:mc-audit} in Appendix~\ref{app:cp-tail}) finds that naive nominal thresholds trigger $99.8\%$--$100\%$ spurious false positives at $N_s \ge 10{,}000$, whereas $B_2^{\rm robust}(\Theta_2)$ yields an observed Monte Carlo rejection rate $\le 8\times 10^{-5}$ over $50{,}000$ trials alongside a conservative binomial PMF upper bound $\le 3.5\times 10^{-5}$. Energy-slack trade-offs (Table~\ref{tab:energy-slack} in Appendix~\ref{app:cp-tail}) show that keeping $\nU/\langle\hat n\rangle \le 1.25$ holds $\Theta_2$ budgets at $1,633$--$2,845$ ($\eta \in [0.90, 1.00]$) and $12,749$ ($\eta = 0.70$), and even a $2.00\times$ energy bound certifies $r=-0.42$ ($\eta=0.90$) in $12,774$ shots.
+
+% ===========================================================================
+\section{Ideal Quantum Ceilings and Discussion}\label{sec:quantum-ceilings}
+% ===========================================================================
+
+To benchmark how closely squeezed and non-Gaussian states approach the ultimate quantum limits without introducing uncertified Fock-space cutoffs, we evaluate the exact ideal ($\eta = 1, \nu = 0$) quantum ceilings on the full infinite-dimensional Hilbert space. Because $E_0(\pm a) = \ket{\mp a}\!\bra{\mp a}$ are rank-one projectors, the operators $A_{00}$, $A_{01}-\I$, and $A_{11}-2\I$ vanish identically on the orthogonal complement of the two-dimensional subspace $V_a = \operatorname{span}\{\ket{a}, \ket{-a}\}$. Diagonalizing directly in the orthonormal even/odd cat basis $\ket{\Cset_\pm(a)} = (\ket{a}\pm\ket{-a})/\sqrt{2(1\pm g)}$ with overlap $g := \braket{-a}{a} = \ee^{-2a^2}$ yields three exact zero-truncation ceilings (Fig.~\ref{fig:fig5}(a)): the \texttt{off/off} ceiling $\lambda_{\max}(A_{00}) = 1 + \ee^{-2a^2}$ is uniquely attained by the even cat state $\ket{\Cset_+(a)}$ with mean photon number $a^2\tanh(a^2)$ ($0.037020$ at $a=0.44$, where the $r=+0.18$ pilot reaches $99.97\%$ of the quantum limit); the \texttt{off/on} ceiling $\lambda_{\max}(A_{01}) = 1 + \sqrt{1 - \ee^{-4a^2}}$ ($1.734180$ at $a=0.44$) is uniquely attained by $\ket{\psi_{01}^*} = \frac{1}{\sqrt{2}}(\ket{\Cset_+(a)} + \ket{\Cset_-(a)})$ with exact energy $a^2\coth(2a^2)$ ($0.524741$ at $a=0.44$); and the \texttt{on/on} ceiling $\lambda_{\max}(A_{11}) = 2$ is attained on $V_a^\perp$ by the three-level dark state $\ket{\chi_a}$ of Eq.~\eqref{eq:darkstate} with energy $4/(a^4+2)$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig5_quantum_ceilings_audit.pdf}
+\caption{\textbf{Exact zero-truncation ideal quantum ceilings and finite-Fock SDP tail audit.}
+\textbf{(a)}~Exact ideal ($\eta=1, \nu=0$) quantum ceilings (\texttt{on/on} $=2$ by 3-level dark state $\ket{\chi_a}$, \texttt{off/on} $=1+\sqrt{1-\ee^{-4a^2}}$, \texttt{off/off} $=1+\ee^{-2a^2}$ by even cat $\ket{\Cset_+(a)}$) compared against exact classical bounds $S_2^{\Cset}(a)$ at matching state energies.
+\textbf{(b)}~At flagship $a = 1.15, \eta = 1.0, \nbar = 0.22$, the compressed Fock SDP $h_{\Qset,N}(P_N A P_N)$ converges by $N = 15$ ($1.792833$, gap $\le 2.2\times 10^{-15}$), while the gentle-projection tail remainder $R_N(2) = 2(\sqrt{\delta_N} + \delta_N/2)$~\cite{Winter1999} decays as $O(N^{-1/2})$ and remains $+0.0673$ at $N = 200$.}
+\label{fig:fig5}
+\end{figure}
+
+For general $\eta < 1$ or $\nbar < 4/(a^4+2)$, projecting onto the finite Fock subspace $\mathcal{H}_N = \operatorname{span}\{\ket{0},\dots,\ket{N}\}$ with projector $P_N$ and applying Winter's gentle-projection trace-norm lemma~\cite{Winter1999} bounds the infinite-dimensional quantum support function by
+\begin{align}\label{eq:fock-sdp-tail}
+h_{\Qset_{\nbar}}(A) &\le h_{\Qset_{\nbar}, N}(P_N A P_N) + R_N(m), \\
+R_N(m) &:= m\min\bigl\{1,\ \sqrt{\delta_N} + \delta_N/2\bigr\}, \qquad
+\delta_N := \min\Bigl(1, \frac{\nbar}{N+1}\Bigr), \nonumber
+\end{align}
+where $0 \preceq A \preceq m\I$. As quantified in Fig.~\ref{fig:fig5}(b) and Table~\ref{tab:fock-tail} (Appendix~\ref{app:fock-audit}), although the compressed Fock SDP dual stabilizes by $N = 15$ ($1.792833$, finite-$N$ SDP gap $\le 2.22\times 10^{-15}$), the generic $O(N^{-1/2})$ tail remainder $R_N(2)$ still adds $+0.067262$ at $N = 200$. Keeping our classical certification thresholds strictly exact (zero Fock cutoff) while reporting zero-truncation ideal quantum ceilings ensures that every nonclassicality certificate in this work is free of Fock-truncation artifacts.
+
+\begin{table}[t]
+\centering
+\caption{\textbf{Positioning of the present energy-constrained majorization protocol vs.\ Kovtoniuk--Bohmann--Semenov~\cite{Kovtoniuk2026}.}}
+\label{tab:kov2026-comp}
+\small
+\begin{tabular}{@{}p{0.21\textwidth}p{0.35\textwidth}p{0.38\textwidth}@{}}
+\toprule
+Feature & Kovtoniuk \emph{et al.} (PRA 2026)~\cite{Kovtoniuk2026} & Present Work \\
+\midrule
+Measurement model & Variable-transmittance attenuation channel (no LO displacement). & Two-setting displaced on/off detection with $(a_+,a_-,\delta_\phi,\eta_+,\eta_-,\nu_+,\nu_-)$. \\
+Energy information & Unconstrained classical convex hull. & Energy-constrained $\Cset_{\nU}$ + bright-tail no-go + tap-beam $\nU$ protocol. \\
+Calibration robustness & Worst-case classical bound over transmittance calibration intervals. & High-precision $B_2^{\rm robust}(\Theta,\nU)$ via exact reductions + decoupled $C^2$ dual (dual-gap audit $U-L \le 1.31 \times 10^{-12}$ in \texttt{float64}). \\
+Finite-sample statistics & Asymptotic Gaussian $1\sigma$ error bars on linear inequalities. & Distribution-free exact Clopper--Pearson / Hoeffding LCBs + $\delta_{\rm tot} = \delta_{\rm stat}+\delta_{\rm cal}+\delta_E$. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:kov2026-comp} contrasts our protocol directly with recent variable-transmittance single-detector tests~\cite{Kovtoniuk2026}. In summary, pairing an independently certified pre-displacement energy bound $\tr(\rho\hat n) \le \nU$ with two opposite displaced threshold-detector settings resolves the infinite-dimensional collapse of binary direct-sum majorization while preserving minimal binary hardware. Physically, the witness translates sub-vacuum quadrature fluctuations of squeezed light ($u < 1$) and phase-space interference fringes of optical cat states directly into two-point Husimi $Q$-function majorization violations, achieving zero sorting penalty on the active click branch, unifying Shannon, Tsallis, and R\'enyi entropy bounds, and remaining experimentally practical under realistic $2\%$ calibration drift and a few thousand detection pulses.
+
+Three natural scope boundaries and future directions stand out. First, $W_2 > 0$ is strictly a \emph{sufficient} nonclassicality certificate: nonviolation never implies classicality, and for asymmetric click settings ($q_+ \neq q_-$) full outcome-resolved convex-hull membership can outperform sorted majorization. Second, tighter operator-adapted spectral tail bounds beyond generic trace-norm gentle projection~\eqref{eq:fock-sdp-tail} remain an open mathematical problem for lossy ($\eta < 1$) quantum majorization envelopes~\cite{YangQiaoOptimization2026}. Third, our single-mode protocol opens natural extensions to continuous-variable steering, multimode entangled threshold networks, and laboratory demonstrations with standard $\approx 3.5\;\mathrm{dB}$ squeezed-vacuum sources and tap-beam power monitors.
+
+\section*{Data and Code Availability}
+All analytical solvers, $C^2$ dual routines, Fock-space Kraus-channel tests (54 unit tests passing), CSV datasets, and plotting scripts reproducing every number, table, and figure in this manuscript are publicly available at \url{https://github.com/RuiZhu1/quantum-light-majorization} and can be executed end-to-end via \texttt{python run\_all.py}.
+
+\section*{Acknowledgments}
+We acknowledge helpful discussions with Gilad Gour on binary direct-sum majorization and support from Guangdong Technion -- Israel Institute of Technology.
+
+% ===========================================================================
+\appendix
+\renewcommand{\thetable}{A\arabic{table}}
+\setcounter{table}{0}
+
+\section{Exact Classical Duality, Concavity Thresholds, and Attainment Proofs}\label{app:classical-dual}
+% ===========================================================================
+
+\subsection{2D-to-1D Reduction, Strong Duality, and Two-Point Sufficiency}\label{app:strong-duality}
+For each branch $k \in \{0, 1, 00, 01, 11\}$, monotonicity of $x \mapsto \ee^{\pm 2bx}$, $x \mapsto \sinh(2bx)$, and $\abs{x} \mapsto \cosh(2bx)$ on $[-\sqrt{s}, +\sqrt{s}]$ yields Eqs.~\eqref{eq:g0-g1}--\eqref{eq:g11}. Pushing any 2D probability measure $\mu \in \Pset(\mathbb{C})$ forward onto $s = \eta\abs{\beta}^2 \ge 0$ does not increase mean energy, and lifting any 1D measure $\sigma \in \Pset([0,\infty))$ onto the maximizing ray gives the exact 1D moment problem
+\begin{equation}\label{eq:1d-moment}
+h_k(E) = \sup\left\{\int_0^\infty g_k(s)\,\dd\sigma(s) : \sigma \in \Pset([0,\infty)),\ \int_0^\infty s\,\dd\sigma(s) \le E\right\},
+\end{equation}
+with Lagrangian dual $D_k(E) := \inf_{\lambda \ge 0}[\lambda E + \phi_k(\lambda)]$ and $\phi_k(\lambda) := \sup_{s \ge 0}[g_k(s) - \lambda s]$.
+
+Weak duality $h_k(E) \le D_k(E)$ holds for every $E \ge 0$. At $E = 0$, the only feasible measure is $\delta_0$, giving $h_k(0) = g_k(0)$; conversely, for any $\varepsilon > 0$ picking $\delta > 0$ with $g_k(s) \le g_k(0) + \varepsilon$ on $[0,\delta]$ and $\lambda \ge \max(0, (2-g_k(0))/\delta)$ forces $g_k(s) - \lambda s \le g_k(0)$ for $s \ge \delta$, so $D_k(0) = g_k(0)$. For $k \in \{1, 11\}$, direct differentiation yields $g_k'(s) > 0$ and $g_k''(s) < 0$ globally on $(0,\infty)$, so $\lambda^* = g_k'(E)$ certifies strong duality $h_k(E) = D_k(E) = g_k(E)$ and unique one-point attainment $\delta_E$. For $k \in \{0, 00, 01\}$, each $g_k$ has a unique global maximizer $s_{\max} = x_{\max}^2$ (namely $x_{\max} = b$ for $g_0$, $x_{\max} = x_0 \in [0,b)$ solving $x_0 = b\tanh(2bx_0)$ for $g_{00}$, and $x_{\max} = x_* > b$ solving $(x_*+b)\ee^{-4bx_*} = x_* - b$ for $g_{01}$) with $g_k'(s) < 0$ strictly on $(s_{\max},\infty)$. Thus $\phi_k(\lambda) = \max_{s\in[0,s_{\max}]}[g_k(s)-\lambda s]$ with zero tail truncation error, and $h_k(E) = g_k(s_{\max})$ ($\lambda^* = 0$) for $E \ge s_{\max}$. For $0 < E < s_{\max}$, Carath\'eodory's theorem on the compact convex hull $\conv\{(s,g_k(s)) : s \in [0, s_{\max}]\}$ yields two-point attainment $\sigma^* = (1-p)\delta_{s_1} + p\delta_{s_2}$, while any supergradient $\lambda^* \in \partial \widehat{g}_k(E)$ certifies $h_k(E) = D_k(E) = \widehat{g}_k(E)$.
+
+\subsection{Exact Branch Concavity Thresholds}\label{app:concavity}
+Writing $G(x) = g(x^2)$ ($x = \sqrt{s} > 0$), $g''(s) = [x G''(x) - G'(x)]/(4x^3)$, so $\sgn g''(s) = \sgn[x G''(x) - G'(x)]$.
+
+For $g_0(s) = \kappa\ee^{-(x-b)^2}$ on $(0,b)$, $\frac{4x^3}{\kappa\ee^{-(x-b)^2}}g_0''(s) = 2[2x(b-x)^2 - b]$. On $[0,b]$, $2x(b-x)^2$ achieves its unique maximum $\frac{8}{27}b^3$ at $x = b/3$; hence $g_0'' \le 0$ on $(0,b^2]$ iff $b^2 \le \frac{27}{8}$ ($b_{\rm crit,0} = \sqrt{27/8} \approx 1.837117$). For $b > b_{\rm crit,0}$, $\widehat{g}_0$ has a unique interior bitangent segment $[s_L, s_R] \subset (0, b^2)$.
+
+For $g_{01}(s)$ on $(0, x_*]$, $\frac{4x^3}{\kappa\ee^{-(x-b)^2}}g_{01}''(s) = 2[(2x(x-b)^2 - b) - (2x(x+b)^2 + b)\ee^{-4bx}]$. On $(b, x_*]$, $g_{01}' \ge 0$ implies $(x+b)\ee^{-4bx} \ge x-b > 0$; substituting this yields $[2x(x-b)^2-b] - (2x(x+b)^2+b)\ee^{-4bx} \le -4bx(x-b) - b(1+\ee^{-4bx}) < 0$ for all $b > 0$. For $x \in (0, b]$, set $x = \alpha b$ ($\alpha \in (0,1]$) and $t := b^2$, so that $\frac{2x^3}{b\kappa\ee^{-(x-b)^2}} g_{01}''(s) = \Phi(\alpha, t) := [2\alpha(1-\alpha)^2 t - 1] - [2\alpha(1+\alpha)^2 t + 1]\ee^{-4\alpha t}$. Differentiating with respect to $t$ gives
+\begin{equation*}
+\partial_t \Phi(\alpha, t) = 2\alpha\Bigl[(1-\alpha)^2 + \bigl((4\alpha t - 1)(1+\alpha)^2 + 2\bigr)\ee^{-4\alpha t}\Bigr].
+\end{equation*}
+For every $t \ge 1$ and $\alpha \in (0,1)$, if $4\alpha t \ge 1$ then $(4\alpha t - 1)(1+\alpha)^2 + 2 \ge 2 > 0$, whereas if $4\alpha t < 1$ then $\alpha < \frac{1}{4}$ and $2 - (1+\alpha)^2 > \frac{7}{16} > 0$; hence $\partial_t\Phi(\alpha,t) > 2\alpha(1-\alpha)^2 > 0$ strictly everywhere on $(0,1) \times [1,\infty)$. Let $M(t) := \max_{\alpha \in [0,1]} \Phi(\alpha, t)$. Since $\Phi(0,t) = -2$, $\Phi(1,t) < -1$, and $\Phi(\frac{1}{3},t) \ge \Phi(\frac{1}{3},\frac{27}{8}) = -5\ee^{-9/2} > -1$ for all $t \ge \frac{27}{8}$, any maximizer belongs to the compact interior $(0,1)$, making $M(t)$ continuous and strictly increasing on $[\frac{27}{8},\infty)$. At $t = \frac{27}{8}$, $\max_{\alpha\in[0,1]} 2\alpha(1-\alpha)^2 t = 1$ gives $M(\frac{27}{8}) < 0$ (indeed $g_{01}'' < 0$ strictly on $(0, b^2]$ for all $t \le \frac{27}{8}$). At $t = 4$, $\Phi(\frac{1}{3}, 4) = \frac{5}{27} - \frac{155}{27}\ee^{-16/3} > 0$ (since $\ee^{16/3} > 207 > 31$), so $M(4) > 0$. By the intermediate-value theorem and strict monotonicity, $M(t)$ possesses a unique zero $b_{\rm crit,01}^2 \in (\frac{27}{8}, 4)$ ($b_{\rm crit,01} \approx 1.874331$), proving that $g_{01}$ is concave on $[0, x_*^2]$ if and only if $b \le b_{\rm crit,01}$. Moreover, for $b > b_{\rm crit,01}$, $g_{01}(s) \sim 1 + 4b\kappa\ee^{-b^2}\sqrt{s}$ near $0$ gives $g_{01}''(0^+) = -\infty$, while $g_{01}'' < 0$ on $[b^2, x_*^2]$, so $\widehat{g}_{01}$ strictly requires two-point mixtures on interior bitangent bridges $[s_L, s_R] \subset (0, b^2)$.
+
+For $g_{00}(s)$ when $2b^2 > 1$, set $z := 2bx > 0$ and $\tilde u := 1/b^2 \in (0,2)$:
+\begin{equation}\label{eq:Qz-def}
+\frac{4x^3 \ee^{x^2+b^2}}{\kappa\cosh z}\,g_{00}''(s) = z^3\left[\tilde u^2 - \frac{4\tanh z}{z}\,\tilde u + \frac{4(z-\tanh z)}{z^3}\right] =: z^3 Q_z(\tilde u).
+\end{equation}
+As $z \to 0^+$, $Q_0(\tilde u) = \tilde u^2 - 4\tilde u + \frac{4}{3}$ vanishes at $\tilde u_1 := 2 - \frac{2\sqrt{6}}{3} = \frac{2}{3+\sqrt{6}}$ ($b_{\rm crit,00}^2 = \frac{3+\sqrt{6}}{2}$). For $\tilde u < \tilde u_1$, $g_{00}''(0^+) > 0$ and $\widehat{g}_{00}$ begins with a vacuum-to-coherent two-point mixture on $[0, x_R^2]$. Conversely, for $\tilde u \in [\tilde u_1, 2)$, on $(0, x_0]$ we have $\tilde u \le \frac{2\tanh z}{z}$, so $Q_z(\tilde u) \le Q_z(\tilde u_1)$, while $z = 2bx \le 2b^2\tanh z < \frac{2}{\tilde u_1} = 3 + \sqrt{6} \approx 5.4495$. Expanding $\sinh z$ and $\cosh z$ in Taylor series yields the positive series
+\begin{equation}\label{eq:sinh-pade}
+\sinh z\,(105 + 45z^2 + z^4) - z\cosh z\,(105 + 10z^2) = \sum_{k=4}^\infty \frac{16k(k-1)(k-2)(k-3)}{(2k+1)!}\,z^{2k+1} > 0 \quad (\forall z > 0),
+\end{equation}
+whence $\tanh z > \frac{z(105+10z^2)}{105+45z^2+z^4}$. Using $\tilde u_1^2 = 4\tilde u_1 - \frac{4}{3}$, direct algebra gives $(105+10z^2)(1+\tilde u_1 z^2) - (105+45z^2+z^4)(1+\frac{\tilde u_1^2}{4}z^2) = (14 - 35\tilde u_1)z^4 - \frac{\tilde u_1^2}{4}z^6 > 0$ for all $0 < z < \sqrt{4(14-35\tilde u_1)/\tilde u_1^2} \approx 5.856$ (covering $(0, 3+\sqrt{6}]$), proving $\tanh z > \frac{z+(\tilde u_1^2/4)z^3}{1+\tilde u_1 z^2} \iff Q_z(\tilde u_1) < 0$.
+
+\subsection{Global Click-Branch Dominance and Attainment Cascade}\label{app:universal}
+We verify strict dominance of $h_1$ and $h_{11}$ on every bitangent interval $[s_L, s_R]$ where Appendix~\ref{app:concavity} permits two-point mixtures, establishing Eqs.~\eqref{eq:universal-S1}--\eqref{eq:universal-S2}.
+
+For $A_{00}$ ($b^2 > \frac{3+\sqrt{6}}{2}$): for every $E \ge 0$, $h_{00}(E) \le \kappa(1+\ee^{-b^2})$ while $h_{11}(E) \ge 2 - 2\kappa\ee^{-b^2}$, so $h_{11}(E) - h_{00}(E) \ge 2 - \kappa(1 + 3\ee^{-b^2}) \ge 1 - 3\ee^{-(3+\sqrt{6})/2} > 0.80 > 0$.
+
+For $E_0$ ($b^2 > \frac{27}{8}$): on $[s_L, s_R] \subset (0, b^2)$, $h_0(E) \le g_0(s_R)$. The tangent intercept $I_0(s) := g_0(s) - s g_0'(s)$ increases on $(x_2^2, b^2)$ ($I_0' = -s g_0'' > 0$) and satisfies $I_0(s_R) = I_0(s_L) < g_0(s_L) < \kappa\ee^{-4b^2/9} < 0.224\kappa$ (since $x_1 < b/3$). Evaluating at $x = b - \frac{1}{2b} \in (x_2, b)$ gives $I_0(x^2) = \kappa\ee^{-1/(4b^2)}(\frac{1}{2} + \frac{1}{4b^2}) > 0.464\kappa > 0.224\kappa$, forcing $b - x_R > \frac{1}{2b}$. Hence $h_1(E) - h_0(E) > 1 - \kappa(\ee^{-b^2} + \ee^{-1/(4b^2)}) \ge 1 - (\ee^{-t} + \ee^{-1/(4t)}) > 0$ for all $t = b^2 \ge \frac{27}{8}$ (using $\ee^{-1/(4t)} < 1 - \frac{7}{32t}$ and $t\ee^{-t} < \frac{7}{32}$).
+
+For $A_{01}$, consider any $t = b^2 \ge \frac{27}{8}$ (independent of $b_{\rm crit,01}$), and write $\tilde g_{01}(s) := g_{01}(s) - 1$ with tangent intercept $\tilde I_{01}(s) := \tilde g_{01}(s) - s \tilde g_{01}'(s)$. Differentiating $\Phi(\alpha,t)$ from Appendix~\ref{app:concavity} with respect to $\alpha \in [\frac{1}{2}, 1]$ yields
+\begin{equation*}
+\partial_\alpha \Phi(\alpha,t) = 2t(1-\alpha)(1-3\alpha) + \bigl[4t(2\alpha(1+\alpha)^2 t + 1) - 2t(1+\alpha)(1+3\alpha)\bigr]\ee^{-4\alpha t}.
+\end{equation*}
+On $\alpha \in [\frac{1}{2}, 1]$, the second term is strictly below $4t(8t+1)\ee^{-2t} \le 378\,\ee^{-27/4} < 0.443$ (decreasing in $t \ge \frac{27}{8}$). Meanwhile, whenever $\Phi(\alpha,t) \ge 0$ we have $2t(1-\alpha)^2 \ge 2\alpha(1-\alpha)^2 t > 1 \implies 1 - \alpha > (2t)^{-1/2}$, so $2t(1-\alpha)(1-3\alpha) \le -t(1-\alpha) < -\sqrt{t/2} \le -\frac{3\sqrt{3}}{4} < -1.299$. Thus $\partial_\alpha\Phi(\alpha,t) < -0.85 < 0$ whenever $\alpha \in [\frac{1}{2},1]$ and $\Phi(\alpha,t) \ge 0$, forbidding any upcrossing of $\Phi(\cdot,t)$ from $\le 0$ to $> 0$ on $[\frac{1}{2}, 1]$. Consequently, any bitangent segment $[s_L, s_R]$ of $\widehat{g}_{01}$ must satisfy $s_L < b^2/4$ (else $g_{01}'' \le 0$ everywhere on $[s_L, x_*^2]$), whence $\tilde I_{01}(s_R) = \tilde I_{01}(s_L) < \tilde g_{01}(s_L) < \kappa\ee^{-t/4} \le \kappa\ee^{-27/32} < 0.4301\kappa$. Next, at $\alpha_0 := 1 - \frac{1}{2t} \in [\frac{23}{27}, 1)$ (corresponding to $x = b - \frac{1}{2b}$), $2\alpha_0(1-\alpha_0)^2 t - 1 = \frac{1}{2t}(1 - \frac{1}{2t}) - 1 < 0$ implies $\Phi(\alpha_0,t) < 0$, so by the no-upcrossing property $g_{01}'' < 0$ and $\tilde I_{01}' = -s g_{01}'' > 0$ strictly on $[(b - \frac{1}{2b})^2, x_*^2]$. Direct evaluation gives
+\begin{align*}
+\tilde I_{01}\!\left(\Bigl(b - \frac{1}{2b}\Bigr)^{\!2}\right)
+&= \kappa\!\left[\left(\frac{1}{2}+\frac{1}{4t}\right)\ee^{-1/(4t)} - \left(2t - \frac{1}{2} + \frac{1}{4t}\right)\ee^{-(4t-2+1/(4t))}\right] \\
+&> \kappa\!\left(\frac{1}{2} - 2t\,\ee^{-(4t-2)}\right) > 0.499\kappa
+\end{align*}
+for all $t \ge \frac{27}{8}$ (using $(\frac{1}{2}+y)\ee^{-y} > (\frac{1}{2}+y)(1-y) > \frac{1}{2}$ for $y = \frac{1}{4t} \le \frac{2}{27}$ and $2t\ee^{-(4t-2)} \le \frac{27}{4}\ee^{-11.5} < 7\times 10^{-5}$). Hence $\tilde I_{01}(s_R) < \tilde I_{01}((b - \frac{1}{2b})^2)$, forcing $b - x_R > \frac{1}{2b}$. Therefore, on any bitangent chord of $\widehat{g}_{01}$ with $t = b^2 \ge \frac{27}{8}$,
+\begin{align*}
+h_{11}(E) - h_{01}(E) &> 1 - (2\ee^{-t} + \ee^{-1/(4t)}) > \frac{1}{t^2}\!\left[\left(\frac{t}{4} - \frac{1}{32}\right) - 2t^2\ee^{-t}\right] \\
+&\ge \frac{0.8125 - 0.7796}{t^2} = \frac{0.0329}{t^2} > 0,
+\end{align*}
+since $\ee^{-y} < 1 - y + y^2/2$ at $y = \frac{1}{4t} > 0$, $\frac{t}{4} - \frac{1}{32}$ increases, and $2t^2\ee^{-t}$ decreases on $[\frac{27}{8}, \infty)$.
+
+Finally, for the attainment classification in Section~\ref{sec:classical-dual}, non-attainment of \texttt{E1/off\_off} when attained follows from $E \le x_0^2 \implies h_{00}(E) \ge h_{01}(E) \implies 2\kappa\ee^{-(\sqrt{E}+b)^2} \ge 1 \implies h_1(E) \le \frac{1}{2} < h_0(E)$. Analytically, \texttt{E0/off\_off/attained} vanishes iff $\nu \ge \nu_2 := \ln 2 - \frac{1}{2} \approx 0.1931$, and for $\nu \ge \ln 2$ ($\kappa \le \frac{1}{2}$), $h_1(E) > \frac{1}{2} \ge h_0(E)$ and $h_{11}(E) > 1 \ge h_{00}(E)$; with $x_1 = \min(x_*, \sqrt{E})$ and $z = 2bx_1 > 0$, AM--GM ($b^2+E \ge z$) gives $h_{11}(E) - h_{01}(E) \ge 1 - \kappa[2 - (1-\ee^{-z})^2] > 1 - 2\kappa \ge 0$, leaving \texttt{E1/on\_on/non\_attained} everywhere (note that strong dark counts $\nu \ge \ln 2$ can activate \texttt{on/on} even inside $2b^2 \le 1$). The vanishing thresholds for \texttt{E0/on\_on/non\_attained} and \texttt{E1/off\_on/non\_attained} are analytically defined by the variational equations $\nu_1 := \sup\{\nu > 0 : \exists\,(b,E)\in(0,\infty)^2\ \text{with}\ h_0 > h_1,\ h_{11} > \max(h_{00},h_{01})\} \approx 0.0969$ (at $(b,\sqrt{E}) \approx (0.3939, 1.1178)$) and $\nu_3 := \ln(\max_{b>0}[2\ee^{-(b^2+x_*(b)^2)} + \ee^{-(x_*(b)-b)^2} - \ee^{-(x_*(b)+b)^2}]) \approx 0.4676$ (at $b \approx 0.4377$), while numerical sampling of the $(b,E)$ plane yields the numerically resolved phase cascade $9$ ($0<\nu<\nu_1$), $8$ ($\nu_1<\nu<\nu_2$), $7$ ($\nu_2 \le \nu < \nu_3$), $6$ ($\nu_3 < \nu < \ln 2$), and $1$ ($\nu \ge \ln 2$).
+
+% ===========================================================================
+\section{Asymmetric Calibration-Box Duality, Phase Monotonicity, and Corner Proofs}\label{app:calibration}
+% ===========================================================================
+
+For $\theta = (a_+, a_-, \delta_\phi, \eta_+, \eta_-, \nu_+, \nu_-)$ and $\beta = \sqrt{s}\,\ee^{\ii\varphi}$ ($s = \abs{\beta}^2$), define $\kappa_\pm = \ee^{-\nu_\pm}$, $C_\pm(s) = \kappa_\pm\ee^{-\eta_\pm(s+a_\pm^2)}$, and $B_\pm(s) = 2\eta_\pm a_\pm\sqrt{s} \ge 0$, so $q_+(\varphi) = C_+\ee^{-B_+\cos\varphi}$ and $q_-(\varphi;\delta_\phi) = C_-\ee^{B_-\cos(\varphi-\delta_\phi)}$. At fixed $s > 0$ and $\delta_\phi = 0$, writing $z = \cos\varphi \in [-1,1]$, $\partial_z f_{01} = B_- C_-\ee^{B_- z} + B_+ C_+\ee^{-B_+ z} > 0$ gives $z^* = +1$ ($z^* = -1$ for $f_{10}$), while $\partial_z^2 f_{00} = B_+^2 C_+\ee^{-B_+ z} + B_-^2 C_-\ee^{B_- z} > 0$ and $\partial_z^2 f_{11} = -\partial_z^2 f_{00} < 0$ yield $z^* \in \{-1,+1\}$ for \texttt{off/off} and the unique interior \texttt{on/on} maximizer
+\begin{equation}\label{eq:zstar-onon}
+z^*(s) = \clip\!\left(\frac{\ln(C_+(s) B_+(s)) - \ln(C_-(s) B_-(s))}{B_+(s) + B_-(s)},\ -1,\ 1\right), \quad
+\beta^*(s) = \sqrt{s}\Bigl(z^*(s) \pm \ii\sqrt{1-z^*(s)^2}\Bigr).
+\end{equation}
+
+For general asymmetric parameters at $s > 0$ and $\delta := \abs{\delta_\phi} \in (0, \pi/2]$ (by $\varphi \mapsto -\varphi$, every circle maximum depends on $\delta_\phi$ only through $\delta$), consider two exact reflections on $[-\pi,\pi)$: first, $\varphi \mapsto -\varphi$ fixes $q_+$ while $\cos(-\varphi-\delta)-\cos(\varphi-\delta) = -2\sin\varphi\sin\delta$, so $q_-(\varphi;\delta) > q_-(-\varphi;\delta)$ on $(0,\pi)$ and reversed on $(-\pi,0)$; second, $\varphi \mapsto 2\delta-\varphi$ fixes $\cos(\varphi-\delta)$ (hence $q_-$) while $\cos(2\delta-\varphi)-\cos\varphi = 2\sin\delta\sin(\varphi-\delta)$, so $q_+(2\delta-\varphi) > q_+(\varphi)$ on $(\delta-\pi,\delta)$ and reversed on $(-\pi,\delta-\pi)\cup(\delta,\pi)$. Comparing reflected pairs and ruling out the fixed points $\{0,\pi,\delta,\delta-\pi\}$ via $\partial_\varphi f_A \neq 0$ (since $\sin\delta > 0$) confines every circle maximizer $\varphi^*$ strictly to an open arc on which $\partial_\delta f_A(\varphi^*;\delta) = \pm B_- q_-(\varphi^*;\delta)\sin(\varphi^*-\delta)$ has constant strict sign: for \texttt{off/off} ($f_{00} = q_+ + q_-$), $\varphi^* \in (\delta,\pi) \implies \sin(\varphi^*-\delta) > 0 \implies \partial_\delta f_{00} > 0$; for \texttt{on/on} ($f_{11} = 2 - q_+ - q_-$), $\varphi^* \in (\delta-\pi,0) \implies \sin(\varphi^*-\delta) < 0 \implies \partial_\delta f_{11} = -B_- q_-\sin(\varphi^*-\delta) > 0$; for \texttt{off/on} ($f_{01} = 1 + q_- - q_+$), $\varphi^* \in (0,\delta) \implies \sin(\varphi^*-\delta) < 0 \implies \partial_\delta f_{01} < 0$; and for \texttt{on/off} ($f_{10} = 1 + q_+ - q_-$), $\varphi^* \in (-\pi,\delta-\pi) \implies \sin(\varphi^*-\delta) > 0 \implies \partial_\delta f_{10} < 0$. By Danskin's envelope theorem (and continuity down to $\delta = 0$), $\max_\varphi f_A(\varphi;\delta)$ is strictly increasing on $[0,\delta_{\phi,\max}]$ for \texttt{off/off} and \texttt{on/on} (giving Eq.~\eqref{eq:onon-dphi} on the symmetric bisector $\varphi^* = \delta_\phi/2 - \pi/2$) and strictly decreasing for \texttt{off/on} and \texttt{on/off} (peaking at $\delta_\phi = 0$).
+
+Single-setting branches $E_0(j;\theta)$ and $E_1(j;\theta)$ are monotone in $(a_j,\eta_j,\nu_j)$, reducing $S_1^{\rm robust}(\Theta,\nU)$ to exact corners $(a_j^L,\eta_j^L,\nu_j^L,\nU)$ and $(a_j^U,\eta_j^U,\nu_j^U,\nU)$. Cross branches reduce analytically in $(\nu_+,\nu_-,\delta_\phi)$ to $(\nu_+^L,\nu_-^L,\delta_{\phi,\max})$ (\texttt{off/off}), $(\nu_+^U,\nu_-^U,\delta_{\phi,\max})$ (\texttt{on/on}), $(\nu_+^U,\nu_-^L,0)$ (\texttt{off/on}), and $(\nu_+^L,\nu_-^U,0)$ (\texttt{on/off}), leaving a four-dimensional sub-box $B = B_+ \times B_-$ with $B_\pm = [a_\pm^L,a_\pm^U]\times[\eta_\pm^L,\eta_\pm^U]$.
+
+For worst-case quantum signal evaluation on any centered squeezed thermal state $\rho(r,n_{\rm th},T)$, write $u(\eta)=1+c_u\eta$ and $w(\eta)=1+c_w\eta$ with $c_{u,w} = \frac{T}{2}[(2n_{\rm th}+1)\ee^{\pm 2r}-1]$. Under $\alpha_- = -a_-\ee^{\ii\delta_\phi}$, Eq.~\eqref{eq:sq-noclick} generalizes to
+\begin{equation*}
+q_-(\theta) = \frac{\ee^{-\nu_-}}{\sqrt{u(\eta_-)w(\eta_-)}}\exp\!\left(-\eta_- a_-^2\!\left[\frac{\cos^2\delta_\phi}{u(\eta_-)} + \frac{\sin^2\delta_\phi}{w(\eta_-)}\right]\right),
+\end{equation*}
+which decreases strictly in $a_-$ and $\nu_-$, obeys $\sgn\partial_{\abs{\delta_\phi}}q_- = -\sgn(r)$ via $\sgn(u-w)=\sgn(r)$, and decreases strictly in $\eta_-\in(0,1]$ because $\partial_\eta(\frac{\eta}{1+c\eta}) = (1+c\eta)^{-2} > 0$ and $\partial_\eta(uw) = c_u+c_w+2c_uc_w\eta$ is affine in $\eta$ with nonnegative endpoints $c_u+c_w = 2\tr(\rho\hat n)\ge 0$ (at $\eta=0$) and $c_u+c_w+2c_uc_w = \frac{1}{2}[(1+2c_u)(1+2c_w)-1] \ge \frac{1}{2}[(1-T+T)^2-1] = 0$ (at $\eta=1$, using $\cosh(2r)\ge 1$ and $2n_{\rm th}+1\ge 1$). Thus $[q_\pm^{\min}(\Theta), q_\pm^{\max}(\Theta)]$ and $\inf_{\theta\in\Theta} L_2(\rho,\theta)$ follow from exact box corners without heuristics.
+
+On any 4D sub-box $B = B_+ \times B_-$, $q_+(\beta;\theta_+)$ and $q_-(\beta;\theta_-)$ separate across $B_+ \times B_-$, yielding closed-form pointwise bounds $q_\pm^{\min}(\beta;B_\pm)$, $q_\pm^{\max}(\beta;B_\pm)$, and hence $F_A^B(\beta) := \sup_{\theta \in B} f_A(\beta;\theta)$. Specifically, writing $\beta = (\xi,\zeta) = \rho_r(\cos\varphi,\sin\varphi)$ with $a_{+,\rm min}(\xi) := \clip(-\xi, a_+^L, a_+^U)$, $\cos_{\max}(\varphi) := \cos(\max(0, \abs{\varphi}-\delta_{\phi,\max}))$, and $a_{-,\rm min}(\rho_r,\varphi) := \clip(\rho_r\cos_{\max}(\varphi), a_-^L, a_-^U)$, the exact upper bounds are $q_+^{\max}(\beta;B_+) = \kappa_+\exp[-\eta_+^L((\xi+a_{+,\rm min})^2+\zeta^2)]$ and $q_-^{\max}(\beta;B_-) = \kappa_-\exp[-\eta_-^L(\rho_r^2 + a_{-,\rm min}^2 - 2\rho_r a_{-,\rm min}\cos_{\max}(\varphi))_+]$, while the endpoint maxima over $\{a_\pm^L, a_\pm^U\}$ at $\eta_\pm^U$ and $\cos_{\min}(\varphi) := \cos(\min(\pi, \abs{\varphi}+\delta_{\phi,\max}))$ yield $q_\pm^{\min}(\beta;B_\pm)$. By weak minimax duality,
+\begin{equation}\label{eq:decoupled-dual}
+\sup_{\theta\in B} h_{\Cset_{\nU}}(A(\theta)) \le \inf_{\lambda \ge 0}\left[\lambda \nU + \sup_{s \ge 0}\Bigl(\max_{\abs{\beta}^2=s} F_A^B(\beta) - \lambda s\Bigr)\right] =: U_A(B).
+\end{equation}
+We compute $\max_{\abs{\beta}=\rho_r} F_A^B(\beta)$ analytically on the real axis for \texttt{off/on}, \texttt{on/off}, and $\delta_\phi=0$ \texttt{off/off}, and via an unclipped adaptive $C^2$ angular branch-and-bound routine ($32$ initial cells, $8$-way subdivision up to $12$ levels targeting $10^{-12}$, without artificial cap clipping) for \texttt{on/on} and $\delta_\phi > 0$ \texttt{off/off} using the overflow-free curvature bound $M_{\phi,2}(\rho_r;B) = \kappa_+\ee^{-\eta_+^{\rm ext} d_+(\rho_r)^2}(B_{+,\max}+B_{+,\max}^2) + \kappa_-\ee^{-\eta_-^{\rm ext} d_-(\rho_r)^2}(B_{-,\max}+B_{-,\max}^2)$, where $B_{\pm,\max} = 2\eta_\pm^{\rm ext} a_\pm^U \rho_r$, $d_\pm(\rho_r) = \operatorname{dist}(\rho_r, [a_\pm^L, a_\pm^U])$, and $\eta_\pm^{\rm ext} = \eta_\pm^L$ (\texttt{off/off}) or $\eta_\pm^U$ (\texttt{on/on}). The outer radial dual $\sup_{\rho_r \ge 0}[G_A^B(\rho_r) - \lambda \rho_r^2]$ is certified by an unclipped adaptive $C^2$ radial branch-and-bound routine with curvature bound $M_{r,2} = 2(\kappa_+\eta_+^U + \kappa_-\eta_-^U) + 2\lambda$, extending dynamically to $\rho_{\rm eff} = \max(\rho_{\rm cut}, \sqrt{\max(0, T_A - G_A^B(0))/\lambda} + 0.05)$ ($\lambda > 0$) with $\rho_{\rm cut} = \max(a_+^U, a_-^U) + 5.5/\sqrt{\min(\eta_+^L,\eta_-^L)}$ and branch asymptotic tail caps $T_{00} = 10^{-12}$, $T_{01} = T_{10} = 1 + 10^{-12}$, and $T_{11} = 2$. Subdividing the 4D sub-box with largest relaxation gap along its widest normalized coordinate in a max-heap, paired with feasible primal evaluations and explicit soundness check $U_A \ge L_A - 10^{-11}$, maintains $U_A - L_A \le 10^{-6}$ (numerical dual-gap audit $0 \le U_A - L_A \le 1.305 \times 10^{-12} \le 1.31 \times 10^{-12}$ across all $565$ boxes). All numerical evaluations execute in IEEE-754 \texttt{float64} arithmetic (high-precision numerical evaluation without directed-rounding interval arithmetic).
+
+% ===========================================================================
+\section{Self-Contained Proof of Direct-Sum R\'enyi Bounds}\label{app:renyi}
+% ===========================================================================
+
+Let $p_\pm(\rho) = (q_\pm, 1-q_\pm)$ and $v(\rho) = p_+(\rho) \oplus p_-(\rho) \prec \omega_{\Sset}$. Set $A := p_{+,1}^\alpha + p_{+,2}^\alpha$ and $B := p_{-,1}^\alpha + p_{-,2}^\alpha$, so $A + B = \sum_{i=1}^4 v_i(\rho)^\alpha$ and $H_\alpha(p_+) + H_\alpha(p_-) = \frac{1}{1-\alpha}\log_2(AB)$.
+
+For $0 < \alpha < 1$, $t \mapsto t^\alpha$ is concave on $[0,1]$, so $\sum_{i=1}^4 v_i^\alpha$ is Schur-concave and $v(\rho) \prec \omega_{\Sset}$ implies $A + B \ge \sum_{i=1}^4 \omega_{\Sset,i}^\alpha$. Moreover, $p_{\pm,j} \in [0,1] \implies p_{\pm,j}^\alpha \ge p_{\pm,j}$, so writing $A = 1+X$ and $B = 1+Y$ with $X,Y \ge 0$ gives $AB = 1 + X + Y + XY \ge A + B - 1 \ge \sum_{i=1}^4 \omega_{\Sset,i}^\alpha - 1 \ge 1$. Taking $\frac{1}{1-\alpha}\log_2(\cdot)$ (with $\frac{1}{1-\alpha} > 0$) establishes the first line of Eq.~\eqref{eq:renyi-bound}.
+
+For $1 < \alpha < \infty$, $t \mapsto t^\alpha$ is convex, so $\sum_{i=1}^4 v_i^\alpha$ is Schur-convex, giving $A + B \le \sum_{i=1}^4 \omega_{\Sset,i}^\alpha$. By the AM--GM inequality, $AB \le (\frac{A+B}{2})^2 \le (\frac{1}{2}\sum_{i=1}^4 \omega_{\Sset,i}^\alpha)^2$; since $\frac{1}{1-\alpha} < 0$, taking $\frac{1}{1-\alpha}\log_2(\cdot)$ reverses the inequality and proves the second line of Eq.~\eqref{eq:renyi-bound}.
+
+For $\alpha = \infty$, $H_\infty(p_+) + H_\infty(p_-) = -\log_2(M_+ M_-)$ and $M_+ M_- \le (\frac{M_+ + M_-}{2})^2 = (L_2(\rho)/2)^2 \le (S_2^{\Sset}/2)^2$; taking $-\log_2(\cdot)$ yields $H_\infty(p_+)+H_\infty(p_-) \ge -2\log_2(S_2^{\Sset}/2)$.
+
+% ===========================================================================
+\section{Analytic Chernoff--KL Tail Bound, Coupling Certification, and Statistical Audit Tables}\label{app:cp-tail}
+% ===========================================================================
+
+Given $q_\pm \in [0,1]$ and target threshold $B := B_2^{\rm robust} \in [1,2)$ with positive witness margin $1 + d_{+,0} + d_{-,0} > B$ ($d_{j,0} := \abs{q_j - \frac{1}{2}}$), we certify $\operatorname{power}_{\rm CP}(N) := \mathbb{P}(1 + d_+^{\rm LCB}(K_+;N) + d_-^{\rm LCB}(K_-;N) > B) \ge P_0$ ($P_0 = 0.99$) for \emph{all} integers $N \ge N_s^{\rm CP99}$ in two exact steps.
+
+First, to obtain an analytic Chernoff--KL tail threshold $N_{\rm tail}^{\rm KL}$, allocate targets $t_j := (B - 1)\frac{d_{j,0}}{d_{+,0}+d_{-,0}} \in [0, d_{j,0})$ ($j\in\{+,-\}$, $t_+ + t_- = B - 1$). Let $p_j := \min(q_j, 1-q_j)$ and $F_j := \min(K_j, N - K_j) \sim \mathrm{Bin}(N, p_j)$. By Beta symmetry, $d_j^{\rm LCB}(K_j;N) = \max(0, \frac{1}{2} - q_{\rm hi}^{\rm CP}(F_j;N))$ whenever $F_j \le N/2$, where $q_{\rm hi}^{\rm CP}(f;N)$ solves $\mathbb{P}_{Y\sim\mathrm{Bin}(N,q_{\rm hi})}(Y \le f) = \delta_{\rm stat}/4$. For each active setting ($t_j > 0$), set $p_{{\rm thr},j} := \frac{1}{2} - t_j \in (p_j, \frac{1}{2}]$. Choosing any $m_j \in (p_j, p_{{\rm thr},j})$, if $F_j/N \le m_j$ and $N\,D_{\rm KL}(m_j \,\|\, p_{{\rm thr},j}) > \ln(4/\delta_{\rm stat})$, Chernoff's bound gives $\mathbb{P}_{Y\sim\mathrm{Bin}(N,p_{{\rm thr},j})}(Y \le F_j) \le \ee^{-N D_{\rm KL}(m_j \| p_{{\rm thr},j})} < \delta_{\rm stat}/4$, forcing $q_{\rm hi}^{\rm CP}(F_j;N) < p_{{\rm thr},j} \implies d_j^{\rm LCB} > t_j$; simultaneously $\mathbb{P}(F_j/N > m_j) \le \ee^{-N D_{\rm KL}(m_j \| p_j)}$. Setting $m_j^*$ to equalize $N_j^{(1)} = \ln(4/\delta_{\rm stat})/D_{\rm KL}(m_j \| p_{{\rm thr},j})$ and $N_j^{(2)} = \ln(c_u/(1-P_0))/D_{\rm KL}(m_j \| p_j)$ ($c_u = 2$ if both $t_\pm > 0$, $1$ if one vanishes) guarantees $\operatorname{power}_{\rm CP}(N) \ge P_0$ strictly for \emph{all} $N \ge N_{\rm tail}^{\rm KL} := \max_j \lceil N_j^{(1)} \rceil + 1$.
+
+Second, on any integer block $[N_1, N_2] \subset [N_{\rm bin}, N_{\rm tail}^{\rm KL} - 1]$, for every $N \in [N_1, N_2]$ and fixed failure count $f$, $\mathbb{P}_{Y\sim\mathrm{Bin}(N,q)}(Y \le f)$ decreases in $N$ ($Y_{N_1} \preceq_{\rm st} Y_N$), so $q_{\rm hi}^{\rm CP}(f;N) \le q_{\rm hi}^{\rm CP}(f;N_1)$ and thus $d_j^{\rm LCB}(K_j;N) \ge \underline{d}_j(F_j; N_1) := \max(0, \frac{1}{2} - q_{\rm hi}^{\rm CP}(F_j;N_1))$ (vanishing safely if $f \ge N_1$). Since $\underline{d}_j(\cdot;N_1)$ is nonincreasing and $F_j^{(N)} \preceq_{\rm st} F_j^{(N_2)}$ for $N \le N_2$,
+\begin{equation*}
+\min_{N \in [N_1, N_2]} \operatorname{power}_{\rm CP}(N) \;\ge\; \mathbb{P}_{F_\pm \sim \mathrm{Bin}(N_2, p_\pm)}\!\Bigl(1 + \underline{d}_+(F_+; N_1) + \underline{d}_-(F_-; N_1) > B\Bigr).
+\end{equation*}
+Adaptive dyadic subdivision across $[N_{\rm bin}, N_{\rm tail}^{\rm KL} - 1]$ verifies every failing $N$ at single-point resolution ($\text{step}=1$) and certifies all passing intervals, returning $N_s^{\rm CP99}$ proven for all $N \ge N_s^{\rm CP99}$ (strictly returning none whenever $N_{\rm tail}^{\rm KL}$ exceeds the search budget, without truncation). When evaluating PMFs numerically with tail cutoff $10^{-13}$, omitted outer weights reduce $\operatorname{power}_{\rm CP}$ conservatively (preserving valid lower bounds), while classical Type-I audits add the exact omitted binomial mass explicitly.
+
+Regarding the Route~A tap-beam energy monitor of Eq.~\eqref{eq:tap-bound}, the observable $X_t \in [0, M_{\max}]$ may represent either a discrete per-pulse tapped photon count $X_t \in \{0,\dots,M_{\max}\}$ or a calibrated linear analog photodiode energy reading normalized to detected-photon units (with bounded electronic noise absorbed into $M_{\max}$, and any out-of-range saturation event aborting the run rather than clipping). When a prior second-moment bound $\operatorname{Var}(X_t) \le \sigma_{\rm tap}^2$ is justified alongside $X_t \le M_{\max}$, one-sided Bernstein's inequality replaces $M_{\max}\sqrt{\ln(1/\delta_E)/(2N_{\rm tap})}$ by $\sqrt{2\sigma_{\rm tap}^2 \ln(1/\delta_E)/N_{\rm tap}} + M_{\max}\ln(1/\delta_E)/(3N_{\rm tap})$: for $M_{\max} = 5$ and $\sigma_{\rm tap}^2 = 0.02$, this achieves the same $1.20\times$ energy slack ($\nU \le 0.218$) using $N_{\rm tap} = 2\times 10^5$ pulses ($100\times$ fewer pulses than Hoeffding). Tables~\ref{tab:energy-slack} and~\ref{tab:mc-audit} report the full energy-slack trade-off and $50{,}000$-trial Monte Carlo Type-I audit underlying Section~\ref{sec:calibration}.
 
 \begin{table}[t]
 \centering
@@ -485,63 +524,6 @@ Pilot $r=+0.18$ ($\eta=1.00, a^*_{\rm CP}=0.434$) & $+0.0014$ / $>2\!\times\!10^
 \end{tabular}}
 \end{table}
 
-\subsection{Distribution-Free Error Budget and Monte Carlo False-Positive Audit}\label{subsec:stats-budget}
-Let $K_+$ and $K_-$ denote the observed no-click counts over $N_s$ independent detection pulses at settings $\alpha_+$ and $\alpha_-$, with empirical frequencies $\widehat q_\pm = K_\pm/N_s$. Explicitly distinguishing parameter assumptions: (i) for \emph{stationary} repeated experiments with fixed unknown parameters $\theta_{\rm true} \in \Theta$, $K_\pm \sim \mathrm{Bin}(N_s, q_\pm)$ are exact independent binomial variables; (ii) under \emph{shot-to-shot parameter drift} $\theta_t \in \Theta$ across independent trials ($t=1,\dots,N_s$), $K_\pm$ are sums of independent non-identically distributed Bernoullis with means $\bar q_\pm = \frac{1}{N_s}\sum_t q_\pm(\theta_t)$ that remain covered by Hoeffding's inequality and convexity of $B_2^{\rm robust}(\Theta,\nU)$. Two distribution-free lower confidence bounds on $L_2(\rho) = 1 + \abs{q_+-\frac{1}{2}} + \abs{q_--\frac{1}{2}}$ at confidence $1 - \delta_{\rm stat}$ are:
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Hoeffding LCB~\cite{Hoeffding1963}:} $L_{2,\rm LCB}^{\rm Hoeff}(K_+,K_-) := 1 + \abs{\widehat q_+ - \frac{1}{2}} + \abs{\widehat q_- - \frac{1}{2}} - 2\epsilon_H$, where $\epsilon_H = \sqrt{\ln(4/\delta_{\rm stat})/(2N_s)}$ (valid both at fixed $\theta_{\rm true} \in \Theta$ and under independent non-stationary drift within $\Theta$).
-\item \textbf{Exact Clopper--Pearson LCB~\cite{ClopperPearson1934} (stationary i.i.d.\ sampling):} Letting $[q_{\pm,\rm lo}^{\rm CP}, q_{\pm,\rm hi}^{\rm CP}]$ be the two-sided Clopper--Pearson binomial confidence interval for $K_\pm \sim \mathrm{Bin}(N_s, q_\pm)$ at error $\delta_{\rm stat}/2$ (via exact Beta quantiles), set $d_\pm^{\rm LCB} := \max\bigl(0,\, q_{\pm,\rm lo}^{\rm CP} - \tfrac{1}{2},\, \tfrac{1}{2} - q_{\pm,\rm hi}^{\rm CP}\bigr)$ and $L_{2,\rm LCB}^{\rm CP}(K_+, K_-) := 1 + d_+^{\rm LCB} + d_-^{\rm LCB}$. When planning sample sizes, we enforce Chernick--Liu~\cite{ChernickLiu2002} sawtooth-stability ($N_s^{\rm CP99} = \min\{N_0 : \text{power}(N) \ge 0.99\ \forall N \ge N_0\}$), proved across \emph{all} $N \ge N_s^{\rm CP99}$ using the analytic Chernoff--KL tail threshold $N_{\rm tail}^{\rm KL}$ and stochastic-coupling block certification in Appendix~\ref{app:cp-tail} (where the $10^{-13}$ binomial numerical cutoff conservatively drops only positive mass for Type-II power while explicitly adding omitted tail probability for Type-I PMF checks).
-\end{enumerate}
-
-\begin{theorem}[Finite-Sample Soundness Under Calibration and Energy Uncertainty]\label{thm:finite-sample}
-Under the decision rule $L_{2,\rm LCB}(K_+, K_-; N_s, \delta_{\rm stat}) > B_2^{\rm robust}(\Theta, \nU)$, for any classical state $\rho \in \Cset$ and any experimental history with $\mathbb{P}(\theta_{\rm true} \notin \Theta) \le \delta_{\rm cal}$ and $\mathbb{P}(\tr(\rho\hat n) > \nU) \le \delta_E$ (assuming stationary i.i.d.\ trials for Clopper--Pearson, or independent trials inside $\Theta$ for Hoeffding),
-\begin{equation}\label{eq:union-budget}
-\mathbb{P}_{\rm classical}(\text{False Certification}) \le \delta_{\rm stat} + \delta_{\rm cal} + \delta_E =: \delta_{\rm tot}.
-\end{equation}
-If, in addition, the $2N_s$ main-detector trials are statistically independent of the auxiliary calibration and energy-monitoring data generating $(\Theta,\nU)$ (or for fixed deterministic $(\Theta,\nU)$), then conditioned on $\{\theta_{\rm true} \in \Theta\} \cap \{\tr(\rho\hat n) \le \nU\}$, the Type-I error rate is strictly $\le \delta_{\rm stat}$ for every $N_s \ge 1$.
-\end{theorem}
-\begin{proof}
-Immediate by a union bound over the three bad events $\{\theta_{\rm true} \notin \Theta\}$, $\{\tr(\rho\hat n) > \nU\}$, and $\{L_2(\rho,\theta_{\rm true}) < L_{2,\rm LCB}(K_+, K_-)\}$, together with $L_2(\rho,\theta_{\rm true}) \le B_2^{\rm robust}(\Theta, \nU)$ whenever all three good events hold; conditional soundness $\le \delta_{\rm stat}$ follows because statistical independence preserves the conditional binomial/Hoeffding law of $(K_+, K_-)$ on $\{\theta_{\rm true} \in \Theta\} \cap \{\tr(\rho\hat n) \le \nU\}$.
-\end{proof}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig4_calibration_and_stats.pdf}
-\caption{\textbf{Asymmetric calibration-box robustness, 50,000-trial Monte Carlo false-positive audit, and Clopper--Pearson shot economy.}
-\textbf{(a)}~Worst-case certified margin $W_2^{\rm rob,worst}(\Theta)$ across calibration uncertainty tiers: Nominal ($0\%$), $\Theta_1$ ($1\%$), $\Theta_2$ ($2\%$), and $\Theta_3$ ($5\%$). Flagship $r=-0.42$ ($\eta \in [0.90,1.00]$) and high-loss $r=-0.40$ ($\eta=0.70$) remain robustly positive throughout $\Theta_2$, whereas the $r=+0.18$ pilot collapses to $+0.0014$.
-\textbf{(b)}~50,000-trial Monte Carlo audit under $\Theta_2$: testing a classical boundary state against naive nominal $S_2^{\Cset}(\theta_{\rm nom})$ yields up to $100\%$ spurious false positives, whereas certified $B_2^{\rm robust}(\Theta_2)$ holds classical rejection $\le 0.008\% \ll \delta_{\rm stat} = 1\%$ while reaching $99\%$ exact quantum certification power at $1,727$ shots/setting ($r=-0.42, a^*_{\rm CP}=1.342, \eta=1.0$).
-\textbf{(c)}~Required shots per setting $N_s(a)$ showing the $4.45\times$ exact Clopper--Pearson speedup over Hoeffding and the calibration headroom gained by shifting from $a^*_{W_2}$ to $a^*_{\rm CP}$.}
-\label{fig:fig4}
-\end{figure}
-
-Table~\ref{tab:cal-tiers} audits all benchmarks across three asymmetric calibration boxes: $\Theta_1$ (tight: $\abs{\delta a}/a \le 1\%$, $\abs{\delta\eta}\le 0.005$, $\delta\nu \le 10^{-4}$, $\delta_{\phi,\max}=1^\circ$, $+5\%$ cap), $\Theta_2$ (realistic: $2\%, 0.01, 10^{-3}, 2^\circ, +10\%$ cap), and $\Theta_3$ (conservative: $5\%, 0.02, 5\times 10^{-3}, 5^\circ, +20\%$ cap). Note that Type-I soundness relies solely on the classical bound $B_2^{\rm robust}(\Theta,\nU)$; for the worst-case Type-II margins and shot counts $W_2^{\rm rob,worst}$ and $N_s^{\rm CP99,worst}$, $\inf_{\theta\in\Theta} L_2(\rho,\theta)$ is computed at its exact analytical corners for all squeezed thermal states (proved in Appendix~\ref{app:calibration}), whereas auxiliary non-Gaussian probes (Fock $\ket{1}$, cats, $\ket{0}+\ket{2}$) are minimized over $\Theta$ numerically via $11 \times 7 \times 5$ grid-seeded \texttt{L-BFGS-B} optimization. Crucially, shifting from $a^*_{W_2}$ to the statistical optimum $a^*_{\rm CP}$ provides a \emph{second, independent} advantage: moving to the gentler high-$a$ shoulder of the witness peak cuts calibration-box inflation $\Delta_{\rm cal}(\Theta_2) = B_2^{\rm robust} - S_2^{\Cset}(\theta_{\rm nom})$ (e.g.\ from $0.0394$ to $0.0298$ at $\eta=1.0$), reducing $\Theta_2$ worst-case shots by $2.46\times$ at $\eta=0.90$ ($7,448 \to 3,033$) and $6.92\times$ at $\eta=0.70$ ($91,402 \to 13,201$); re-optimizing the displacement directly against the $\Theta_2$ box ($a^*_{\rm robust,CP}$) lowers these budgets further to $1,630$ ($a=1.482, \eta=1.0$), $2,831$ ($a=1.577, \eta=0.9$), and $11,327$ ($a=1.767, \eta=0.7$). Table~\ref{tab:mc-audit} confirms via 50,000-trial Monte Carlo runs that naive nominal bounds cause $99.8\%$--$100\%$ spurious false positives at $N_s \ge 10{,}000$, while $B_2^{\rm robust}(\Theta_2)$ enforces Type-I control $\le 8 \times 10^{-5}$, and Table~\ref{tab:kov2026-comp} contrasts our protocol explicitly with Kovtoniuk \emph{et al.}~\cite{Kovtoniuk2026}.
-
-\begin{table}[t]
-\centering
-\caption{\textbf{Globally certified calibration-box audit across Nominal, $\Theta_1$ ($1\%$), $\Theta_2$ ($2\%$), and $\Theta_3$ ($5\%$).} Reports $W_2^{\rm rob}(\theta_{\rm nom}) / W_2^{\rm rob,worst}(\Theta)$ and worst-case shots ($N_s^{\rm CP99,worst}$ at $\delta_{\rm stat}=0.01$, $\delta_{\rm tot} = 0.02$ with $\delta_{\rm cal}=\delta_E=0.005$).}
-\label{tab:cal-tiers}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}lccccc@{}}
-\toprule
-Benchmark State & $a$ & Nominal $W_2$ ($N_s$) & $\Theta_1$ ($1\%$) & $\Theta_2$ ($2\%$) & $\Theta_3$ ($5\%$) \\
-\midrule
-Flagship $r=-0.42$ ($\eta=1.0$) & $1.150$ & $+0.1383$ ($630$) & $+0.1185 / +0.1038$ ($1,106$) & $+0.0989 / +0.0690$ ($2,473$) & $+0.0418 / -0.0330$ \\
-Flagship $r=-0.42$ ($\eta=1.0$) & $1.342$ & $+0.1168$ ($559$) & $+0.1017 / +0.0913$ (\textbf{904}) & $+0.0870 / +0.0657$ (\textbf{1,727})$^a$ & $+0.0487 / -0.0058$ \\
-Flagship $r=-0.42$ ($\eta=0.9$) & $1.191$ & $+0.1272$ ($798$) & $+0.0997 / +0.0839$ ($1,802$) & $+0.0731 / +0.0409$ ($7,448$) & $+0.0110 / -0.0689$ \\
-Flagship $r=-0.42$ ($\eta=0.9$) & $1.446$ & $+0.1033$ ($688$) & $+0.0863 / +0.0758$ (\textbf{1,259}) & $+0.0698 / +0.0483$ (\textbf{3,033})$^b$ & $+0.0293 / -0.0258$ \\
-High-loss $r=-0.40$ ($\eta=0.7$) & $1.308$ & $+0.1048$ ($1,334$) & $+0.0769 / +0.0585$ ($4,228$) & $+0.0498 / +0.0125$ ($91,402$) & $-0.0142 / -0.1050$ \\
-High-loss $r=-0.40$ ($\eta=0.7$) & $1.629$ & $+0.0859$ ($1,123$) & $+0.0681 / +0.0553$ (\textbf{2,669}) & $+0.0507 / +0.0246$ (\textbf{13,201})$^c$ & $+0.0079 / -0.0577$ \\
-Pilot $r=+0.18$ ($\nbar=0.50$) & $0.434$ & $+0.0292$ ($12,934$) & $+0.0214 / +0.0160$ ($42,912$) & $+0.0136 / +0.0014$ ($>2\times 10^6$) & $-0.0078 / -0.0431$ \\
-Fock $\ket{1}$ ($\eta=1.0$) & $0.433$ & $+0.0311$ ($11,334$) & $+0.0233 / +0.0129$ ($65,950$) & $+0.0156 / -0.0052$ (---) & $-0.0058 / -0.0518$ \\
-Opt.\ real odd cat ($c=1.35$) & $0.354$ & $+0.0911$ ($851$) & $+0.0661 / +0.0582$ ($1,985$) & $+0.0435 / +0.0276$ ($8,361$)$^*$ & $+0.0028 / -0.0316$ \\
-$\frac{1}{2}\ket{0}-\frac{\sqrt{3}}{2}\ket{2}$ ($\eta=1.0$) & $0.699$ & $+0.0638$ ($789$) & $+0.0598 / +0.0501$ ($1,331$) & $+0.0558 / +0.0361$ ($2,625$)$^{**}$ & $+0.0444 / -0.0008$ \\
-\bottomrule
-\end{tabular}}
-\par\vspace{2pt}\footnotesize\raggedright
-At $\Theta_2$-optimized displacements $a^*_{\rm robust,CP}$, worst-case shots drop further to $^a$\textbf{1,630} ($a=1.482$), $^b$\textbf{2,831} ($a=1.577$), $^c$\textbf{11,327} ($a=1.767$), $^*$\textbf{3,003} ($a=0.293$), and $^{**}$\textbf{1,896} ($a=0.816$).
-\end{table}
-
 \begin{table}[t]
 \centering
 \caption{\textbf{50,000-trial Monte Carlo Type-I false-positive audit under $\Theta_2$ ($\delta_{\rm stat}=0.01$)} for the boundary classical mixture $(\theta^*,\mu^*) \in \Theta_2 \times \Cset_{\nU}$ at nominal $a=1.15, \eta=1.0, \nbar=0.22$.}
@@ -561,57 +543,11 @@ $N_s$ & Naive Hoeff. & Naive CP & \textbf{Certified Rob.\ Hoeff.} & \textbf{Cert
 \end{tabular}
 \end{table}
 
-\begin{table}[t]
-\centering
-\caption{\textbf{Explicit positioning vs.\ Kovtoniuk--Bohmann--Semenov, Phys.\ Rev.\ A 113, 063726 (2026)~\cite{Kovtoniuk2026}.}}
-\label{tab:kov2026-comp}
-\small
-\begin{tabular}{@{}p{0.21\textwidth}p{0.35\textwidth}p{0.38\textwidth}@{}}
-\toprule
-Feature & Kovtoniuk \emph{et al.} (PRA 2026)~\cite{Kovtoniuk2026} & Present Work \\
-\midrule
-Measurement model & Variable-transmittance attenuation channel (no LO displacement). & Two-setting displaced on/off detection with $(a_+,a_-,\delta_\phi,\eta_+,\eta_-,\nu_+,\nu_-)$. \\
-Energy information & Unconstrained classical convex hull. & Energy-constrained $\Cset_{\nU}$ + no-go theorem (Prop.~\ref{prop:no-go}) + tap-beam $\nU$ protocol. \\
-Calibration robustness & Worst-case classical bound over transmittance calibration intervals. & Global $B_2^{\rm robust}(\Theta,\nU)$ via exact corner reductions + decoupled $C^2$ dual + branch-and-bound ($U-L \le 1.31 \times 10^{-12}$ in \texttt{float64}). \\
-Finite-sample statistics & Asymptotic Gaussian $1\sigma$ error bars on linear inequalities. & Distribution-free exact Clopper--Pearson / Hoeffding LCBs + $\delta_{\rm tot} = \delta_{\rm stat}+\delta_{\rm cal}+\delta_E$ for nonlinear Lorenz sums. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 % ===========================================================================
-\section{Certified Ideal Quantum Ceilings and Finite-Fock Truncation Audit}\label{sec:quantum-ceilings}
+\section{Finite-Fock SDP Truncation Audit Table}\label{app:fock-audit}
 % ===========================================================================
 
-To complete the comparison between classical and quantum majorization envelopes without introducing uncertified Fock-space cutoffs, we derive exact ideal quantum ceilings in infinite dimension alongside a quantitative Fock-truncation tail audit.
-
-\begin{proposition}[Exact Zero-Truncation Ideal Quantum Ceilings]\label{prop:quantum-ceilings}
-At ideal detection ($\eta = 1, \nu = 0$), let $V_a = \operatorname{span}\{\ket{a}, \ket{-a}\}$ with overlap $g := \braket{-a}{a} = \ee^{-2a^2}$ and orthonormal even/odd cat basis $\ket{\Cset_\pm(a)} = (\ket{a} \pm \ket{-a})/\sqrt{2(1 \pm g)}$. Then on the full infinite-dimensional Hilbert space:
-\begin{enumerate}[leftmargin=*]
-\item {\normalfont\textbf{\texttt{off/off}}} \textbf{($A_{00} = \ket{-a}\!\bra{-a} + \ket{a}\!\bra{a}$):} $\lambda_{\max}(A_{00}) = 1 + \ee^{-2a^2}$, uniquely attained by the even cat state $\ket{\Cset_+(a)}$ with finite mean photon number $\langle\hat n\rangle = a^2\tanh(a^2)$ (e.g.\ $0.037020$ at $a=0.44$, where the $r=+0.18$ pilot reaches $99.97\%$ of this ceiling).
-\item {\normalfont\textbf{\texttt{off/on}}} \textbf{($A_{01} = \I - \ket{-a}\!\bra{-a} + \ket{a}\!\bra{a}$):} Restricting $A_{01} - \I = \sqrt{1-g^2}\,\sigma_x$ in $\{\ket{\Cset_+(a)}, \ket{\Cset_-(a)}\}$ gives $\lambda_{\max}(A_{01}) = 1 + \sqrt{1 - \ee^{-4a^2}}$ ($1.734180$ at $a=0.44$), uniquely attained by $\ket{\psi_{01}^*} = \frac{1}{\sqrt{2}}\bigl(\ket{\Cset_+(a)} + \ket{\Cset_-(a)}\bigr)$ with exact mean photon number $\langle\hat n\rangle = a^2\coth(2a^2)$ ($0.524741$ at $a=0.44$).
-\item {\normalfont\textbf{\texttt{on/on}}} \textbf{($A_{11} = 2\I - \ket{-a}\!\bra{-a} - \ket{a}\!\bra{a}$):} $\lambda_{\max}(A_{11}) = 2$, attained on $V_a^\perp$ by the 3-level dark state $\ket{\chi_a}$ of Eq.~\eqref{eq:darkstate} with energy $4/(a^4+2)$ (simultaneously attaining $L_1=1$ and $L_2=2$).
-\end{enumerate}
-\end{proposition}
-\begin{proof}
-Because $E_0(\pm a) = \ket{\mp a}\!\bra{\mp a}$ are rank-one projectors, $A_{00}, A_{01}-\I, A_{11}-2\I$ vanish identically on $V_a^\perp$, and diagonalize directly on $V_a$ using $\ket{a}\!\bra{a} + \ket{-a}\!\bra{-a} = (1+g)\ket{\Cset_+}\!\bra{\Cset_+} + (1-g)\ket{\Cset_-}\!\bra{\Cset_-}$ and $\ket{a}\!\bra{a} - \ket{-a}\!\bra{-a} = \sqrt{1-g^2}\bigl(\ket{\Cset_+}\!\bra{\Cset_-} + \ket{\Cset_-}\!\bra{\Cset_+}\bigr)$. Parity invariance $\bra{\Cset_+(a)}\hat n\ket{\Cset_-(a)} = 0$ yields $\bra{\psi_{01}^*}\hat n\ket{\psi_{01}^*} = \frac{a^2}{2}[\tanh(a^2) + \coth(a^2)] = a^2\coth(2a^2)$.
-\end{proof}
-
-For general $\eta < 1$ or $\nbar < 4/(a^4+2)$, one can project onto the finite Fock subspace $\mathcal{H}_N = \operatorname{span}\{\ket{0},\dots,\ket{N}\}$ with projector $P_N$ and solve the exact finite-dimensional SDP dual~\eqref{eq:state-sets} for the compressed operator $P_N A P_N$:
-\begin{align}\label{eq:fock-sdp-tail}
-h_{\Qset_{\nbar}}(A) &\le h_{\Qset_{\nbar}, N}(P_N A P_N) + R_N(m), \\
-R_N(m) &:= m\min\bigl\{1,\ \sqrt{\delta_N} + \delta_N/2\bigr\}, \qquad
-\delta_N := \min\Bigl(1, \frac{\nbar}{N+1}\Bigr), \nonumber
-\end{align}
-where the remainder $R_N(m)$ ($0 \preceq A \preceq m\I$) follows from Winter's gentle-projection trace-norm lemma~\cite{Winter1999} applied to $\sigma = P_N\rho P_N + \tr[(\I-P_N)\rho]\ket{0}\!\bra{0}$. Table~\ref{tab:fock-tail} and Figure~\ref{fig:fig5} show that although the compressed Fock SDP stabilizes by $N = 15$ ($1.792833$, SDP gap $\le 2.2\times 10^{-15}$), the generic $O(N^{-1/2})$ tail penalty $R_N(2)$ remains $+0.0673$ even at $N = 200$. Consequently, keeping our witness thresholds exact in the classical sector (zero Fock cutoff) while reporting zero-truncation ideal quantum ceilings (Proposition~\ref{prop:quantum-ceilings}) leaves our nonclassicality certificates completely free of Fock-truncation artifacts.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/fig5_quantum_ceilings_audit.pdf}
-\caption{\textbf{Exact zero-truncation ideal quantum ceilings and finite-Fock SDP tail audit.}
-\textbf{(a)}~Ideal ($\eta=1, \nu=0$) quantum ceilings of Proposition~\ref{prop:quantum-ceilings} (\texttt{on/on} $=2$ by 3-level dark state $\ket{\chi_a}$, \texttt{off/on} $=1+\sqrt{1-\ee^{-4a^2}}$, \texttt{off/off} $=1+\ee^{-2a^2}$ by even cat $\ket{\Cset_+(a)}$) compared against exact classical bounds $S_2^{\Cset}(a)$ at matching state energies.
-\textbf{(b)}~At flagship $a = 1.15, \eta = 1.0, \nbar = 0.22$, the compressed Fock SDP $h_{\Qset,N}(P_N A P_N)$ converges by $N = 15$ ($1.792833$, gap $\le 2.2\times 10^{-15}$), while the gentle-projection tail remainder $R_N(2) = 2(\sqrt{\delta_N} + \delta_N/2)$~\cite{Winter1999} decays as $O(N^{-1/2})$ and remains $+0.0673$ at $N = 200$.}
-\label{fig:fig5}
-\end{figure}
+Table~\ref{tab:fock-tail} details the compressed Fock-space SDP dual convergence and gentle-projection remainder $R_N(2)$ of Eq.~\eqref{eq:fock-sdp-tail} at the flagship benchmark $a=1.15, \eta=1.0, \nbar=0.22$ (plotted in Fig.~\ref{fig:fig5}(b)).
 
 \begin{table}[t]
 \centering
@@ -632,103 +568,7 @@ $N$ & $h_{\Qset,N}(P_N A P_N)$ & Finite-$N$ SDP Gap & $\delta_N = \nbar/(N+1)$ &
 \end{tabular}
 \end{table}
 
-% ===========================================================================
-\section{Discussion and Outlook}\label{sec:discussion}
-% ===========================================================================
-
-By pairing an independently certified pre-displacement energy constraint $\tr(\rho\hat n) \le \nU$ with two opposite displaced threshold-detector settings, we have resolved the infinite-dimensional $c = 1$ obstruction of binary direct-sum majorization without altering the binary on/off detection hardware. The resulting classical majorization envelope (Theorem~\ref{thm:universal-closed-form}) is exact in closed form across all displacements $a > 0$, detector efficiencies $\eta \in (0,1]$, and dark-count rates $\nu \ge 0$, bounds all Shannon, Tsallis, and R\'enyi entropy sums simultaneously (Lemma~\ref{lem:restricted-binary}), suffers zero sorting penalty on the active click branch (Theorem~\ref{thm:outcome-resolved}), and generalizes cleanly to 7-parameter asymmetric calibration boxes (Theorems~\ref{thm:asym-circle}--\ref{thm:robust-box}) and distribution-free Clopper--Pearson error budgets (Theorem~\ref{thm:finite-sample}).
-
-We emphasize three deliberate scope boundaries and open directions. First, our witness is strictly a \emph{sufficient} nonclassicality certificate: nonviolation of $W_2 > 0$ never implies classicality, and for asymmetric click settings ($q_+ \neq q_-$) full convex-hull membership in $\Dset_{\nbar}$ can outperform sorted majorization. Second, tighter operator-adapted spectral tail bounds beyond generic trace-norm gentle projection~\eqref{eq:fock-sdp-tail} remain an interesting mathematical problem for $\eta < 1$ quantum majorization envelopes~\cite{YangQiaoOptimization2026}. Third, our single-mode, two-setting protocol opens natural extensions to continuous-variable steering, multimode entangled threshold networks, and experimental demonstrations using standard $\approx 3.5\;\mathrm{dB}$ squeezed vacuum sources and tap-beam power monitors.
-
-\section*{Data and Code Availability}
-All analytical solvers, $C^2$-certified dual routines, Fock-space Kraus-channel tests (54 unit tests passing), CSV datasets, and plotting scripts reproducing every number, table, and figure in this manuscript are publicly available at \url{https://github.com/RuiZhu1/quantum-light-majorization} and can be executed end-to-end via \texttt{python run\_all.py}.
-
-\section*{Acknowledgments}
-We acknowledge helpful discussions with Gilad Gour on binary direct-sum majorization and support from Guangdong Technion -- Israel Institute of Technology.
-
-% ===========================================================================
-\appendix
-\section{Technical Proofs}\label{app:proofs}
-% ===========================================================================
-
-\subsection{Proof of Theorem~\ref{thm:concavity} (Exact Branch Concavity Thresholds)}\label{app:concavity}
-Writing $G(x) = g(x^2)$ ($x = \sqrt{s} > 0$), $g''(s) = \bigl[x G''(x) - G'(x)\bigr]/(4x^3)$, so $\sgn g''(s) = \sgn[x G''(x) - G'(x)]$.
-\begin{enumerate}[leftmargin=*]
-\item For $g_0(s) = \kappa\ee^{-(x-b)^2}$ on $(0,b)$, $\frac{4x^3}{\kappa\ee^{-(x-b)^2}}g_0''(s) = 2[2x(b-x)^2 - b]$. On $[0,b]$, $2x(b-x)^2$ achieves its unique maximum $\frac{8}{27}b^3$ at $x = b/3$; hence $g_0'' \le 0$ on $(0,b^2]$ iff $b^2 \le \frac{27}{8}$.
-\item For $g_{01}(s)$ on $(0, x_*]$, $\frac{4x^3}{\kappa\ee^{-(x-b)^2}}g_{01}''(s) = 2\bigl[(2x(x-b)^2 - b) - (2x(x+b)^2 + b)\ee^{-4bx}\bigr]$. On $(b, x_*]$, $g_{01}' \ge 0$ implies $(x+b)\ee^{-4bx} \ge x-b > 0$; substituting this yields $[2x(x-b)^2-b] - (2x(x+b)^2+b)\ee^{-4bx} \le -4bx(x-b) - b(1+\ee^{-4bx}) < 0$ for all $b > 0$. For $x \in (0, b]$, write $x = \alpha b$ ($\alpha \in (0,1]$) and $t := b^2$, so that $\frac{2x^3}{b\kappa\ee^{-(x-b)^2}} g_{01}''(s) = \Phi(\alpha, t) := [2\alpha(1-\alpha)^2 t - 1] - [2\alpha(1+\alpha)^2 t + 1]\ee^{-4\alpha t}$. Differentiating with respect to $t$ yields
-\begin{equation*}
-\partial_t \Phi(\alpha, t) = 2\alpha\Bigl[(1-\alpha)^2 + \bigl((4\alpha t - 1)(1+\alpha)^2 + 2\bigr)\ee^{-4\alpha t}\Bigr].
-\end{equation*}
-For every $t \ge 1$ and $\alpha \in (0,1)$, if $4\alpha t \ge 1$ then $(4\alpha t - 1)(1+\alpha)^2 + 2 \ge 2 > 0$, whereas if $4\alpha t < 1$ then $\alpha < \frac{1}{4}$ and $2 - (1+\alpha)^2 > \frac{7}{16} > 0$; hence $\partial_t\Phi(\alpha,t) > 2\alpha(1-\alpha)^2 > 0$ strictly everywhere on $(0,1) \times [1,\infty)$. Let $M(t) := \max_{\alpha \in [0,1]} \Phi(\alpha, t)$. Since $\Phi(0,t) = -2$, $\Phi(1,t) < -1$, and $\Phi(\frac{1}{3},t) \ge \Phi(\frac{1}{3},\frac{27}{8}) = -5\ee^{-9/2} > -1$ for all $t \ge \frac{27}{8}$, any maximizer belongs to the compact interior $(0,1)$, making $M(t)$ continuous and strictly increasing on $[\frac{27}{8},\infty)$. At $t = \frac{27}{8}$, $\max_{\alpha\in[0,1]} 2\alpha(1-\alpha)^2 t = 1$ gives $M(\frac{27}{8}) < 0$ (indeed $g_{01}'' < 0$ strictly on $(0, b^2]$ for all $t \le \frac{27}{8}$). At $t = 4$, $\Phi(\frac{1}{3}, 4) = \frac{5}{27} - \frac{155}{27}\ee^{-16/3} > 0$ (since $\ee^{16/3} > 207 > 31$), so $M(4) > 0$. By the intermediate-value theorem and strict monotonicity, $M(t)$ possesses a unique zero $b_{\rm crit,01}^2 \in (\frac{27}{8}, 4)$ ($b_{\rm crit,01} \approx 1.874331$), proving that $g_{01}$ is concave on $[0, x_*^2]$ if and only if $b \le b_{\rm crit,01}$. Moreover, for $b > b_{\rm crit,01}$, $g_{01}(s) \sim 1 + 4b\kappa\ee^{-b^2}\sqrt{s}$ near $0$ gives $g_{01}''(0^+) = -\infty$, while $g_{01}'' < 0$ on $[b^2, x_*^2]$ (and $x_R < b - \frac{1}{2b}$ by Appendix~\ref{app:universal}), so $\widehat{g}_{01}$ strictly requires two-point mixtures supported on interior bitangent bridges $[s_L, s_R] \subset (0, b^2)$.
-\item For $g_{00}(s)$ when $2b^2 > 1$, set $z := 2bx > 0$ and $u := 1/b^2 \in (0,2)$:
-\begin{equation}\label{eq:Qz-def}
-\frac{4x^3 \ee^{x^2+b^2}}{\kappa\cosh z}\,g_{00}''(s) = z^3\left[u^2 - \frac{4\tanh z}{z}\,u + \frac{4(z-\tanh z)}{z^3}\right] =: z^3 Q_z(u).
-\end{equation}
-As $z \to 0^+$, $Q_0(u) = u^2 - 4u + \frac{4}{3}$ vanishes at $u_1 := 2 - \frac{2\sqrt{6}}{3} = \frac{2}{3+\sqrt{6}}$ ($b_{\rm crit,00}^2 = \frac{3+\sqrt{6}}{2}$). For $u < u_1$, $g_{00}''(0^+) > 0$. Conversely, for $u \in [u_1, 2)$, on $(0, x_0]$ we have $u \le \frac{2\tanh z}{z} = u_{\rm vertex}(Q_z)$, so $Q_z(u) \le Q_z(u_1)$, while $z = 2bx \le 2b^2\tanh z < \frac{2}{u_1} = 3 + \sqrt{6} \approx 5.4495$. Expanding $\sinh z$ and $\cosh z$ in Taylor series yields the positive series
-\begin{equation}\label{eq:sinh-pade}
-\sinh z\,(105 + 45z^2 + z^4) - z\cosh z\,(105 + 10z^2) = \sum_{k=4}^\infty \frac{16k(k-1)(k-2)(k-3)}{(2k+1)!}\,z^{2k+1} > 0 \quad (\forall z > 0),
-\end{equation}
-whence $\tanh z > \frac{z(105+10z^2)}{105+45z^2+z^4}$. Using $u_1^2 = 4u_1 - \frac{4}{3}$, direct algebra gives $(105+10z^2)(1+u_1 z^2) - (105+45z^2+z^4)(1+\frac{u_1^2}{4}z^2) = (14 - 35u_1)z^4 - \frac{u_1^2}{4}z^6 > 0$ for all $0 < z < \sqrt{4(14-35u_1)/u_1^2} \approx 5.856$ (covering $(0, 3+\sqrt{6}]$), proving $\tanh z > \frac{z+(u_1^2/4)z^3}{1+u_1 z^2} \iff Q_z(u_1) < 0$.
-\end{enumerate}
-
-\subsection{Proof of Theorem~\ref{thm:universal-closed-form} (Global Click-Branch Dominance)}\label{app:universal}
-We verify strict dominance on every bitangent interval $[s_L, s_R]$ where Theorem~\ref{thm:concavity} permits two-point mixtures:
-\begin{enumerate}[leftmargin=*]
-\item For $A_{00}$ ($b^2 > \frac{3+\sqrt{6}}{2}$): for every $E \ge 0$, $h_{00}(E) \le \kappa(1+\ee^{-b^2})$ while $h_{11}(E) \ge 2 - 2\kappa\ee^{-b^2}$, so $h_{11}(E) - h_{00}(E) \ge 2 - \kappa(1 + 3\ee^{-b^2}) \ge 1 - 3\ee^{-(3+\sqrt{6})/2} > 0.80 > 0$.
-\item For $E_0$ ($b^2 > \frac{27}{8}$): on $[s_L, s_R] \subset (0, b^2)$, $h_0(E) \le g_0(s_R)$. The tangent intercept $I_0(s) := g_0(s) - s g_0'(s)$ increases on $(x_2^2, b^2)$ ($I_0' = -s g_0'' > 0$) and satisfies $I_0(s_R) = I_0(s_L) < g_0(s_L) < \kappa\ee^{-4b^2/9} < 0.224\kappa$ (since $x_1 < b/3$). Evaluating at $x = b - \frac{1}{2b} \in (x_2, b)$ gives $I_0(x^2) = \kappa\ee^{-1/(4b^2)}(\frac{1}{2} + \frac{1}{4b^2}) > 0.464\kappa > 0.224\kappa$, forcing $b - x_R > \frac{1}{2b}$. Hence $h_1(E) - h_0(E) > 1 - \kappa(\ee^{-b^2} + \ee^{-1/(4b^2)}) \ge 1 - (\ee^{-t} + \ee^{-1/(4t)}) > 0$ for all $t = b^2 \ge \frac{27}{8}$ (using $\ee^{-1/(4t)} < 1 - \frac{7}{32t}$ and $t\ee^{-t} < \frac{7}{32}$).
-\item For $A_{01}$, consider any $t = b^2 \ge \frac{27}{8}$ (independent of $b_{\rm crit,01}$), and write $\tilde g_{01}(s) := g_{01}(s) - 1$ with tangent intercept $\tilde I_{01}(s) := \tilde g_{01}(s) - s \tilde g_{01}'(s)$. Differentiating $\Phi(\alpha,t)$ from Appendix~\ref{app:concavity} with respect to $\alpha \in [\frac{1}{2}, 1]$ yields
-\begin{equation*}
-\partial_\alpha \Phi(\alpha,t) = 2t(1-\alpha)(1-3\alpha) + \bigl[4t(2\alpha(1+\alpha)^2 t + 1) - 2t(1+\alpha)(1+3\alpha)\bigr]\ee^{-4\alpha t}.
-\end{equation*}
-On $\alpha \in [\frac{1}{2}, 1]$, the second term is strictly below $4t(8t+1)\ee^{-2t} \le 378\,\ee^{-27/4} < 0.443$ (decreasing in $t \ge \frac{27}{8}$). Meanwhile, whenever $\Phi(\alpha,t) \ge 0$ we have $2t(1-\alpha)^2 \ge 2\alpha(1-\alpha)^2 t > 1 \implies 1 - \alpha > (2t)^{-1/2}$, so $2t(1-\alpha)(1-3\alpha) \le -t(1-\alpha) < -\sqrt{t/2} \le -\frac{3\sqrt{3}}{4} < -1.299$. Thus $\partial_\alpha\Phi(\alpha,t) < -0.85 < 0$ whenever $\alpha \in [\frac{1}{2},1]$ and $\Phi(\alpha,t) \ge 0$, forbidding any upcrossing of $\Phi(\cdot,t)$ from $\le 0$ to $> 0$ on $[\frac{1}{2}, 1]$. Consequently, any bitangent segment $[s_L, s_R]$ of $\widehat{g}_{01}$ must satisfy $s_L < b^2/4$ (else $g_{01}'' \le 0$ everywhere on $[s_L, x_*^2]$), whence $\tilde I_{01}(s_R) = \tilde I_{01}(s_L) < \tilde g_{01}(s_L) < \kappa\ee^{-t/4} \le \kappa\ee^{-27/32} < 0.4301\kappa$. Next, at $\alpha_0 := 1 - \frac{1}{2t} \in [\frac{23}{27}, 1)$ (corresponding to $x = b - \frac{1}{2b}$), $2\alpha_0(1-\alpha_0)^2 t - 1 = \frac{1}{2t}(1 - \frac{1}{2t}) - 1 < 0$ implies $\Phi(\alpha_0,t) < 0$, so by the no-upcrossing property $g_{01}'' < 0$ and $\tilde I_{01}' = -s g_{01}'' > 0$ strictly on $[(b - \frac{1}{2b})^2, x_*^2]$. Direct evaluation gives
-\begin{align*}
-\tilde I_{01}\!\left(\Bigl(b - \frac{1}{2b}\Bigr)^{\!2}\right)
-&= \kappa\!\left[\left(\frac{1}{2}+\frac{1}{4t}\right)\ee^{-1/(4t)} - \left(2t - \frac{1}{2} + \frac{1}{4t}\right)\ee^{-(4t-2+1/(4t))}\right] \\
-&> \kappa\!\left(\frac{1}{2} - 2t\,\ee^{-(4t-2)}\right) > 0.499\kappa
-\end{align*}
-for all $t \ge \frac{27}{8}$ (using $(\frac{1}{2}+u)\ee^{-u} > (\frac{1}{2}+u)(1-u) > \frac{1}{2}$ for $u = \frac{1}{4t} \le \frac{2}{27}$ and $2t\ee^{-(4t-2)} \le \frac{27}{4}\ee^{-11.5} < 7\times 10^{-5}$). Hence $\tilde I_{01}(s_R) < \tilde I_{01}((b - \frac{1}{2b})^2)$, forcing $b - x_R > \frac{1}{2b}$. Therefore, on any bitangent chord of $\widehat{g}_{01}$ with $t = b^2 \ge \frac{27}{8}$,
-\begin{align*}
-h_{11}(E) - h_{01}(E) &> 1 - (2\ee^{-t} + \ee^{-1/(4t)}) > \frac{1}{t^2}\!\left[\left(\frac{t}{4} - \frac{1}{32}\right) - 2t^2\ee^{-t}\right] \\
-&\ge \frac{0.8125 - 0.7796}{t^2} = \frac{0.0329}{t^2} > 0,
-\end{align*}
-since $\ee^{-u} < 1 - u + u^2/2$ at $u = \frac{1}{4t} > 0$, $\frac{t}{4} - \frac{1}{32}$ increases, and $2t^2\ee^{-t}$ decreases on $[\frac{27}{8}, \infty)$.
-\end{enumerate}
-
-\subsection{Proofs of Theorems~\ref{thm:asym-circle} and~\ref{thm:robust-box} (Asymmetric Duality and Boxes)}\label{app:calibration}
-At fixed $s > 0$ and $\delta_\phi = 0$, differentiating $f_{01}(\varphi) = 1 + C_- \ee^{B_- z} - C_+ \ee^{-B_+ z}$ in $z = \cos\varphi \in [-1,1]$ yields $\partial_z f_{01} = B_- C_- \ee^{B_- z} + B_+ C_+ \ee^{-B_+ z} > 0$, giving $z^* = +1$ (and $z^* = -1$ for $f_{10}$). For $f_{00}$, $\partial_z^2 f_{00} = B_+^2 C_+ \ee^{-B_+ z} + B_-^2 C_- \ee^{B_- z} > 0$, whereas $\partial_z^2 f_{11} = -\partial_z^2 f_{00} < 0$, yielding $z^* \in \{-1,+1\}$ for \texttt{off/off} and $\partial_z f_{11} = 0 \implies z^*(s)$ in Eq.~\eqref{eq:zstar-onon} for \texttt{on/on}. For general asymmetric parameters $(a_+,a_-,\eta_+,\eta_-,\nu_+,\nu_-)$ at $s > 0$ and $\delta := \abs{\delta_\phi} \in (0, \pi/2]$ (by $\varphi \mapsto -\varphi$, every circle maximum depends on $\delta_\phi$ only through $\delta$), write $q_+(\varphi) = C_+ \ee^{-B_+\cos\varphi}$ and $q_-(\varphi;\delta) = C_- \ee^{B_-\cos(\varphi-\delta)}$ with $B_\pm > 0$. Notice two exact reflections on $[-\pi,\pi)$: (i) $\varphi \mapsto -\varphi$ fixes $q_+$ while $\cos(-\varphi-\delta)-\cos(\varphi-\delta) = -2\sin\varphi\sin\delta$, so $q_-(\varphi;\delta) > q_-(-\varphi;\delta)$ for $\varphi \in (0,\pi)$ and reversed for $\varphi \in (-\pi,0)$; (ii) $\varphi \mapsto 2\delta-\varphi$ fixes $\cos(\varphi-\delta)$ (hence $q_-$) while $\cos(2\delta-\varphi)-\cos\varphi = 2\sin\delta\sin(\varphi-\delta)$, so $q_+(2\delta-\varphi) > q_+(\varphi)$ for $\varphi \in (\delta-\pi,\delta)$ and reversed for $\varphi \in (-\pi,\delta-\pi)\cup(\delta,\pi)$. Comparing reflected pairs and ruling out the reflection fixed points $\{0,\pi,\delta,\delta-\pi\}$ via $\partial_\varphi f_A \neq 0$ (since $\sin\delta > 0$) confines every circle maximizer $\varphi^*$ strictly to an open arc on which $\partial_\delta f_A(\varphi^*;\delta) = \pm B_- q_-(\varphi^*;\delta)\sin(\varphi^*-\delta)$ has constant strict sign:
-\begin{itemize}[leftmargin=*]
-\item \texttt{off/off} ($f_{00}=q_++q_-$): $\varphi \mapsto -\varphi$ rules out $(-\pi,0)$, $\varphi\mapsto 2\delta-\varphi$ rules out $[0,\delta)$, and $f_{00}'(\delta)>0>f_{00}'(\pi)$ excludes $\{\delta,\pi\}$; hence $\varphi^* \in (\delta,\pi) \implies \sin(\varphi^*-\delta)>0 \implies \partial_\delta f_{00}(\varphi^*;\delta) > 0$.
-\item \texttt{on/on} ($f_{11}=2-q_+-q_-$): minimizing $q_++q_-$ rules out $(0,\pi]$, $[-\pi,\delta-\pi)$, and $\{0,\delta-\pi\}$; hence $\varphi^* \in (\delta-\pi,0) \implies \sin(\varphi^*-\delta)<0 \implies \partial_\delta f_{11}(\varphi^*;\delta) = -B_- q_-\sin(\varphi^*-\delta) > 0$.
-\item \texttt{off/on} ($f_{01}=1+q_--q_+$): maximizing $q_-$ and minimizing $q_+$ confines $\varphi^* \in (0,\delta) \implies \sin(\varphi^*-\delta)<0 \implies \partial_\delta f_{01}(\varphi^*;\delta) = B_- q_-\sin(\varphi^*-\delta) < 0$.
-\item \texttt{on/off} ($f_{10}=1+q_+-q_-$): maximizing $q_+$ and minimizing $q_-$ confines $\varphi^* \in (-\pi,\delta-\pi) \implies \varphi^*-\delta \in (-\pi-\delta,-\pi) \implies \sin(\varphi^*-\delta)>0 \implies \partial_\delta f_{10}(\varphi^*;\delta) = -B_- q_-\sin(\varphi^*-\delta) < 0$.
-\end{itemize}
-By Danskin's envelope theorem (and continuity down to $\delta=0$), $\max_\varphi f_A(\varphi;\delta)$ is strictly increasing on $[0,\delta_{\phi,\max}]$ for \texttt{off/off} and \texttt{on/on} (peaking at $\abs{\delta_\phi}=\delta_{\phi,\max}$, with symmetric bisector $\varphi^* = \delta_\phi/2-\pi/2$ giving Eq.~\eqref{eq:onon-dphi}) and strictly decreasing for \texttt{off/on} and \texttt{on/off} (peaking at $\delta_\phi=0$).
-
-In Theorem~\ref{thm:robust-box}, $E_0(j;\theta)$ decreases pointwise in $(a_j,\eta_j,\nu_j)$ at optimal real states while $E_1(j;\theta)$ increases pointwise in $(a_j,\eta_j,\nu_j)$ at $\ket{\pm\sqrt{\nU}}$, reducing $S_1^{\rm robust}$ to exact corner evaluations. Similarly, pointwise monotonicity in $\nu_\pm$ fixes $(\nu_+,\nu_-)$ per cross branch, and the asymmetric phase monotonicity above fixes $\delta_\phi$ per branch. For worst-case quantum signal evaluation on any centered squeezed thermal state $\rho(r,n_{\rm th},T)$, write $u(\eta)=1+c_u\eta$ and $w(\eta)=1+c_w\eta$ with $c_{u,w} = \frac{T}{2}[(2n_{\rm th}+1)\ee^{\pm 2r}-1]$. Under $\alpha_- = -a_-\ee^{\ii\delta_\phi}$, Eq.~\eqref{eq:sq-noclick} generalizes to $q_-(\theta) = \frac{\ee^{-\nu_-}}{\sqrt{u(\eta_-)w(\eta_-)}}\exp\bigl(-\eta_- a_-^2[\frac{\cos^2\delta_\phi}{u(\eta_-)} + \frac{\sin^2\delta_\phi}{w(\eta_-)}]\bigr)$, which decreases strictly in $a_-,\nu_-$, obeys $\sgn\partial_{\abs{\delta_\phi}}q_- = -\sgn(r)$ via $\sgn(u-w)=\sgn(r)$, and decreases strictly in $\eta_-\in(0,1]$ because $\partial_\eta(\frac{\eta}{1+c\eta}) = (1+c\eta)^{-2} > 0$ and $\partial_\eta(uw) = c_u+c_w+2c_uc_w\eta$ is affine in $\eta$ with nonnegative endpoints $c_u+c_w = 2\tr(\rho\hat n)\ge 0$ (at $\eta=0$) and $c_u+c_w+2c_uc_w = \frac{1}{2}[(1+2c_u)(1+2c_w)-1] \ge \frac{1}{2}[(1-T+T)^2-1] = 0$ (at $\eta=1$, using $\cosh(2r)\ge 1$ and $2n_{\rm th}+1\ge 1$). Thus $[q_\pm^{\min}(\Theta), q_\pm^{\max}(\Theta)]$ and $\inf_{\theta\in\Theta} L_2(\rho,\theta)$ follow from exact box corners without heuristics.
-
-On any 4D sub-box $B = B_+ \times B_-$ with $B_\pm = [a_\pm^L,a_\pm^U]\times[\eta_\pm^L,\eta_\pm^U]$, $q_+(\beta;\theta_+)$ and $q_-(\beta;\theta_-)$ separate across $B_+ \times B_-$, so optimizing each variable pointwise gives closed-form interval extremes: for $\beta = (u,v) = r(\cos\varphi,\sin\varphi)$, letting $a_{+,\rm min}(u) := \clip(-u, a_+^L, a_+^U)$, $\cos_{\max}(\varphi) := \cos(\max(0, \abs{\varphi}-\delta_{\phi,\max}))$, and $a_{-,\rm min}(r,\varphi) := \clip(r\cos_{\max}(\varphi), a_-^L, a_-^U)$, the exact bounds $q_+^{\max}(\beta;B_+) = \kappa_+\exp[-\eta_+^L((u+a_{+,\rm min})^2+v^2)]$ and $q_-^{\max}(\beta;B_-) = \kappa_-\exp[-\eta_-^L(r^2 + a_{-,\rm min}^2 - 2r a_{-,\rm min}\cos_{\max}(\varphi))_+] $ maximize $q_\pm$, while the endpoint maxima over $\{a_\pm^L, a_\pm^U\}$ at $\eta_\pm^U$ and $\cos_{\min}(\varphi) := \cos(\min(\pi, \abs{\varphi}+\delta_{\phi,\max}))$ yield $q_\pm^{\min}(\beta;B_\pm)$. From these, $F_A^B(\beta) := \sup_{\theta \in B} f_A(\beta;\theta)$ evaluates pointwise in closed form.
-
-Because $\sup_{\theta \in B} \int f_A(\beta;\theta)\,\dd\mu(\beta) \le \int F_A^B(\beta)\,\dd\mu(\beta)$ for every $\mu \in \Cset_{\nU}$, the global dual~\eqref{eq:decoupled-dual} satisfies $U_A(B) \ge \sup_{\theta\in B} h_{\Cset_{\nU}}(A(\theta))$. We compute $\max_{\abs{\beta}=r} F_A^B(\beta)$ analytically on the real axis for \texttt{off/on}, \texttt{on/off}, and $\delta_\phi=0$ \texttt{off/off} (exploiting convexity in $\cos\varphi$), and via an unclipped adaptive $C^2$ angular branch-and-bound routine ($32$ initial cells, $8$-way subdivision up to $12$ levels targeting $10^{-12}$, without artificial cap clipping) for \texttt{on/on} and $\delta_\phi > 0$ \texttt{off/off} using the overflow-free analytical curvature bound $M_{\phi,2}(r;B) = \kappa_+\ee^{-\eta_+^{\rm ext} d_+(r)^2}(B_{+,\max}+B_{+,\max}^2) + \kappa_-\ee^{-\eta_-^{\rm ext} d_-(r)^2}(B_{-,\max}+B_{-,\max}^2)$ where $B_{\pm,\max} = 2\eta_\pm^{\rm ext} a_\pm^U r$, $d_\pm(r) = \operatorname{dist}(r, [a_\pm^L, a_\pm^U])$, and $\eta_\pm^{\rm ext} = \eta_\pm^L$ (\texttt{off/off}) or $\eta_\pm^U$ (\texttt{on/on}). The outer radial dual $\sup_{r \ge 0}[G_A^B(r) - \lambda r^2]$ is likewise certified by an unclipped adaptive $C^2$ radial branch-and-bound routine with curvature bound $M_{r,2} = 2(\kappa_+\eta_+^U + \kappa_-\eta_-^U) + 2\lambda$, extending the domain dynamically to $r_{\rm eff} = \max\bigl(r_{\rm cut}, \sqrt{\max(0, T_A - G_A^B(0))/\lambda} + 0.05\bigr)$ ($\lambda > 0$) with $r_{\rm cut} = \max(a_+^U, a_-^U) + 5.5/\sqrt{\min(\eta_+^L,\eta_-^L)}$ and branch asymptotic tail caps $T_{00} = 10^{-12}$, $T_{01} = T_{10} = 1 + 10^{-12}$, and $T_{11} = 2$. Subdividing the 4D sub-box with largest relaxation gap along its widest normalized coordinate in a max-heap, paired with feasible primal evaluations and explicit soundness assertion $U_A \ge L_A - 10^{-11}$, guarantees $U_A - L_A \le 10^{-6}$ (actual observed max gap $1.305 \times 10^{-12}$ across all 565 boxes). All numerical certificates execute in IEEE-754 \texttt{float64} arithmetic (sound to $\sim 10^{-14}$ machine rounding, rather than directed-rounding interval arithmetic).
-
-\subsection{Self-Contained Proof of \texorpdfstring{Eq.~\eqref{eq:renyi-bound}}{Eq. (9)} (Direct-Sum R\'enyi Bounds)}\label{app:renyi}
-Let $p_\pm(\rho) = (q_\pm, 1-q_\pm)$ and $v(\rho) = p_+(\rho) \oplus p_-(\rho) \prec \omega_{\Sset}$. Set $A := p_{+,1}^\alpha + p_{+,2}^\alpha$ and $B := p_{-,1}^\alpha + p_{-,2}^\alpha$, so $A + B = \sum_{i=1}^4 v_i(\rho)^\alpha$ and $H_\alpha(p_+) + H_\alpha(p_-) = \frac{1}{1-\alpha}\log_2(AB)$:
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Case $0 < \alpha < 1$:} Since $t \mapsto t^\alpha$ is concave on $[0,1]$, $\sum_{i=1}^4 v_i^\alpha$ is Schur-concave; hence $v(\rho) \prec \omega_{\Sset}$ implies $A + B \ge \sum_{i=1}^4 \omega_{\Sset,i}^\alpha$. Moreover, $p_{\pm,j} \in [0,1] \implies p_{\pm,j}^\alpha \ge p_{\pm,j}$, so writing $A = 1+X$ and $B = 1+Y$ with $X,Y \ge 0$ gives $AB = 1 + X + Y + XY \ge A + B - 1 \ge \sum_{i=1}^4 \omega_{\Sset,i}^\alpha - 1 \ge 1$. Taking $\frac{1}{1-\alpha}\log_2(\cdot)$ (with $\frac{1}{1-\alpha} > 0$) establishes the first line of Eq.~\eqref{eq:renyi-bound}.
-\item \textbf{Case $1 < \alpha < \infty$:} Since $t \mapsto t^\alpha$ is convex, $\sum_{i=1}^4 v_i^\alpha$ is Schur-convex, giving $A + B \le \sum_{i=1}^4 \omega_{\Sset,i}^\alpha$. By the AM--GM inequality, $AB \le (\frac{A+B}{2})^2 \le \bigl(\frac{1}{2}\sum_{i=1}^4 \omega_{\Sset,i}^\alpha\bigr)^2$; since $\frac{1}{1-\alpha} < 0$, taking $\frac{1}{1-\alpha}\log_2(\cdot)$ reverses the inequality and proves the second line of Eq.~\eqref{eq:renyi-bound}.
-\item \textbf{Case $\alpha = \infty$:} Since $H_\infty(p_+) + H_\infty(p_-) = -\log_2(M_+ M_-)$ and $M_+ M_- \le (\frac{M_+ + M_-}{2})^2 = (L_2(\rho)/2)^2 \le (S_2^{\Sset}/2)^2$, taking $-\log_2(\cdot)$ yields $H_\infty(p_+)+H_\infty(p_-) \ge -2\log_2(S_2^{\Sset}/2)$.
-\end{enumerate}
-
-\subsection{Analytic Chernoff--KL Tail Bound and Coupling Certification of \texorpdfstring{$N_s^{\rm CP99}$}{CP99}}\label{app:cp-tail}
-Given $q_\pm \in [0,1]$ and target threshold $B := B_2^{\rm robust} \in [1,2)$ with positive witness margin $1 + d_{+,0} + d_{-,0} > B$ ($d_{j,0} := \abs{q_j - \frac{1}{2}}$), we certify $\operatorname{power}_{\rm CP}(N) := \mathbb{P}(1 + d_+^{\rm LCB}(K_+;N) + d_-^{\rm LCB}(K_-;N) > B) \ge P_0$ ($P_0 = 0.99$) for \emph{all} integers $N \ge N_s^{\rm CP99}$ in two exact steps:
-\begin{enumerate}[leftmargin=*]
-\item \textbf{Analytic Chernoff--KL tail threshold $N_{\rm tail}^{\rm KL}$:} Allocate targets $t_j := (B - 1)\frac{d_{j,0}}{d_{+,0}+d_{-,0}} \in [0, d_{j,0})$ ($j\in\{+,-\}$, $t_+ + t_- = B - 1$). Let $p_j := \min(q_j, 1-q_j)$ and $F_j := \min(K_j, N - K_j) \sim \mathrm{Bin}(N, p_j)$ (by Beta symmetry, $d_j^{\rm LCB}(K_j;N) = \max(0, \frac{1}{2} - q_{\rm hi}^{\rm CP}(F_j;N))$ whenever $F_j \le N/2$, with $q_{\rm hi}^{\rm CP}(f;N)$ solving $\mathbb{P}_{Y\sim\mathrm{Bin}(N,q_{\rm hi})}(Y \le f) = \delta_{\rm stat}/4$). For each active setting ($t_j > 0$), $p_{{\rm thr},j} := \frac{1}{2} - t_j \in (p_j, \frac{1}{2}]$. Choosing any $m_j \in (p_j, p_{{\rm thr},j})$, if $F_j/N \le m_j$ and $N\,D_{\rm KL}(m_j \,\|\, p_{{\rm thr},j}) > \ln(4/\delta_{\rm stat})$, Chernoff's bound gives $\mathbb{P}_{Y\sim\mathrm{Bin}(N,p_{{\rm thr},j})}(Y \le F_j) \le \ee^{-N D_{\rm KL}(m_j \| p_{{\rm thr},j})} < \delta_{\rm stat}/4$, forcing $q_{\rm hi}^{\rm CP}(F_j;N) < p_{{\rm thr},j} \implies d_j^{\rm LCB} > t_j$; simultaneously $\mathbb{P}(F_j/N > m_j) \le \ee^{-N D_{\rm KL}(m_j \| p_j)}$. Setting $m_j^*$ to equalize $N_j^{(1)} = \ln(4/\delta_{\rm stat})/D_{\rm KL}(m_j \| p_{{\rm thr},j})$ and $N_j^{(2)} = \ln(c_u/(1-P_0))/D_{\rm KL}(m_j \| p_j)$ ($c_u = 2$ if both $t_\pm > 0$, $1$ if one vanishes) guarantees $\operatorname{power}_{\rm CP}(N) \ge P_0$ strictly for \emph{all} $N \ge N_{\rm tail}^{\rm KL} := \max_j \lceil N_j^{(1)} \rceil + 1$.
-\item \textbf{Stochastic-coupling block certification on $[N_{\rm bin}, N_{\rm tail}^{\rm KL} - 1]$:} On any integer block $[N_1, N_2]$, for every $N \in [N_1, N_2]$ and fixed failure count $f$, $\mathbb{P}_{Y\sim\mathrm{Bin}(N,q)}(Y \le f)$ decreases in $N$ ($Y_{N_1} \preceq_{\rm st} Y_N$), so $q_{\rm hi}^{\rm CP}(f;N) \le q_{\rm hi}^{\rm CP}(f;N_1)$ and thus $d_j^{\rm LCB}(K_j;N) \ge \underline{d}_j(F_j; N_1) := \max(0, \frac{1}{2} - q_{\rm hi}^{\rm CP}(F_j;N_1))$ (vanishing safely if $f \ge N_1$). Since $\underline{d}_j(\cdot;N_1)$ is nonincreasing and $F_j^{(N)} \preceq_{\rm st} F_j^{(N_2)}$ for $N \le N_2$,
-\begin{equation*}
-\min_{N \in [N_1, N_2]} \operatorname{power}_{\rm CP}(N) \;\ge\; \mathbb{P}_{F_\pm \sim \mathrm{Bin}(N_2, p_\pm)}\!\Bigl(1 + \underline{d}_+(F_+; N_1) + \underline{d}_-(F_-; N_1) > B\Bigr).
-\end{equation*}
-Adaptive dyadic subdivision across $[N_{\rm bin}, N_{\rm tail}^{\rm KL} - 1]$ verifies every failing $N$ at single-point resolution ($\text{step}=1$) and certifies all passing intervals, returning $N_s^{\rm CP99}$ proven for all $N \ge N_s^{\rm CP99}$. When evaluating PMFs numerically with tail cutoff $10^{-13}$, omitted outer weights reduce $\operatorname{power}_{\rm CP}$ conservatively (preserving valid lower bounds), while classical Type-I audits add the exact omitted binomial mass explicitly.
-\end{enumerate}
-
+\clearpage
 \bibliographystyle{unsrtnat}
 \bibliography{references}
 

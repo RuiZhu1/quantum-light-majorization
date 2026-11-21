@@ -22,6 +22,7 @@ Covers all 9 verification requirements from notes/STAGE4_HANDOFF_PROMPT.md:
 
 from __future__ import annotations
 
+import csv
 import json
 import math
 from pathlib import Path
@@ -288,18 +289,38 @@ class TestStage4CalibrationAndStats(unittest.TestCase):
         self.assertAlmostEqual(no_go["mixture_mean_photons"], 500.0, places=10)
         self.assertLessEqual(no_go["no_click_deficit_from_vacuum"], 1e-4)
 
+        # Consistent discrete per-pulse photon ceiling M_max = 5 over N_tap = 2e7 shots
+        # where R_tap * eta_tap / (1 - R_tap) * 0.182 = 0.0091 exactly.
         tap = tap_beam_energy_upper_bound(
             tap_mean_estimate=0.0091,
             tap_fraction=0.05,
             eta_tap=0.95,
-            n_tap_shots=50_000,
-            peak_photon_ceiling=0.25,
+            n_tap_shots=20_000_000,
+            peak_photon_ceiling=5.0,
             delta_energy=0.005,
         )
+        self.assertAlmostEqual(tap["transmitted_mean_estimate"], 0.182, places=12)
+        self.assertAlmostEqual(tap["certified_energy_cap_upper_nbar_U"], 0.218395, places=5)
         self.assertGreater(
             tap["certified_energy_cap_upper_nbar_U"], tap["transmitted_mean_estimate"]
         )
-        self.assertLess(tap["relative_cap_slack"], 1.35)
+        self.assertLess(tap["relative_cap_slack"], 1.25)
+
+        # Bernstein variance-aware tightening achieves <= 1.25 slack with 100x fewer shots
+        tap_bern = tap_beam_energy_upper_bound(
+            tap_mean_estimate=0.0091,
+            tap_fraction=0.05,
+            eta_tap=0.95,
+            n_tap_shots=200_000,
+            peak_photon_ceiling=5.0,
+            delta_energy=0.005,
+            variance_bound=0.02,
+        )
+        self.assertEqual(tap_bern["concentration_bound"], "bernstein")
+        self.assertGreater(
+            tap_bern["certified_energy_cap_upper_nbar_U"], tap_bern["transmitted_mean_estimate"]
+        )
+        self.assertLess(tap_bern["relative_cap_slack"], 1.25)
 
     def test_07_spurious_nominal_false_positive_vs_certified_robust_control(self) -> None:
         """Naive nominal bound S2^C(theta_nom) suffers spurious false positives >> delta_stat, while B2^robust has <= delta_stat."""
@@ -435,6 +456,19 @@ class TestStage4CalibrationAndStats(unittest.TestCase):
             summary["type1_false_positive_audit"]["max_certified_robust_false_positive_rate"],
             summary["type1_false_positive_audit"]["delta_stat"],
         )
+
+        # Cross-file consistency: Scan 3 must share canonical a_CP and Theta2 CP99 counts with Scan 1
+        with (data_dir / "scan1_calibration_box_tiers.csv").open("r", encoding="utf-8") as f:
+            scan1_cp = {
+                r["state_id"]: r
+                for r in csv.DictReader(f)
+                if r["displacement_choice"] == "a_CP" and r["tier"] == "Theta2"
+            }
+        with (data_dir / "scan3_robust_displacement_optimization.csv").open("r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                s1_row = scan1_cp[r["state_id"]]
+                self.assertAlmostEqual(float(r["a_star_CP"]), float(s1_row["a_nom"]), places=10)
+                self.assertEqual(r["CP99_rob_worst_at_aCP"], s1_row["cp99_robust_worst_sig"])
 
     def test_11_unclipped_angular_and_box_dual_never_underestimates(self) -> None:
         """Verify unclipped adaptive C^2 angular bounds never underestimate continuous circle maxima."""

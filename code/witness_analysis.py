@@ -430,6 +430,7 @@ def clopper_pearson_required_shots(
     max_shots: int = 2_000_000,
     *,
     guaranteed_stable: bool = True,
+    max_tail_cert: Optional[int] = None,
 ) -> Optional[int]:
     """Exact minimum shots per setting N_s achieving CP certification power >= `power`.
 
@@ -438,8 +439,9 @@ def clopper_pearson_required_shots(
     (Chernick & Liu 2002). By default (`guaranteed_stable=True`), this returns the
     sawtooth-safe guaranteed threshold
         N_guar = min{ N_0 >= 1 : P(N) >= power for ALL N >= N_0 },
-    so any experiment collecting at least N_guar shots per setting is strictly
-    guaranteed certification power >= `power` (never dipping below `power` at N_guar+1).
+    exhaustively certifying every integer block up to the true Chernoff-KL
+    asymptotic tail threshold `n_tail` (never truncating `n_tail`; returns `None`
+    if `n_tail > max_tail_cert`, defaulting to `5 * max_shots`).
     Setting `guaranteed_stable=False` returns the binary-search crossing estimate.
     """
     _validate_prob("q_plus", q_plus)
@@ -503,13 +505,13 @@ def clopper_pearson_required_shots(
     # Exact sawtooth-safe certification for ALL N >= N_0:
     # Step 1: Compute analytic Chernoff-KL threshold n_tail proving power(N) >= power for all N >= n_tail.
     # Step 2: Certify every integer N in [n_bin, n_tail - 1] via stochastic-coupling block lower bounds.
+    # Never truncate n_tail: if full tail certification exceeds `max_tail_cert`, return None.
     n_tail = analytic_cp_power_tail_bound(q_plus, q_minus, s2_bound, delta_stat, power)
-    if n_tail is None:
+    tail_limit = (5 * max_shots) if max_tail_cert is None else int(max_tail_cert)
+    if tail_limit <= 0:
+        raise ValueError(f"max_tail_cert must be a positive integer, got {tail_limit}")
+    if n_tail is None or n_tail > tail_limit:
         return None
-    if n_tail > max_shots:
-        # Still run certified coupling blocks inside [n_bin, min(n_tail, max_shots + 10_000_000)]
-        # when n_bin <= max_shots; return None only if last_fail + 1 > max_shots.
-        n_tail = min(n_tail, max_shots + 2_000_000)
 
     last_fail = n_bin - 1
     cur = n_bin + 1
