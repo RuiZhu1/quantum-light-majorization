@@ -1765,39 +1765,70 @@ def tap_beam_energy_upper_bound(
     tap_fraction: float,
     eta_tap: float,
     n_tap_shots: int,
-    peak_photon_ceiling: float,
+    peak_photon_ceiling: Optional[float] = None,
     delta_energy: float = 0.005,
     *,
     variance_bound: Optional[float] = None,
-) -> Dict[str, float]:
+    bound_type: str = "auto",
+) -> Dict[str, Any]:
     """Route A independent energy upper confidence bound nbar_U before displacement.
 
     A calibrated beam splitter of reflectivity `tap_fraction` = R in (0, 1) diverts a
     fraction R of the input mode to an unsaturated linear monitor of quantum efficiency
     `eta_tap`, while the transmitted fraction T_tap = 1 - R enters the displacement stage.
-    Under a strict per-pulse observable support bound X_t in [0, M_max] (e.g., an integer
-    pre-tap photon-count ceiling M_max >= 1 with out-of-range saturation aborting the run,
-    never clipping) and optional second-moment variance bound `variance_bound`,
-    Hoeffding's or one-sided Bernstein's inequality certifies with probability >= 1 - delta_energy:
-        <n>_transmitted <= ((1 - R) / (R * eta_tap)) * (tap_mean_estimate + eps_E) =: nbar_U.
+    Supports three explicit concentration modes (`bound_type`):
+      - `"cantelli"`: one-sided Cantelli-Chebyshev inequality using ONLY an independent
+        prior variance bound `variance_bound` (no hard bounded-support cutoff required,
+        applicable to unbounded Fock-tail states): eps = sqrt(Var * (1/delta - 1) / N_tap).
+      - `"hoeffding"`: requires strict observable ceiling M_max = `peak_photon_ceiling`
+        per pulse (out-of-range saturation aborts rather than clipping).
+      - `"bernstein"`: combines both `peak_photon_ceiling` M_max and `variance_bound`.
+      - `"auto"` (default): uses Cantelli if `peak_photon_ceiling is None` (requiring
+        `variance_bound`), else takes min(Hoeffding, Bernstein if variance_bound is given).
     """
     if not (0.0 < tap_fraction < 1.0 and 0.0 < eta_tap <= 1.0):
         raise ValueError("Require tap_fraction in (0, 1) and eta_tap in (0, 1]")
-    if n_tap_shots <= 0 or peak_photon_ceiling <= 0.0 or not (0.0 < delta_energy < 1.0):
+    if n_tap_shots <= 0 or not (0.0 < delta_energy < 1.0):
         raise ValueError("Invalid tap-beam statistical parameters")
+    mode = bound_type.lower()
+    if mode not in ("auto", "hoeffding", "bernstein", "cantelli"):
+        raise ValueError(f"Unsupported bound_type={bound_type!r}")
+    if variance_bound is not None and variance_bound < 0.0:
+        raise ValueError(f"variance_bound must be nonnegative, got {variance_bound}")
+    if peak_photon_ceiling is not None and peak_photon_ceiling <= 0.0:
+        raise ValueError(f"peak_photon_ceiling must be positive, got {peak_photon_ceiling}")
+
     log_inv = math.log(1.0 / delta_energy)
-    eps_hoeff = peak_photon_ceiling * math.sqrt(log_inv / (2.0 * n_tap_shots))
-    if variance_bound is not None:
-        if variance_bound < 0.0:
-            raise ValueError(f"variance_bound must be nonnegative, got {variance_bound}")
-        eps_bern = math.sqrt(2.0 * variance_bound * log_inv / n_tap_shots) + (
+    if mode == "cantelli" or (mode == "auto" and peak_photon_ceiling is None):
+        if variance_bound is None:
+            raise ValueError("Cantelli bound requires an explicit nonnegative variance_bound")
+        eps_tap = math.sqrt((variance_bound / n_tap_shots) * (1.0 / delta_energy - 1.0))
+        bound_method = "cantelli"
+    elif mode == "hoeffding":
+        if peak_photon_ceiling is None:
+            raise ValueError("Hoeffding bound requires a finite peak_photon_ceiling M_max")
+        eps_tap = peak_photon_ceiling * math.sqrt(log_inv / (2.0 * n_tap_shots))
+        bound_method = "hoeffding"
+    elif mode == "bernstein":
+        if peak_photon_ceiling is None or variance_bound is None:
+            raise ValueError("Bernstein bound requires both peak_photon_ceiling and variance_bound")
+        eps_tap = math.sqrt(2.0 * variance_bound * log_inv / n_tap_shots) + (
             peak_photon_ceiling * log_inv
         ) / (3.0 * n_tap_shots)
-        eps_tap = min(eps_hoeff, eps_bern)
-        bound_method = "bernstein" if eps_bern < eps_hoeff else "hoeffding"
+        bound_method = "bernstein"
     else:
-        eps_tap = eps_hoeff
-        bound_method = "hoeffding"
+        assert peak_photon_ceiling is not None
+        eps_hoeff = peak_photon_ceiling * math.sqrt(log_inv / (2.0 * n_tap_shots))
+        if variance_bound is not None:
+            eps_bern = math.sqrt(2.0 * variance_bound * log_inv / n_tap_shots) + (
+                peak_photon_ceiling * log_inv
+            ) / (3.0 * n_tap_shots)
+            eps_tap = min(eps_hoeff, eps_bern)
+            bound_method = "bernstein" if eps_bern < eps_hoeff else "hoeffding"
+        else:
+            eps_tap = eps_hoeff
+            bound_method = "hoeffding"
+
     scale = (1.0 - tap_fraction) / (tap_fraction * eta_tap)
     nbar_est = scale * tap_mean_estimate
     nbar_u = scale * (tap_mean_estimate + eps_tap)
@@ -1806,7 +1837,9 @@ def tap_beam_energy_upper_bound(
         "transmitted_fraction": 1.0 - tap_fraction,
         "n_tap_shots": n_tap_shots,
         "peak_observable_ceiling_M_max": peak_photon_ceiling,
+        "variance_bound": variance_bound,
         "delta_energy": delta_energy,
+        "tap_epsilon": eps_tap,
         "concentration_bound": bound_method,
         "transmitted_mean_estimate": nbar_est,
         "certified_energy_cap_upper_nbar_U": nbar_u,
