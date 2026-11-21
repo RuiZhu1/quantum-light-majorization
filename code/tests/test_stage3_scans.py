@@ -598,6 +598,23 @@ class Stage3OpticalAndAnalysisTests(unittest.TestCase):
             self.assertGreaterEqual(exact_cp_certification_power(qp, qm, s2_b, n_tail, 0.01), 0.99)
             self.assertLess(exact_cp_certification_power(qp, qm, s2_b, n_req - 1, 0.01), 0.99)
 
+        # Non-truncation guarantee: if analytic n_tail exceeds max_tail_cert, strictly return None
+        n_tail_flag = analytic_cp_power_tail_bound(
+            0.074209040405888, 0.074209040405888, 1.7348166304807207, 0.01, 0.99
+        )
+        assert n_tail_flag is not None
+        self.assertIsNone(
+            clopper_pearson_required_shots(
+                0.074209040405888,
+                0.074209040405888,
+                1.7348166304807207,
+                delta_stat=0.01,
+                power=0.99,
+                guaranteed_stable=True,
+                max_tail_cert=564,
+            )
+        )
+
         # Conservative upper mode adds omitted tail mass >= default PMF sum
         p_def = exact_cp_certification_power(0.16, 0.16, 1.612, 3000, 0.01, conservative_upper=False)
         p_cons = exact_cp_certification_power(0.16, 0.16, 1.612, 3000, 0.01, conservative_upper=True)

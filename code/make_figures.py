@@ -571,7 +571,7 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
     ax0.set_xticks(x_idx)
     ax0.set_xticklabels(tier_labels)
     ax0.set_ylim(-0.07, 0.13)
-    ax0.set_ylabel("Worst-case certified margin $W_2^{\\rm rob,worst}(\\Theta)$")
+    ax0.set_ylabel("Worst-case robust margin $W_2^{\\rm rob,worst}(\\Theta)$")
     ax0.set_title("(a) Calibration-Box Robustness Across Tiers", fontweight="bold")
     ax0.legend(loc="lower left", fontsize=6.5)
     ax0.grid(True)
@@ -601,7 +601,7 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
     ax1.plot(fp_shots, fp_naive_cp, color=PALETTE["red"], marker="x", markersize=6.0, lw=1.8, linestyle="--",
              label="Type-I FP: Naive nominal bound (classical state!)")
     ax1.plot(fp_shots, fp_rob_cp, color=PALETTE["green"], marker="s", markersize=5.0, lw=2.0,
-             label="Type-I FP: Certified $B_2^{\\rm rob}(\\Theta_2)$ ($\\leq 0.008\\% \\ll \\delta_{\\rm stat}$)")
+             label="Type-I FP: Robust $B_2^{\\rm rob}(\\Theta_2)$ (MC obs. $\\leq 0.008\\%$)")
     ax1.plot(pow_shots, pow_mc_cp, color=PALETTE["blue"], marker="o", markersize=5.0, lw=2.0,
              label="Type-II Power: Robust CP ($r=-0.42, a^*_{\\rm CP}$, $99\\%$ at $1,727$)")
     ax1.plot(pow_shots, pow_mc_hoeff, color=PALETTE["orange"], marker="^", markersize=5.0, lw=1.5, linestyle="-.",

@@ -91,7 +91,7 @@ quantum-light-majorization/
 │   └── stage5/                                   Quantum ceilings & Fock tail audit CSV + stage5_summary.json
 └── paper/
     ├── main.tex                                  Complete JPB submission-ready manuscript source
-    ├── main.pdf                                  Compiled 20-page manuscript PDF (zero warnings)
+    ├── main.pdf                                  Compiled 21-page manuscript PDF (zero warnings)
     ├── references.bib                            Verified bibliography (27 entries, all cited)
     └── figures/                                  5 publication vector PDFs + PNG previews (fig1–fig5)
 ```

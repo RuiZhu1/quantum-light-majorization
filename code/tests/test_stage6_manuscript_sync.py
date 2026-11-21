@@ -122,6 +122,9 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "statistically independent",
             "Danskin",
             "Finite-$N$ SDP Gap",
+            "conditional",
+            r"2 \times 10^7",
+            r"\clearpage",
         ]
         self.assertLess(d4["max_box_relaxation_gap"], 1e-10)
         for token in expected_tokens:
