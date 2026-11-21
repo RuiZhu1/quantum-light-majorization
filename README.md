@@ -87,11 +87,11 @@ quantum-light-majorization/
 │   ├── lorenz.csv                                Direct-sum Lorenz curve data for PGFPlots
 │   ├── quantum_light_feasibility.json            Pilot efficiency scan output
 │   ├── stage3/                                   11 Stage 3 scan CSVs + master stage3_summary.json
-│   ├── stage4/                                   5 Stage 4 calibration CSVs + master stage4_summary.json
+│   ├── stage4/                                   5 Stage 4 calibration CSVs + closed e2e tap CSV + stage4_summary.json
 │   └── stage5/                                   Quantum ceilings & Fock tail audit CSV + stage5_summary.json
 └── paper/
     ├── main.tex                                  Complete JPB submission-ready manuscript source
-    ├── main.pdf                                  Compiled 21-page manuscript PDF (zero warnings)
+    ├── main.pdf                                  Compiled 22-page manuscript PDF (zero warnings)
     ├── references.bib                            Verified bibliography (27 entries, all cited)
     └── figures/                                  5 publication vector PDFs + PNG previews (fig1–fig5)
 ```

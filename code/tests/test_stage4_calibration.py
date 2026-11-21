@@ -322,6 +322,21 @@ class TestStage4CalibrationAndStats(unittest.TestCase):
         )
         self.assertLess(tap_bern["relative_cap_slack"], 1.25)
 
+        # Cantelli-Chebyshev one-sided bound requires NO hard support cutoff peak_photon_ceiling
+        tap_cant = tap_beam_energy_upper_bound(
+            tap_mean_estimate=0.05 * 0.95 * 0.1776684 / 0.95,
+            tap_fraction=0.05,
+            eta_tap=0.95,
+            n_tap_shots=1_250_000,
+            delta_energy=0.005,
+            variance_bound=0.02,
+            bound_type="cantelli",
+        )
+        self.assertEqual(tap_cant["concentration_bound"], "cantelli")
+        self.assertIsNone(tap_cant["peak_observable_ceiling_M_max"])
+        self.assertAlmostEqual(tap_cant["transmitted_mean_estimate"], 0.1776684, places=6)
+        self.assertLess(tap_cant["relative_cap_slack"], 1.25)
+
     def test_07_spurious_nominal_false_positive_vs_certified_robust_control(self) -> None:
         """Naive nominal bound S2^C(theta_nom) suffers spurious false positives >> delta_stat, while B2^robust has <= delta_stat."""
         a_nom, eta_nom, dark_nom, cap_nom = 1.15, 1.00, 0.0, 0.22
@@ -469,6 +484,17 @@ class TestStage4CalibrationAndStats(unittest.TestCase):
                 s1_row = scan1_cp[r["state_id"]]
                 self.assertAlmostEqual(float(r["a_star_CP"]), float(s1_row["a_nom"]), places=10)
                 self.assertEqual(r["CP99_rob_worst_at_aCP"], s1_row["cp99_robust_worst_sig"])
+
+        # Closed end-to-end tap-monitored benchmarks (T_eff = T_src * (1 - R_tap))
+        e2e_csv = data_dir / "end_to_end_tap_monitored_benchmarks.csv"
+        self.assertTrue(e2e_csv.exists(), f"Missing {e2e_csv}")
+        with e2e_csv.open("r", encoding="utf-8") as f:
+            e2e_rows = list(csv.DictReader(f))
+        self.assertGreaterEqual(len(e2e_rows), 2)
+        for row in e2e_rows:
+            self.assertGreater(float(row["Theta2_W2_worst_at_aCP"]), 0.0)
+            self.assertGreater(int(row["Theta2_CP99_at_aCP"]), 0)
+            self.assertLessEqual(int(row["Theta2_CP99_at_aRobCP"]), int(row["Theta2_CP99_at_aCP"]))
 
     def test_11_unclipped_angular_and_box_dual_never_underestimates(self) -> None:
         """Verify unclipped adaptive C^2 angular bounds never underestimate continuous circle maxima."""

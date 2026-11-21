@@ -699,6 +699,164 @@ def run_scan5_energy_bound_budget_tradeoff() -> List[Dict[str, Any]]:
 
 
 # ---------------------------------------------------------------------------
+# End-to-End Closed Tap-Monitored Experimental Predictions (R_tap = 0.05)
+# ---------------------------------------------------------------------------
+
+def run_end_to_end_tap_monitored_benchmarks() -> List[Dict[str, Any]]:
+    """Compute closed end-to-end predictions including R_tap = 0.05 transmission loss.
+
+    For pre-tap source transmissivity T_src and tap beam-splitter reflectivity R_tap = 0.05
+    (T_tap = 1 - R_tap = 0.95), the state entering the displacement stage is
+    rho_trans = L_{T_eff}(rho_0) with total pre-displacement transmissivity T_eff = T_src * T_tap.
+    The monitor observes m_tap = (R_tap * eta_tap / T_tap) * <n>_trans and outputs nbar_U
+    via tap_beam_energy_upper_bound; displacements a*_CP and a*_robust_CP are then
+    re-optimized directly under this closed (T_eff, nbar_U) configuration.
+    """
+    r_tap = 0.05
+    t_tap = 1.0 - r_tap
+    eta_tap = 0.95
+    delta_e = 0.005
+    n_tap_cantelli = 1_250_000
+    sigma_sq_prior = 0.02
+
+    e2e_specs = [
+        {
+            "scenario_id": "e2e_flagship_r_minus042_tap5pct",
+            "label": "End-to-end 5% tap: flagship r=-0.42 (T_src=1.0, eta=1.0)",
+            "r": -0.42,
+            "n_th": 0.0,
+            "T_src": 1.00,
+            "eta_nom": 1.00,
+            "dark_nom": 0.0,
+            "a_min": 0.80,
+            "a_max": 2.00,
+        },
+        {
+            "scenario_id": "e2e_realistic_r_minus045_tap5pct",
+            "label": "End-to-end 5% tap: simulated lab r=-0.45 (T_src=0.90, eta=0.85, n_th=0.02, nu=1e-3)",
+            "r": -0.45,
+            "n_th": 0.02,
+            "T_src": 0.90,
+            "eta_nom": 0.85,
+            "dark_nom": 1e-3,
+            "a_min": 0.90,
+            "a_max": 2.10,
+        },
+    ]
+
+    rows: List[Dict[str, Any]] = []
+    for sp in e2e_specs:
+        t_eff = sp["T_src"] * t_tap
+        n_trans = squeezed_thermal_mean_photons(sp["r"], sp["n_th"], t_eff)
+        m_tap = (r_tap * eta_tap / t_tap) * n_trans
+        tap_cant = tap_beam_energy_upper_bound(
+            tap_mean_estimate=m_tap,
+            tap_fraction=r_tap,
+            eta_tap=eta_tap,
+            n_tap_shots=n_tap_cantelli,
+            delta_energy=delta_e,
+            variance_bound=sigma_sq_prior,
+            bound_type="cantelli",
+        )
+        nbar_u = float(tap_cant["certified_energy_cap_upper_nbar_U"])
+        q_fn = _make_q_fn_squeezed(sp["r"], n_th=sp["n_th"], source_transmission=t_eff)
+
+        # Evaluate Nominal & Theta2 at nominal displacement a*_CP and Theta2-optimized a*_robust_CP,
+        # using exact derived cap nbar_U as the pre-displacement cap.
+        res_opt = optimize_displacement_robust(
+            q_fn,
+            sp["eta_nom"],
+            sp["dark_nom"],
+            nbar_u,
+            n_trans,
+            tier="Theta2",
+            a_min=sp["a_min"],
+            a_max=sp["a_max"],
+            n_grid=45,
+        )
+        # Note: in optimize_displacement_robust(..., cap_nom=nbar_u), make_standard_calibration_box("Theta2")
+        # adds a conservative +10% energy buffer on top of cap_nom; also evaluate directly with
+        # uninflated cap_upper = nbar_u (the already statistically certified Cantelli UCB!)
+        a_cp = float(res_opt["a_cp"])
+        a_rob_cp = float(res_opt["a_robust_cp"])
+        box_nom = CalibrationBox(
+            label="EndToEnd_Nominal",
+            a_plus_bounds=(a_cp, a_cp),
+            a_minus_bounds=(a_cp, a_cp),
+            eta_plus_bounds=(sp["eta_nom"], sp["eta_nom"]),
+            eta_minus_bounds=(sp["eta_nom"], sp["eta_nom"]),
+            nu_plus_bounds=(sp["dark_nom"], sp["dark_nom"]),
+            nu_minus_bounds=(sp["dark_nom"], sp["dark_nom"]),
+            delta_phi_max=0.0,
+            energy_cap_upper=nbar_u,
+        )
+        ev_nom = evaluate_state_over_calibration_box(
+            q_fn, a_cp, sp["eta_nom"], sp["dark_nom"], nbar_u, n_trans, box_nom
+        )
+        box_t2_acp = CalibrationBox(
+            label="EndToEnd_Theta2_at_aCP",
+            a_plus_bounds=(0.98 * a_cp, 1.02 * a_cp),
+            a_minus_bounds=(0.98 * a_cp, 1.02 * a_cp),
+            eta_plus_bounds=(max(1e-6, sp["eta_nom"] - 0.01), min(1.0, sp["eta_nom"] + 0.01)),
+            eta_minus_bounds=(max(1e-6, sp["eta_nom"] - 0.01), min(1.0, sp["eta_nom"] + 0.01)),
+            nu_plus_bounds=(sp["dark_nom"], sp["dark_nom"] + 1e-3),
+            nu_minus_bounds=(sp["dark_nom"], sp["dark_nom"] + 1e-3),
+            delta_phi_max=math.radians(2.0),
+            energy_cap_upper=nbar_u,
+        )
+        ev_t2_acp = evaluate_state_over_calibration_box(
+            q_fn, a_cp, sp["eta_nom"], sp["dark_nom"], nbar_u, n_trans, box_t2_acp
+        )
+        box_t2_rob = CalibrationBox(
+            label="EndToEnd_Theta2_at_aRobCP",
+            a_plus_bounds=(0.98 * a_rob_cp, 1.02 * a_rob_cp),
+            a_minus_bounds=(0.98 * a_rob_cp, 1.02 * a_rob_cp),
+            eta_plus_bounds=(max(1e-6, sp["eta_nom"] - 0.01), min(1.0, sp["eta_nom"] + 0.01)),
+            eta_minus_bounds=(max(1e-6, sp["eta_nom"] - 0.01), min(1.0, sp["eta_nom"] + 0.01)),
+            nu_plus_bounds=(sp["dark_nom"], sp["dark_nom"] + 1e-3),
+            nu_minus_bounds=(sp["dark_nom"], sp["dark_nom"] + 1e-3),
+            delta_phi_max=math.radians(2.0),
+            energy_cap_upper=nbar_u,
+        )
+        ev_t2_rob = evaluate_state_over_calibration_box(
+            q_fn, a_rob_cp, sp["eta_nom"], sp["dark_nom"], nbar_u, n_trans, box_t2_rob
+        )
+        rows.append({
+            "scenario_id": sp["scenario_id"],
+            "label": sp["label"],
+            "r": sp["r"],
+            "n_th": sp["n_th"],
+            "T_src": sp["T_src"],
+            "R_tap": r_tap,
+            "T_eff": t_eff,
+            "eta_nom": sp["eta_nom"],
+            "nu_nom": sp["dark_nom"],
+            "mean_photons_trans": n_trans,
+            "tap_mean_m_tap": m_tap,
+            "n_tap_shots_cantelli": n_tap_cantelli,
+            "sigma_sq_prior": sigma_sq_prior,
+            "nbar_U_cantelli": nbar_u,
+            "relative_cap_slack": nbar_u / n_trans,
+            "a_star_CP": a_cp,
+            "W2_nom_at_aCP": ev_nom["W2_nominal"],
+            "CP99_nom_at_aCP": ev_nom["cp99_robust_nom_sig"],
+            "Theta2_W2_worst_at_aCP": ev_t2_acp["W2_robust_at_worst_signal"],
+            "Theta2_CP99_at_aCP": ev_t2_acp["cp99_robust_worst_sig"],
+            "a_star_robust_CP": a_rob_cp,
+            "Theta2_W2_worst_at_aRobCP": ev_t2_rob["W2_robust_at_worst_signal"],
+            "Theta2_CP99_at_aRobCP": ev_t2_rob["cp99_robust_worst_sig"],
+            "max_relaxation_gap": max(
+                ev_nom["max_relaxation_gap"],
+                ev_t2_acp["max_relaxation_gap"],
+                ev_t2_rob["max_relaxation_gap"],
+            ),
+        })
+
+    _write_csv(DATA_DIR / "end_to_end_tap_monitored_benchmarks.csv", rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Master Orchestrator
 # ---------------------------------------------------------------------------
 
@@ -709,12 +867,14 @@ def generate_all_stage4_datasets() -> Dict[str, Any]:
     s3 = run_scan3_robust_displacement_optimization()
     s4 = run_scan4_monte_carlo_false_positive_and_power()
     s5 = run_scan5_energy_bound_budget_tradeoff()
+    e2e = run_end_to_end_tap_monitored_benchmarks()
 
     # Audit relaxation gaps across all certified box evaluations
     all_gaps = (
         [float(r["max_relaxation_gap"]) for r in s1]
         + [float(r["max_relaxation_gap"]) for r in s2]
         + [float(r["max_relaxation_gap"]) for r in s5]
+        + [float(r["max_relaxation_gap"]) for r in e2e]
     )
     max_gap = max(all_gaps) if all_gaps else 0.0
 
@@ -725,7 +885,7 @@ def generate_all_stage4_datasets() -> Dict[str, Any]:
     max_spurious_nominal_fp = max(float(r["mc_reject_cp_nominal"]) for r in type1_rows)
     max_certified_robust_fp = max(float(r["mc_reject_cp_robust"]) for r in type1_rows)
 
-    # Concrete examples of bright-tail no-go and tap-beam protocol
+    # Concrete examples of bright-tail no-go and tap-beam protocol (Hoeffding + Cantelli)
     no_go_demo = bright_tail_no_go_mixture(
         target_mean_photons=100.0,
         max_click_prob=1e-4,
@@ -741,6 +901,15 @@ def generate_all_stage4_datasets() -> Dict[str, Any]:
         peak_photon_ceiling=5.0,
         delta_energy=0.005,
     )
+    tap_cantelli_demo = tap_beam_energy_upper_bound(
+        tap_mean_estimate=0.05 * 0.95 * squeezed_thermal_mean_photons(-0.42, 0.0, 0.95) / 0.95,
+        tap_fraction=0.05,
+        eta_tap=0.95,
+        n_tap_shots=1_250_000,
+        delta_energy=0.005,
+        variance_bound=0.02,
+        bound_type="cantelli",
+    )
 
     summary = {
         "stage": "Stage 4 (Asymmetric Calibration Boxes, Certified B_2^robust, Energy-Bound Protocol & Finite-Sample Stats)",
@@ -755,6 +924,8 @@ def generate_all_stage4_datasets() -> Dict[str, Any]:
         },
         "bright_tail_no_go_example": no_go_demo,
         "tap_beam_energy_bound_example": tap_demo,
+        "tap_beam_cantelli_example": tap_cantelli_demo,
+        "end_to_end_tap_monitored_benchmarks": e2e,
         "breakdown_thresholds_at_a_CP": breakdown_summary,
         "scan3_displacement_optimization": s3,
     }

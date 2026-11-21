@@ -8,7 +8,7 @@ Generates 5 publication-grade multi-panel vector PDF figures (and PNG previews) 
                                          analytical concavity thresholds and dark-count cascade.
   2. `fig2_lorenz_and_hierarchy`   : (a) Direct-sum Lorenz curves showing classical envelope S^C,
                                          robust box envelope B^robust(Theta2), flagship r = -0.42
-                                         squeezed vacuum, and ideal 3-level dark state |chi_a>;
+                                         squeezed vacuum, and two-component dark state |chi_a>;
                                      (b) Witness margin W_2(a), Shannon violation Delta H(a), and
                                          Renyi-2 violation Delta H_2(a) showing Shannon information
                                          loss vs. majorization detection;
@@ -20,7 +20,7 @@ Generates 5 publication-grade multi-panel vector PDF figures (and PNG previews) 
                                          thermal noise n_th, source loss T, and dark counts nu;
                                      (c) 2D independent (a, c) optimization surface for odd cat states
                                          and comparison of real (phi=0), orthogonal (phi=pi/2), and
-                                         3-level |0>+|2> benchmarks.
+                                         two-component |0>+|2> benchmarks.
   4. `fig4_calibration_and_stats`  : (a) Calibration-box robustness across Nominal, Theta1 (1%),
                                          Theta2 (2%), and Theta3 (5%) for flagship vs. pilot benchmarks;
                                      (b) 50,000-trial Monte Carlo Type-I false-positive audit (naive
@@ -433,7 +433,7 @@ def make_fig3_state_scans_and_cats() -> Dict[str, str]:
     channel_cases = [
         (0.00, 1.00, 0.00, "Ideal channel ($T=1.0, n_{\\rm th}=0, \\nu=0$)", PALETTE["blue"], "-", "o"),
         (0.00, 1.00, 0.01, "High dark counts ($\\nu=10^{-2}$, exact $e^{-\\nu}$ scaling)", PALETTE["green"], "--", "s"),
-        (0.02, 0.90, 1e-3, "Realistic lab ($T=0.90, n_{\\rm th}=0.02, \\nu=10^{-3}$)", PALETTE["orange"], "-.", "^"),
+        (0.02, 0.90, 1e-3, "Simulated lab ($T=0.90, n_{\\rm th}=0.02, \\nu=10^{-3}$)", PALETTE["orange"], "-.", "^"),
         (0.10, 1.00, 0.00, "Strong thermal noise ($n_{\\rm th}=0.10, T=1.0$)", PALETTE["purple"], ":", "d"),
         (0.25, 1.00, 0.00, "Extreme thermal noise ($n_{\\rm th}=0.25, T=1.0$)", PALETTE["red"], "--", "v"),
     ]
@@ -546,7 +546,7 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
     ax0 = axes[0]
     s1_rows = _read_csv(DATA_STAGE4 / "scan1_calibration_box_tiers.csv")
     tiers = ["Nominal", "Theta1", "Theta2", "Theta3"]
-    tier_labels = ["Nominal\n(0%)", "$\\Theta_1$\n(1% tight)", "$\\Theta_2$\n(2% real.)", "$\\Theta_3$\n(5% cons.)"]
+    tier_labels = ["Nominal\n(0%)", "$\\Theta_1$\n(1% tight)", "$\\Theta_2$\n(2% rep.)", "$\\Theta_3$\n(5% cons.)"]
     x_idx = np.arange(len(tiers))
 
     bench_plot = [
@@ -683,7 +683,7 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     s2_even_cap = [float(r["S2_classical_at_even_cat_energy"]) for r in ideal_rows]
 
     ax0.plot(a_vals, c_on_on, "k-", lw=2.0,
-             label="Quantum on/on ceiling $2$ (3-level dark state $|\\chi_a\\rangle$)")
+             label="Quantum on/on ceiling $2$ (two-component dark state $|\\chi_a\\rangle$)")
     ax0.plot(a_vals, c_off_on, color=PALETTE["blue"], linestyle="--", lw=1.8,
              label="Quantum off/on ceiling $1+\\sqrt{1-e^{-4a^2}}$ (rank-2)")
     ax0.plot(a_vals, c_off_off, color=PALETTE["green"], linestyle="-.", lw=1.8,
@@ -697,7 +697,7 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     ax0.set_ylim(1.0, 2.06)
     ax0.set_xlabel("Displacement magnitude $a$ ($\\eta=1, \\nu=0$)")
     ax0.set_ylabel("Two-setting partial sum $L_2$ / Classical bound $S_2^{\\mathcal{C}}$")
-    ax0.set_title("(a) Exact Zero-Truncation Ideal Quantum Ceilings", fontweight="bold")
+    ax0.set_title("(a) Unconstrained Ideal Quantum Ceilings", fontweight="bold")
     ax0.legend(loc="lower right", fontsize=6.7)
     ax0.grid(True)
 

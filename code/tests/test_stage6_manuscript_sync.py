@@ -125,10 +125,23 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "conditional",
             r"2 \times 10^7",
             r"\clearpage",
+            "Cantelli",
+            "two-component even-Fock",
+            "Unconstrained Ideal Quantum Ceilings",
+            "0.2134",
+            "1,810",
+            "1,791",
+            "8,264",
+            "7,587",
         ]
         self.assertLess(d4["max_box_relaxation_gap"], 1e-10)
         for token in expected_tokens:
             self.assertIn(token, tex_text, f"Canonical JSON/CSV metric '{token}' missing from paper/main.tex")
+
+        bib_text = (PAPER_DIR / "references.bib").read_text(encoding="utf-8")
+        self.assertIn("073005", bib_text)
+        self.assertIn("10.1088/1367-2630/ac0b03", bib_text)
+        self.assertNotIn("073010", bib_text)
 
     def test_04_run_all_cli_and_no_backticks_in_tex(self) -> None:
         tex_text = (PAPER_DIR / "main.tex").read_text(encoding="utf-8")
@@ -144,6 +157,8 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "extending numerically",
             "Primal--Dual Gap",
             r"b_{\rm crit,01} \approx 1.84",
+            "three-level dark",
+            "3-level dark",
         ):
             self.assertNotIn(forbidden_tex, tex_no_comments, f"Found stale/internal token '{forbidden_tex}' in paper/main.tex")
 
@@ -159,6 +174,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "1,718",
             "b_{\\rm crit,01}\\approx {B_CRIT_E0",
             "Energy cap $|\\beta|\\leq",
+            "3-level dark",
         ):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
 
