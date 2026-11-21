@@ -30,7 +30,7 @@ Generates 5 publication-grade multi-panel vector PDF figures (and PNG previews) 
   5. `fig5_quantum_ceilings_audit` : (a) Exact zero-truncation ideal quantum branch ceilings (off_off
                                          even cat 1+e^{-2a^2}, off_on 1+sqrt(1-e^{-4a^2}), on_on dark
                                          state |chi_a> = 2) vs. energy-constrained classical envelope;
-                                     (b) Finite-Fock SDP dual h_{Q,N}(P_N A P_N) vs. Eq. (29) gentle-
+                                     (b) Finite-Fock SDP dual h_{Q,N}(P_N A P_N) vs. Appendix D.2 gentle-
                                          projection tail penalty R_N across Fock cutoffs N in [15, 200].
 """
 
@@ -662,12 +662,12 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
 
         ax2.plot([1.140], [639], "o", color=PALETTE["red"], markersize=6.5, label="$a^*_{W_2}=1.140$ ($639$ shots)")
         ax2.plot([1.342], [559], "*", color=PALETTE["orange"], markersize=10.0, markeredgecolor="#111111",
-                 label="$a^*_{\\rm CP}=1.342$ ($559$, $4.45\\times$)")
+                 label="$a^*_{\\rm CP}=1.342$ ($559$, $4.45{\\times}$)")
 
         ax2.set_yscale("log")
         ax2.set_xlim(0.88, 1.72)
         ax2.set_ylim(380, 420_000)
-        ax2.set_xlabel("Displacement $a$ ($r=-0.42$)")
+        ax2.set_xlabel("Displacement $a$")
         ax2.set_ylabel("Required shots $N_s$ (log scale)")
         ax2.set_title("(c) Clopper-Pearson Economy", fontweight="bold")
         ax2.legend(loc="upper right", fontsize=8.0, framealpha=0.94)
@@ -721,7 +721,7 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     ax0.legend(loc="lower right", fontsize=6.7)
     ax0.grid(True)
 
-    # Panel (b): Finite-Fock SDP h_{Q,N} vs. Eq. (29) gentle-projection tail penalty R_N
+    # Panel (b): Finite-Fock SDP h_{Q,N} vs. Appendix D.2 gentle-projection tail penalty R_N
     ax1 = axes[1]
     n_cuts = [int(r["fock_cutoff_N"]) for r in tail_rows]
     h_qn = [float(r["S2_quantum_truncated_N"]) for r in tail_rows]
