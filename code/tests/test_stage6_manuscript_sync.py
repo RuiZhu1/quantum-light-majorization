@@ -159,8 +159,25 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             r"b_{\rm crit,01} \approx 1.84",
             "three-level dark",
             "3-level dark",
+            "even-photon Fock pairs",
+            "C^2-certified",
         ):
             self.assertNotIn(forbidden_tex, tex_no_comments, f"Found stale/internal token '{forbidden_tex}' in paper/main.tex")
+
+        for required_tex in (
+            r"S(r) = \exp[\frac{r}{2}(\hat a^{\dagger 2} - \hat a^2)]",
+            "even photon-number (Fock) states",
+            "uniformly at least as strong as each Schur-concave scalar entropic bound induced by the same classical majorant, and strictly stronger in demonstrated regimes such as the Shannon entropy window",
+            "the no-click probability of the coherent state optimizing the asymptotic",
+            r"q_\pm(\rho) = \tr[\rho E_0(\pm)] = \kappa\,\pi\,Q_{\calL_\eta(\rho)}(\mp\sqrt{\eta}\,a)",
+        ):
+            self.assertIn(required_tex, tex_no_comments, f"Required R1-R3 text missing from paper/main.tex: {required_tex}")
+
+        abs_match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex_no_comments, re.S)
+        self.assertIsNotNone(abs_match, "Missing abstract environment in paper/main.tex")
+        abs_raw_words = abs_match.group(1).strip().split()
+        self.assertGreaterEqual(len(abs_raw_words), 120, f"Abstract too short ({len(abs_raw_words)} words)")
+        self.assertLessEqual(len(abs_raw_words), 150, f"Abstract too long ({len(abs_raw_words)} words)")
 
         robust_code = (REPO_ROOT / "code" / "calibration_robust.py").read_text(encoding="utf-8")
         for forbidden_code in ("minimum(pad", "min(pad"):
@@ -179,7 +196,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
 
         # Verify physics-journal narrative structure in main text (before \appendix)
-        main_body = tex_no_comments.split(r"\appendix", 1)[0]
+        main_body, appendix_body = tex_no_comments.split(r"\appendix", 1)
         for env in ("theorem", "lemma", "proposition", "corollary", "remark", "itemize", "enumerate"):
             self.assertNotIn(
                 f"\\begin{{{env}}}",
@@ -187,7 +204,10 @@ class TestStage6ManuscriptSync(unittest.TestCase):
                 f"Main text should remain prose-only without \\begin{{{env}}} environments",
             )
         main_tables = re.findall(r"\\begin\{table\}", main_body)
-        self.assertLessEqual(len(main_tables), 2, f"Expected <=2 main-text tables, found {len(main_tables)}")
+        self.assertEqual(len(main_tables), 1, f"Expected exactly 1 main-text table, found {len(main_tables)}")
+        self.assertIn(r"\label{app:fock-audit}", appendix_body)
+        self.assertIn(r"\label{eq:fock-sdp-tail}", appendix_body)
+        self.assertNotIn(r"\label{eq:fock-sdp-tail}", main_body)
 
         # Verify total unit tests match documented count (54)
         proc_help = subprocess.run(
