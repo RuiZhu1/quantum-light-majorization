@@ -1,6 +1,6 @@
 """Publication figure generation suite for the JPB manuscript (Stage 5).
 
-Generates 5 publication-grade multi-panel vector PDF figures (and PNG previews) in `paper/figures/`:
+Generates 6 publication-grade vector PDF figures (and PNG previews) in `paper/figures/`:
   1. `fig1_scheme_and_phases`      : (a) Experimental protocol & tap-beam energy monitor;
                                      (b) Phase-space Wigner/Q-contour geometry of r < 0 squeezed
                                          vacuum vs. +/-a displaced threshold detectors & coherent mimic;
@@ -27,11 +27,13 @@ Generates 5 publication-grade multi-panel vector PDF figures (and PNG previews) 
                                          nominal bound vs. certified B_2^robust) and Type-II power curves;
                                      (c) Sawtooth-safe Clopper-Pearson shot economy N_s^CP99(a) vs.
                                          Hoeffding and tap-beam energy-slack trade-off nbar_U/<n>.
-  5. `fig5_quantum_ceilings_audit` : (a) Exact zero-truncation ideal quantum branch ceilings (off_off
-                                         even cat 1+e^{-2a^2}, off_on 1+sqrt(1-e^{-4a^2}), on_on dark
-                                         state |chi_a> = 2) vs. energy-constrained classical envelope;
-                                     (b) Finite-Fock SDP dual h_{Q,N}(P_N A P_N) vs. Appendix D.2 gentle-
-                                         projection tail penalty R_N across Fock cutoffs N in [15, 200].
+  5. `fig5_quantum_ceilings_audit` : Exact zero-truncation ideal quantum branch ceilings (off_off
+                                     even cat 1+e^{-2a^2}, off_on 1+sqrt(1-e^{-4a^2}), on_on
+                                     two-component dark state |chi_a> = 2) vs. energy-constrained
+                                     classical envelope.
+  6. `figA1_fock_tail_audit`       : Appendix D.2 finite-Fock SDP dual h_{Q,N}(P_N A P_N) vs.
+                                     gentle-projection tail penalty R_N across Fock cutoffs
+                                     N in [15, 200].
 """
 
 from __future__ import annotations
@@ -677,24 +679,16 @@ def make_fig4_calibration_and_stats() -> Dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# Figure 5: Ideal Quantum Ceilings & Gentle-Projection Fock-Truncation Tail Audit
+# Figure 5: Ideal Quantum Ceilings (Zero Truncation)
+# Figure A1: Gentle-Projection Fock-Truncation Tail Audit (Appendix D.2)
 # ---------------------------------------------------------------------------
 
 def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
-    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.65))
-    fig.subplots_adjust(wspace=0.30)
+    fig, ax0 = plt.subplots(figsize=(6.2, 4.0))
 
     q_rows = _read_csv(DATA_STAGE5 / "quantum_ceilings_and_tail_audit.csv")
     ideal_rows = [r for r in q_rows if r["record_type"] == "ideal_quantum_ceiling"]
-    tail_rows = [
-        r for r in q_rows
-        if r["record_type"] == "fock_truncation_tail_audit"
-        and abs(float(r["a"]) - 1.15) < 1e-6
-        and abs(float(r["eta"]) - 1.0) < 1e-6
-    ]
 
-    # Panel (a): Exact zero-truncation ideal quantum branch ceilings vs. classical envelope
-    ax0 = axes[0]
     a_vals = [float(r["a"]) for r in ideal_rows]
     c_on_on = [float(r["on_on_ideal_ceiling"]) for r in ideal_rows]
     c_off_on = [float(r["off_on_ideal_ceiling"]) for r in ideal_rows]
@@ -717,12 +711,24 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     ax0.set_ylim(1.0, 2.06)
     ax0.set_xlabel("Displacement magnitude $a$ ($\\eta=1, \\nu=0$)")
     ax0.set_ylabel("Two-setting partial sum $L_2$ / Classical bound $S_2^{\\mathcal{C}}$")
-    ax0.set_title("(a) Unconstrained Ideal Quantum Ceilings", fontweight="bold")
-    ax0.legend(loc="lower right", fontsize=6.7)
+    ax0.set_title("Unconstrained Ideal Quantum Ceilings", fontweight="bold")
+    ax0.legend(loc="lower right", fontsize=7.6)
     ax0.grid(True)
 
-    # Panel (b): Finite-Fock SDP h_{Q,N} vs. Appendix D.2 gentle-projection tail penalty R_N
-    ax1 = axes[1]
+    return _save_fig(fig, "fig5_quantum_ceilings_audit")
+
+
+def make_figA1_fock_tail_audit() -> Dict[str, str]:
+    fig, ax1 = plt.subplots(figsize=(6.2, 4.0))
+
+    q_rows = _read_csv(DATA_STAGE5 / "quantum_ceilings_and_tail_audit.csv")
+    tail_rows = [
+        r for r in q_rows
+        if r["record_type"] == "fock_truncation_tail_audit"
+        and abs(float(r["a"]) - 1.15) < 1e-6
+        and abs(float(r["eta"]) - 1.0) < 1e-6
+    ]
+
     n_cuts = [int(r["fock_cutoff_N"]) for r in tail_rows]
     h_qn = [float(r["S2_quantum_truncated_N"]) for r in tail_rows]
     r_n = [float(r["gentle_projection_penalty_R_N"]) for r in tail_rows]
@@ -742,11 +748,11 @@ def make_fig5_quantum_ceilings_audit() -> Dict[str, str]:
     ax1.set_ylim(0.0, 2.35)
     ax1.set_xlabel("Fock truncation cutoff $N$ ($a=1.15, \\eta=1.0, \\bar{n}_{\\max}=0.22$)")
     ax1.set_ylabel("Support value / Tail penalty")
-    ax1.set_title("(b) Finite-Fock SDP vs. Gentle-Projection Tail Bound", fontweight="bold")
-    ax1.legend(loc="center right", fontsize=6.7)
+    ax1.set_title("Finite-Fock SDP vs. Gentle-Projection Tail Bound", fontweight="bold")
+    ax1.legend(loc="center right", fontsize=7.6)
     ax1.grid(True)
 
-    return _save_fig(fig, "fig5_quantum_ceilings_audit")
+    return _save_fig(fig, "figA1_fock_tail_audit")
 
 
 def generate_all_figures() -> Dict[str, Dict[str, str]]:
@@ -757,6 +763,7 @@ def generate_all_figures() -> Dict[str, Dict[str, str]]:
         "fig3_state_scans_and_cats": make_fig3_state_scans_and_cats(),
         "fig4_calibration_and_stats": make_fig4_calibration_and_stats(),
         "fig5_quantum_ceilings_audit": make_fig5_quantum_ceilings_audit(),
+        "figA1_fock_tail_audit": make_figA1_fock_tail_audit(),
     }
 
 
