@@ -72,23 +72,35 @@ class TestStage5QuantumAndFigures(unittest.TestCase):
         self.assertGreater(rows[2]["gentle_projection_penalty_R_N"], 0.06)
 
     def test_04_publication_figures_and_stage5_datasets_exist(self) -> None:
-        """Verify all 5 publication PDF/PNG figures and Stage 5 dataset files exist and are non-empty."""
+        """Verify all 7 publication PDF/PNG figures (and no stale figures) and Stage 5 dataset files exist."""
         repo_root = CODE_DIR.parent
         fig_dir = repo_root / "paper" / "figures"
         stems = [
-            "fig1_scheme_and_phases",
-            "fig2_lorenz_and_hierarchy",
-            "fig3_state_scans_and_cats",
-            "fig4_calibration_and_stats",
-            "fig5_quantum_ceilings_audit",
+            "fig1_quantum_states",
+            "fig2_scheme_and_phases",
+            "fig3_lorenz_and_hierarchy",
+            "fig4_state_scans_and_cats",
+            "fig5_calibration_and_stats",
+            "fig6_quantum_ceilings",
+            "figA1_fock_tail_audit",
         ]
+        expected_files = {".gitkeep"}
         for stem in stems:
             pdf_p = fig_dir / f"{stem}.pdf"
             png_p = fig_dir / f"{stem}.png"
+            expected_files.add(pdf_p.name)
+            expected_files.add(png_p.name)
             self.assertTrue(pdf_p.exists(), f"Missing PDF figure: {pdf_p}")
             self.assertTrue(png_p.exists(), f"Missing PNG figure: {png_p}")
             self.assertGreater(pdf_p.stat().st_size, 10_000)
             self.assertGreater(png_p.stat().st_size, 30_000)
+
+        actual_files = {p.name for p in fig_dir.iterdir()}
+        self.assertEqual(
+            actual_files,
+            expected_files,
+            f"Unexpected or stale files in paper/figures/: {sorted(actual_files ^ expected_files)}",
+        )
 
         data_dir = repo_root / "data" / "stage5"
         self.assertTrue((data_dir / "quantum_ceilings_and_tail_audit.csv").exists())

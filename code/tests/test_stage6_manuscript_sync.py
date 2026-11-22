@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 from pathlib import Path
 import re
@@ -22,6 +23,8 @@ class TestStage6ManuscriptSync(unittest.TestCase):
         required = [
             REPO_ROOT / "run_all.py",
             PAPER_DIR / "main.tex",
+            PAPER_DIR / "iopjournal.cls",
+            PAPER_DIR / "orcid.pdf",
             PAPER_DIR / "references.bib",
             PAPER_DIR / "main.pdf",
             NOTES_DIR / "STAGE6_REFEREE_AUDIT.md",
@@ -31,6 +34,11 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             self.assertTrue(path.exists(), f"Missing Stage 6 deliverable: {path}")
             self.assertGreater(path.stat().st_size, 100, f"Deliverable unexpectedly small: {path}")
 
+        self.assertFalse(
+            (NOTES_DIR / "figure_legend_options_comparison.pdf").exists(),
+            "Comparison PDF notes/figure_legend_options_comparison.pdf must not be generated",
+        )
+
         pdf_header = (PAPER_DIR / "main.pdf").read_bytes()[:8]
         self.assertTrue(pdf_header.startswith(b"%PDF-"), f"Invalid PDF header: {pdf_header!r}")
 
@@ -38,12 +46,74 @@ class TestStage6ManuscriptSync(unittest.TestCase):
         tex_text = (PAPER_DIR / "main.tex").read_text(encoding="utf-8")
         bib_text = (PAPER_DIR / "references.bib").read_text(encoding="utf-8")
 
-        # 1. Every \includegraphics target resolves to a real file under paper/
+        # 0. Official IOP iopjournal.cls template, ORCIDs, graphicspath, and clean package list
+        self.assertIsNotNone(
+            re.search(r"\\documentclass(?:\[[^\]]*\])?\{iopjournal\}", tex_text),
+            "paper/main.tex must use \\documentclass{iopjournal}",
+        )
+        self.assertIn(r"\graphicspath{{./}{figures/}}", tex_text)
+        self.assertIn(r"\orcid{0009-0001-9109-8618}", tex_text)
+        self.assertIn(r"\orcid{0000-0002-1123-6460}", tex_text)
+        for required_cmd in (r"\articletype{", r"\keywords{", r"\data{", r"\ack{"):
+            self.assertIn(required_cmd, tex_text, f"Missing IOP template macro {required_cmd}")
+        self.assertNotIn(r"\maketitle", tex_text)
+        for bad_pkg in ("{geometry}", "{authblk}", "xcolor,graphicx", "{hyperref}"):
+            self.assertNotIn(bad_pkg, tex_text, f"Conflicting package/option {bad_pkg} in paper/main.tex")
+
+        tex_no_comments = re.sub(r"(?m)^%.*$", "", tex_text)
+        # Ensure \articletype is ungrouped so \reversemarginpar persists for left-margin Crossmark
+        self.assertIsNone(
+            re.search(r"\{[^{}\n]*\\articletype\{", tex_no_comments),
+            "\\articletype must not be wrapped inside a TeX group {...} (breaks \\reversemarginpar)",
+        )
+        self.assertIsNotNone(
+            re.search(r"(?m)^[^%{}\n]*\\articletype\{", tex_no_comments),
+            "Expected ungrouped \\articletype{...} on its own line",
+        )
+        # Ensure distinct \affil paragraphs (^1, ^2, ^*) are separated by blank lines without double space
+        self.assertIn(r"Road,}%", tex_no_comments, "Expected trailing '%' on split ^1 \\affil line")
+        self.assertIsNotNone(
+            re.search(r"\n[ \t]*\n\\affil\{\$\^2\$", tex_no_comments),
+            "Expected blank line before \\affil{$^2$...}",
+        )
+        self.assertIsNotNone(
+            re.search(r"\n[ \t]*\n\\affil\{\$\^\*\$", tex_no_comments),
+            "Expected blank line before \\affil{$^*$...}",
+        )
+        # Ensure no thousands-separated integers N,NNN appear inside single-$ math mode
+        bad_math_commas = []
+        for lineno, line in enumerate(tex_text.splitlines(), 1):
+            if line.lstrip().startswith("%"):
+                continue
+            i = 0
+            in_math = False
+            start = -1
+            while i < len(line):
+                if line[i] == "\\":
+                    i += 2
+                    continue
+                if line[i] == "$":
+                    if i + 1 < len(line) and line[i + 1] == "$":
+                        i += 2
+                        continue
+                    if not in_math:
+                        in_math = True
+                        start = i + 1
+                    else:
+                        span = line[start:i]
+                        if re.search(r"\d,\d{3}", span):
+                            bad_math_commas.append((lineno, span))
+                        in_math = False
+                i += 1
+        self.assertEqual(bad_math_commas, [], f"Math-mode thousands commas found: {bad_math_commas}")
+
+        # 1. Every \includegraphics target is filename-only and resolves to paper/figures/ (or paper/)
         fig_paths = re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", tex_text)
-        self.assertEqual(len(fig_paths), 6, f"Expected 6 manuscript figures, found {fig_paths}")
+        self.assertEqual(len(fig_paths), 7, f"Expected 7 manuscript figures, found {fig_paths}")
         for rel in fig_paths:
-            fig_file = PAPER_DIR / rel
-            self.assertTrue(fig_file.exists(), f"Missing manuscript figure: {fig_file}")
+            self.assertNotIn("/", rel, f"Expected filename-only \\includegraphics target, got {rel}")
+            fig_file = (PAPER_DIR / "figures" / rel) if (PAPER_DIR / "figures" / rel).exists() else (PAPER_DIR / rel)
+            self.assertTrue(fig_file.exists(), f"Missing manuscript figure: {rel}")
             self.assertGreater(fig_file.stat().st_size, 1000)
 
         # 2. Every \cite{...} key exists in paper/references.bib, and all bib entries are cited
@@ -73,6 +143,7 @@ class TestStage6ManuscriptSync(unittest.TestCase):
                 "multiply-defined labels",
                 "LaTeX Font Warning:",
                 "LaTeX Warning:",
+                "Package fancyhdr Warning:",
                 "Package hyperref Warning:",
                 "Rerun to get",
                 "Overfull \\vbox",
@@ -214,11 +285,46 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             "b_{\\rm crit,01}\\approx {B_CRIT_E0",
             "Energy cap $|\\beta|\\leq",
             "3-level dark",
+            "_figs24_rc_context",
         ):
             self.assertNotIn(forbidden_fig, fig_code, f"Found stale/internal figure token '{forbidden_fig}' in make_figures.py")
+        for required_fig in (
+            '"text.usetex": True',
+            '"font.family": "serif"',
+            '"Computer Modern Roman"',
+            r'r"\usepackage{amsmath,amssymb}"',
+            '"--legend-mode"',
+            'default="caption"',
+            "fig1_quantum_states",
+            "fig6_quantum_ceilings",
+        ):
+            self.assertIn(required_fig, fig_code, f"Missing Scheme A / usetex setting '{required_fig}' in make_figures.py")
+
+        # Verify Fig. 2(c) nu=0 phase coverage matches CSV 1-to-1 in both make_figures.py and main.tex caption
+        with (DATA_DIR / "stage3" / "scan5_classical_phase_diagram.csv").open(encoding="utf-8") as fh:
+            csv_nu0_phases = sorted({
+                r["attainment_phase"]
+                for r in csv.DictReader(fh)
+                if abs(float(r["nu"])) < 1e-9 and float(r["b"]) <= 2.3 and float(r["E"]) <= 2.2
+            })
+        self.assertEqual(len(csv_nu0_phases), 7, f"Expected 7 nu=0 phases in CSV, got {csv_nu0_phases}")
+        fig2_match = re.search(r"\\begin\{figure\}.*?\\label\{fig:fig2\}.*?\\end\{figure\}", tex_no_comments, re.S)
+        self.assertIsNotNone(fig2_match, "Missing fig:fig2 figure block in paper/main.tex")
+        fig2_block = fig2_match.group(0)
+        for phase in csv_nu0_phases:
+            self.assertIn(f'"{phase}"', fig_code, f"Fig. 2(c) phase '{phase}' missing from make_figures.py")
+            tex_phase = phase.replace("_", r"\_")
+            self.assertIn(tex_phase, fig2_block, f"Fig. 2(c) phase '{tex_phase}' missing from fig:fig2 caption")
+        for phantom_phase in ("E1/off_off/attained", "E1/off_on/non_attained", "E1/on_on/attained"):
+            self.assertNotIn(f'"{phantom_phase}"', fig_code, f"Phantom Fig. 2(c) phase '{phantom_phase}' in make_figures.py")
+            self.assertNotIn(phantom_phase.replace("_", r"\_"), fig2_block, f"Phantom Fig. 2(c) phase '{phantom_phase}' in fig:fig2 caption")
 
         # Verify physics-journal narrative structure in main text (before \appendix)
         main_body, appendix_body = tex_no_comments.split(r"\appendix", 1)
+        sec1_match = re.search(r"\\section\{Introduction\}.*?(?=\\section\{)", main_body, re.S)
+        self.assertIsNotNone(sec1_match)
+        self.assertIn(r"Fig.~\ref{fig:fig1}", sec1_match.group(0))
+        self.assertIn("fig1_quantum_states.pdf", main_body)
         for env in ("theorem", "lemma", "proposition", "corollary", "remark", "itemize", "enumerate"):
             self.assertNotIn(
                 f"\\begin{{{env}}}",
