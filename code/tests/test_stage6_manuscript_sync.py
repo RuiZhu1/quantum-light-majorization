@@ -70,16 +70,16 @@ class TestStage6ManuscriptSync(unittest.TestCase):
             re.search(r"(?m)^[^%{}\n]*\\articletype\{", tex_no_comments),
             "Expected ungrouped \\articletype{...} on its own line",
         )
-        # Ensure distinct \affil paragraphs (^1, ^2, ^*) are separated by blank lines without double space
-        self.assertIn(r"Road,}%", tex_no_comments, "Expected trailing '%' on split ^1 \\affil line")
-        self.assertIsNotNone(
-            re.search(r"\n[ \t]*\n\\affil\{\$\^2\$", tex_no_comments),
-            "Expected blank line before \\affil{$^2$...}",
-        )
-        self.assertIsNotNone(
-            re.search(r"\n[ \t]*\n\\affil\{\$\^\*\$", tex_no_comments),
-            "Expected blank line before \\affil{$^*$...}",
-        )
+        # Ensure distinct \affil paragraphs (^1, ^2, ^3, ^*) are separated by blank lines without double space
+        self.assertIn(r"Conversion,}%", tex_no_comments, "Expected trailing '%' on split ^3 \\affil line")
+        self.assertIn(r"Rui Zhu$^{1,2,3}$\orcid{0009-0001-9109-8618}", tex_no_comments)
+        self.assertIn(r"Marcelo F.\ Ciappina$^{1,2,3,*}$\orcid{0000-0002-1123-6460}", tex_no_comments)
+        self.assertIsNone(re.search(r"\\author\{[^}]*\\dag", tex_no_comments))
+        for marker in (r"\$\^2\$", r"\$\^3\$", r"\$\^\*\$"):
+            self.assertIsNotNone(
+                re.search(rf"\n[ \t]*\n\\affil\{{{marker}", tex_no_comments),
+                f"Expected blank line before \\affil{{{marker}...}}",
+            )
         # Ensure no thousands-separated integers N,NNN appear inside single-$ math mode
         bad_math_commas = []
         for lineno, line in enumerate(tex_text.splitlines(), 1):
