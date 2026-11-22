@@ -5,7 +5,7 @@ Default (`--fast`) mode skips multi-minute full parameter scans (`stage3_scans.p
 and `stage4_calibration_scans.py`, whose precomputed CSV/JSON outputs are tracked in
 `data/stage3/` and `data/stage4/`) while regenerating all baseline benchmarks,
 certified classical dual verifications, quantum ceilings and Fock-SDP tail audits,
-all five vector PDF figures, all 54 unit tests, and the compiled JPB manuscript PDF.
+all seven vector PDF figures, all 54 unit tests, and the compiled JPB manuscript PDF.
 
 Pass `--full` to regenerate the full Stage 3 and Stage 4 scans from scratch, and
 `--skip-latex` to skip compiling `paper/main.tex`.
@@ -80,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
 
     steps.extend([
         ("Stage 5: Quantum Ceilings & Fock SDP Audit", [sys.executable, "code/quantum_benchmarks.py"], REPO_ROOT),
-        ("Stage 5: Publication Figures (fig1-fig5)", [sys.executable, "code/make_figures.py"], REPO_ROOT),
+        ("Stage 5: Publication Figures (fig1-fig6, figA1)", [sys.executable, "code/make_figures.py"], REPO_ROOT),
     ])
 
     if not args.skip_latex:

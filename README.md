@@ -32,9 +32,9 @@ Research repository for our *Journal of Physics B: Atomic, Molecular and Optical
 4. **Stage 5 Certified Quantum Benchmarks, Gentle-Projection Tail Audit & Publication Figures (`code/quantum_benchmarks.py`, `code/make_figures.py`, `paper/figures/`, `notes/STAGE5_QUANTUM_AND_FIGURES.md`):**
    - **Proposition 5.1:** Verified exact zero-truncation ideal ($\eta=1, \nu=0$) quantum branch ceilings (`off_off` $= 1+e^{-2a^2}$ attained by even cat $\ket{\mathcal C_+(a)}$, `off_on` $= 1+\sqrt{1-e^{-4a^2}}$ with mean photon number $a^2\coth(2a^2)$, and `on_on` $= 2$ attained by the two-component even-Fock dark state $\ket{\chi_a}$ with $\langle\hat n\rangle = 4/(a^4+2)$).
    - **Finite-Fock SDP vs. Gentle-Projection Tail Audit (`data/stage5/`):** Implemented exact Fock-compressed SDP dual `solve_fock_truncated_quantum_branch` (gap $\le 2.2\times 10^{-15}$) and quantified Eq. (35)'s gentle-projection remainder $R_N(2) = 2(\sqrt{\delta_N}+\delta_N/2)$ across $N\in[15,200]$.
-   - **6 Publication-Grade Vector Figures (`paper/figures/fig1`–`fig5`, `figA1`):** Generated all 6 vector PDF figures and PNG previews reproducibly via `code/make_figures.py` (splitting ideal quantum ceilings Fig. 5 and Appendix D.2 Fock-SDP tail audit Fig. A1).
-   - **Stage 6 Complete JPB Manuscript Draft, Automated Reproduction & Adversarial Audit (`paper/main.tex`, `paper/main.pdf`, `run_all.py`, `notes/STAGE6_REFEREE_AUDIT.md`):**
-   - Compiled clean submission-ready manuscript draft (`paper/main.pdf`, 24 pages, Sections 1–6 + Appendices A–D, Tables 1 & A1–A2, Figures 1–5 & A1, 27/27 cited BibTeX references, zero LaTeX/BibTeX warnings or overfull boxes).
+   - **7 Publication-Grade Vector Figures (`paper/figures/fig1`–`fig6`, `figA1`):** Generated reproducibly via `code/make_figures.py` with global `text.usetex=True` (`Computer Modern Roman`), 1:1 `iopjournal.cls` sizing (153 mm text width), and Scheme A caption-based curve descriptions (no in-panel legend boxes; incl. the 2x3 Wigner + Fock Figure 1 `fig1_quantum_states`, ideal quantum ceilings Fig. 6, and Appendix D.2 Fock-SDP tail audit Fig. A1).
+   - **Stage 6 Complete IOP/JPB Manuscript Draft, Automated Reproduction & Adversarial Audit (`paper/main.tex`, `paper/main.pdf`, `run_all.py`, `notes/STAGE6_REFEREE_AUDIT.md`):**
+   - Compiled clean submission-ready manuscript (`paper/main.pdf`, 22 pages on official `iopjournal.cls` with author ORCIDs, Sections 1–6 + Appendices A–D, Tables 1 & A1–A2, Figures 1–6 & A1, 27/27 cited BibTeX references, zero LaTeX/BibTeX warnings or overfull boxes).
    - Delivered single-command reproduction CLI `run_all.py` (`--fast`, `--full`, `--skip-latex`), manuscript-sync unit suite (`code/tests/test_stage6_manuscript_sync.py`, **54/54** unit tests passing), and adversarial referee audits (`notes/STAGE6_REFEREE_AUDIT.md`).
 
 ---
@@ -72,7 +72,7 @@ quantum-light-majorization/
 │   ├── calibration_robust.py                     Asymmetric dual, certified B_2^robust, energy bound & MC
 │   ├── stage4_calibration_scans.py               Reproduces all 5 Stage 4 scans in data/stage4/
 │   ├── quantum_benchmarks.py                     Ideal quantum ceilings, compressed Fock SDP & tail audit
-│   ├── make_figures.py                           Generates all 6 publication vector PDFs in paper/figures/
+│   ├── make_figures.py                           Generates all 7 publication vector PDFs in paper/figures/ (text.usetex=True, Scheme A)
 │   ├── week1_audit_verify.py                     Reproduces all audit & exact-dual benchmark checks
 │   └── tests/
 │       ├── test_quantum_light.py                 13 baseline unit checks (incl. 0<T<1 Kraus odd-cat)
@@ -90,10 +90,12 @@ quantum-light-majorization/
 │   ├── stage4/                                   5 Stage 4 calibration CSVs + closed e2e tap CSV + stage4_summary.json
 │   └── stage5/                                   Quantum ceilings & Fock tail audit CSV + stage5_summary.json
 └── paper/
-    ├── main.tex                                  Complete JPB submission-ready manuscript source
-    ├── main.pdf                                  Compiled 24-page manuscript PDF (zero warnings)
+    ├── iopjournal.cls                            Official IOP Publishing journal template class
+    ├── orcid.pdf                                 Official ORCID badge icon used by iopjournal.cls
+    ├── main.tex                                  Complete IOP/JPB submission-ready manuscript source
+    ├── main.pdf                                  Compiled 22-page manuscript PDF (zero warnings)
     ├── references.bib                            Verified bibliography (27 entries, all cited)
-    └── figures/                                  6 publication vector PDFs + PNG previews (fig1–fig5, figA1)
+    └── figures/                                  7 publication vector PDFs + PNG previews (fig1–fig6, figA1)
 ```
 
 ---
@@ -143,8 +145,8 @@ Accelerated execution of Marcelo's full research plan to deliver a **100% submis
 
 - [x] **Day 6 (25 Nov) — Certified Quantum Benchmarks & Publication Figures [COMPLETE]**
   - Finalized exact zero-truncation ideal quantum `off_off` ($1+e^{-2a^2}$, even cat), `off_on` ($1+\sqrt{1-e^{-4a^2}}$, energy $a^2\coth(2a^2)$), and two-component dark-state $\ket{\chi_a}$ results, plus exact Fock-compressed SDP duals $h_{\mathcal Q,N}(P_N A P_N)$ and gentle-projection tail bound audits (`code/quantum_benchmarks.py`, `data/stage5/`, `notes/STAGE5_QUANTUM_AND_FIGURES.md`).
-  - Generated all 6 publication-grade vector PDF figures (and PNG previews) in `paper/figures/` via reproducible `code/make_figures.py` (`fig1_scheme_and_phases`, `fig2_lorenz_and_hierarchy`, `fig3_state_scans_and_cats`, `fig4_calibration_and_stats`, `fig5_quantum_ceilings_audit`, `figA1_fock_tail_audit`), verified by `code/tests/test_stage5_quantum_and_figures.py` and `code/tests/test_stage6_manuscript_sync.py`.
+  - Generated 7 publication-grade vector PDF figures (and PNG previews) in `paper/figures/` via reproducible `code/make_figures.py` (`fig1_quantum_states`, `fig2_scheme_and_phases`, `fig3_lorenz_and_hierarchy`, `fig4_state_scans_and_cats`, `fig5_calibration_and_stats`, `fig6_quantum_ceilings`, `figA1_fock_tail_audit`), verified by `code/tests/test_stage5_quantum_and_figures.py` and `code/tests/test_stage6_manuscript_sync.py`.
 
-- [x] **Days 7–10 (26–30 Nov) — Complete JPB LaTeX Manuscript, Adversarial Audit & End-to-End Freeze [COMPLETE]**
-  - Drafted and compiled full submission-ready JPB manuscript ([paper/main.tex](paper/main.tex) -> [paper/main.pdf](paper/main.pdf), 24 pages, Sections 1–6 + Appendices A–D, Tables 1 & A1–A2, Figures 1–5 & A1, 27/27 cited BibTeX entries, zero LaTeX warnings or overfull boxes).
+- [x] **Days 7–10 (26–30 Nov) — Complete IOP/JPB LaTeX Manuscript, Adversarial Audit & End-to-End Freeze [COMPLETE]**
+  - Drafted and compiled full submission-ready IOP/JPB manuscript on `iopjournal.cls` ([paper/main.tex](paper/main.tex) -> [paper/main.pdf](paper/main.pdf), 22 pages, Sections 1–6 + Appendices A–D, Tables 1 & A1–A2, Figures 1–6 & A1, 27/27 cited BibTeX entries, zero LaTeX warnings or overfull boxes).
   - Completed adversarial referee audits (`notes/STAGE6_REFEREE_AUDIT.md`), pure-analytic Theorem 2/3, Danskin LO phase monotonicity, squeezed-thermal box corner, Chernoff--KL + coupling $\forall N\ge N_s^{\rm CP99}$ & self-contained Rényi proofs, unclipped $C^2$ calibration solver (`1.305e-12` max gap), `run_all.py`, and [code/tests/test_stage6_manuscript_sync.py](code/tests/test_stage6_manuscript_sync.py) (**54/54** unit tests passing).
