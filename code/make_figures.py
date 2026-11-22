@@ -445,23 +445,35 @@ def make_fig2_scheme_and_phases(legend_mode: str = "caption") -> Dict[str, str]:
     phase_rows = _read_csv(DATA_STAGE3 / "scan5_classical_phase_diagram.csv")
     nu0_rows = [r for r in phase_rows if abs(float(r["nu"])) < 1e-9]
 
+    in_bounds_nu0 = [
+        r for r in nu0_rows
+        if float(r["b"]) <= 2.3 and float(r["E"]) <= 2.2
+    ]
+
     phase_order = [
         ("E0/off_off/attained", r"$E_0$ \& off/off (att.)", PALETTE["green"], "o"),
         ("E0/off_off/non_attained", r"$E_0$ \& off/off (non-att.)", PALETTE["sky"], "s"),
+        ("E0/off_on/attained", r"$E_0$ \& off/on (att.)", PALETTE["purple"], "D"),
         ("E0/off_on/non_attained", r"$E_0$ \& off/on (non-att.)", PALETTE["orange"], "^"),
-        ("E1/off_off/attained", r"$E_1$ \& off/off (att.)", PALETTE["purple"], "D"),
-        ("E1/off_on/non_attained", r"$E_1$ \& off/on (non-att.)", "#E6AB02", "v"),
-        ("E1/on_on/attained", r"$E_1$ \& on/on ($E=0$)", "#66A61E", "P"),
-        ("E1/on_on/non_attained", r"$E_1$ \& on/on (flagship)", PALETTE["blue"], "."),
+        ("E0/on_on/non_attained", r"$E_0$ \& on/on (non-att.)", PALETTE["navy"], "P"),
+        ("E1/off_on/attained", r"$E_1$ \& off/on (att.)", "#66A61E", "v"),
+        ("E1/on_on/non_attained", r"$E_1$ \& on/on (non-att.)", PALETTE["blue"], "."),
     ]
+    assert len({(c, m) for _, _, c, m in phase_order}) == len(phase_order), (
+        "Fig. 2(c) phase_order encodings must be pairwise distinct"
+    )
+    plotted_count = 0
     for p_key, p_lbl, p_col, p_mk in phase_order:
-        sub = [r for r in nu0_rows if r["attainment_phase"] == p_key and float(r["b"]) <= 2.3 and float(r["E"]) <= 2.2]
-        if not sub:
-            continue
+        sub = [r for r in in_bounds_nu0 if r["attainment_phase"] == p_key]
+        assert len(sub) > 0, f"Fig. 2(c) phase_order entry {p_key!r} matched 0 nu=0 in-bounds rows"
+        plotted_count += len(sub)
         bs = [float(r["b"]) for r in sub]
         es = [float(r["E"]) for r in sub]
-        ms = 5 if p_mk == "." else 9
+        ms = 5 if p_mk == "." else (14 if p_mk == "P" else 9)
         ax_c.scatter(bs, es, c=p_col, marker=p_mk, s=ms, alpha=0.85, label=p_lbl, edgecolors="none")
+    assert plotted_count == len(in_bounds_nu0), (
+        f"Fig. 2(c) dropped {len(in_bounds_nu0) - plotted_count} nu=0 in-bounds rows"
+    )
 
     ax_c.axvline(
         1.0 / math.sqrt(2.0), color=PALETTE["red"], linestyle="--", lw=1.1,
